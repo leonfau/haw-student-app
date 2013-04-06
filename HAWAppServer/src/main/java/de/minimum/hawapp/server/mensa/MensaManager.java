@@ -6,12 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface MensaManager {
-	
-	/**
-	 * @return eine Instanz des MensaManagers
-	 */
-	public MensaManager getInstance();
-
     /**
      * Aktuallisiert die Essensliste
      * Achtung, die Berwertungen werden dabei ebenfalls resettet! 
