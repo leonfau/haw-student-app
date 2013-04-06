@@ -6,15 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 public class MensaManagerImpl implements MensaManager {
-	private static MensaManager manager = new MensaManagerImpl();
 	private MensaPlan plan;
 	
-	@Override
-	public MensaManager getInstance() {
-		return manager;	
-	}
-	
-	private MensaManagerImpl(){
+	public MensaManagerImpl(){
 		plan = MensaPlanImpl.MensaPlan();
 	}
 
