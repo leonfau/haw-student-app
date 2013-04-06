@@ -77,5 +77,10 @@ public class MensaPlanImpl implements MensaPlan {
     public Map<String, List<Meal>> getWeekPlan() {
         return this.weekPlan;
     }
+    
+    @Override
+    public Date getUpdateTime(){
+    	return this.updateTime;
+    }
 
 }

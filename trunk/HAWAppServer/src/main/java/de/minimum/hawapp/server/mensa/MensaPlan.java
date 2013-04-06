@@ -1,6 +1,7 @@
 package de.minimum.hawapp.server.mensa;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,4 +30,9 @@ public interface MensaPlan {
      * @return Map mit Enums fï¿½r den Tag und Listen der Gerichte
      */
     public Map<String, List<Meal>> getWeekPlan();
+    
+    /**
+     * Datum und Zeit des zuletzt durchgeführten updates
+     */
+    public Date getUpdateTime();
 }
