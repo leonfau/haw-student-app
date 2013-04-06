@@ -37,4 +37,9 @@ public class MealImpl implements Meal {
     public String toString() {
         return this.description + " " + this.studentPrice + " E / " + this.othersPrice + " E";
     }
+    
+    @Override
+    public Rating getRating(){
+    	return this.rating;
+    }
 }
