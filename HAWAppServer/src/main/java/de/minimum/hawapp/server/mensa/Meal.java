@@ -1,8 +1,7 @@
 package de.minimum.hawapp.server.mensa;
 
-import de.minimum.hawapp.server.facade.serviceprovider.JsonObject;
 
-public interface Meal extends JsonObject {
+public interface Meal {
 
     /**
      * Gibt die Beschreibung des Essens zur�ck

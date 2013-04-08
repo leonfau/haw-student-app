@@ -58,9 +58,9 @@ public class MensaPlanImpl implements MensaPlan {
 
             if (meal.hasText() && !this.dayList.contains(meal.text())) {
                 double studentPrice = Double.parseDouble(meal.getElementsByClass("price").text()
-                                .replaceAll("..\\/.[0-9],[0-9][0-9].", "").replace(",", "."));
+                                .replaceAll(".€.\\/.[0-9],[0-9][0-9].€", "").replace(",", "."));
                 double othersPrice = Double.parseDouble(meal.getElementsByClass("price").text()
-                                .replaceAll("[0-9].[0-9][0-9]..\\/.", "").replaceAll(".", "").replace(",", "."));
+                                .replaceAll("[0-9],[0-9][0-9].€.\\/.", "").replaceAll(".€", "").replace(",", "."));
                 String description = meal.getElementsByTag("strong").text().replaceAll("\\((.*?)\\)", "")
                                 .replaceAll(" +", " ").replaceAll(" , ", ", ");
                 this.weekPlan.get(this.dayList.get(dayIndex))
