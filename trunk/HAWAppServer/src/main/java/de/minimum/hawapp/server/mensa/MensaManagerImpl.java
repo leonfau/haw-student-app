@@ -6,30 +6,37 @@ import java.util.List;
 import java.util.Map;
 
 public class MensaManagerImpl implements MensaManager {
-	private MensaPlan plan;
-	
-	public MensaManagerImpl(){
-		plan = MensaPlanImpl.MensaPlan();
-	}
+    private MensaPlan plan;
 
-	@Override
-	public void update() throws IOException {
-		plan.update();
-	}
+    public MensaManagerImpl() {
+        this.plan = MensaPlanImpl.MensaPlan();
+        try {
+            update();
+        }
+        catch(IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public List<Meal> getDayPlan(String day) {
-		return plan.getDayPlan(day);
-	}
+    @Override
+    public void update() throws IOException {
+        this.plan.update();
+    }
 
-	@Override
-	public Map<String, List<Meal>> getWeekPlan() {
-		return plan.getWeekPlan();
-	}
+    @Override
+    public List<Meal> getDayPlan(String day) {
+        return this.plan.getDayPlan(day);
+    }
 
-	@Override
-	public Date getUpdateTime() {
-		return plan.getUpdateTime();
-	}
+    @Override
+    public Map<String, List<Meal>> getWeekPlan() {
+        return this.plan.getWeekPlan();
+    }
+
+    @Override
+    public Date getUpdateTime() {
+        return this.plan.getUpdateTime();
+    }
 
 }

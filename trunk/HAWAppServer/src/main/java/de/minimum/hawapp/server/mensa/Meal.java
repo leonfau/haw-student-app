@@ -1,6 +1,8 @@
 package de.minimum.hawapp.server.mensa;
 
-public interface Meal {
+import de.minimum.hawapp.server.facade.serviceprovider.JsonObject;
+
+public interface Meal extends JsonObject {
 
     /**
      * Gibt die Beschreibung des Essens zurï¿½ck
@@ -16,10 +18,10 @@ public interface Meal {
      * Gibt den Preis fï¿½r nicht Studenten zurï¿½ck
      */
     public double getOthersPrice();
-    
-   /**
-    * Gibt das Rating Objekt des Gerichts zurück 
-    */
+
+    /**
+     * Gibt das Rating Objekt des Gerichts zurï¿½ck
+     */
     public Rating getRating();
 
 }
