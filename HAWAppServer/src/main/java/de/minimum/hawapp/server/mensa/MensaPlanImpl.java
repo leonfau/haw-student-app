@@ -35,12 +35,12 @@ public class MensaPlanImpl implements MensaPlan {
     }
 
     @Override
-    public void update() throws IOException {
+    public synchronized void update() throws IOException {
         this.updateTime = new Date();
         String url = "http://speiseplan.studwerk.uptrade.de";
         Document doc = Jsoup.connect(url + "/de/cafeteria/show/id/530").get();
-        Elements link = doc.getElementsContainingText("Diese Woche");//doc.select("a");
-        //System.out.println(link);
+        Elements link = doc.getElementsContainingText("Diese Woche");// doc.select("a");
+        // System.out.println(link);
         String relHref = link.attr("href");
         url += relHref;
         System.out.println("URL: " + url);
@@ -58,9 +58,9 @@ public class MensaPlanImpl implements MensaPlan {
 
             if (meal.hasText() && !this.dayList.contains(meal.text())) {
                 double studentPrice = Double.parseDouble(meal.getElementsByClass("price").text()
-                                .replaceAll(".€.\\/.[0-9],[0-9][0-9].€", "").replace(",", "."));
+                                .replaceAll(".Â€.\\/.[0-9],[0-9][0-9].Â€", "").replace(",", "."));
                 double othersPrice = Double.parseDouble(meal.getElementsByClass("price").text()
-                                .replaceAll("[0-9],[0-9][0-9].€.\\/.", "").replaceAll(".€", "").replace(",", "."));
+                                .replaceAll("[0-9].[0-9][0-9].Â€.\\/.", "").replaceAll(".Â€", "").replace(",", "."));
                 String description = meal.getElementsByTag("strong").text().replaceAll("\\((.*?)\\)", "")
                                 .replaceAll(" +", " ").replaceAll(" , ", ", ");
                 this.weekPlan.get(this.dayList.get(dayIndex))
@@ -79,10 +79,10 @@ public class MensaPlanImpl implements MensaPlan {
     public Map<String, List<Meal>> getWeekPlan() {
         return this.weekPlan;
     }
-    
+
     @Override
-    public Date getUpdateTime(){
-    	return this.updateTime;
+    public Date getUpdateTime() {
+        return this.updateTime;
     }
 
 }
