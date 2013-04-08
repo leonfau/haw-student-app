@@ -1,5 +1,6 @@
 package de.minimum.hawapp.server.mensa;
 
+
 public class MealImpl implements Meal {
 
     private String description;
@@ -37,9 +38,9 @@ public class MealImpl implements Meal {
     public String toString() {
         return this.description + " " + this.studentPrice + " E / " + this.othersPrice + " E";
     }
-    
+
     @Override
-    public Rating getRating(){
-    	return this.rating;
+    public Rating getRating() {
+        return this.rating;
     }
 }
