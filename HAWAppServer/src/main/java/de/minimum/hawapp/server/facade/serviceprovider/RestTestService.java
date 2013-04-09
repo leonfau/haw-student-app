@@ -17,8 +17,8 @@ public class RestTestService {
      * @return String that will be send back as a response of type "text/plain".
      */
     @GET
-    @Produces("text/plain")
+    @Produces("application/json")
     public String getTest() {
-        return "Hello World!";
+        return "{ \"parent\": { \"firstObject\": { \"text\": \"Hello World\", \"year\": 2013 }, \"secondOobject\": { \"count\": 3 } } }";
     }
 }
