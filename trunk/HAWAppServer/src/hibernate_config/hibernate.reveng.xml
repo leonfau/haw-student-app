@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+  <table-filter match-catalog="haw_app" match-name="appointment"/>
+  <table-filter match-catalog="haw_app" match-name="category"/>
+  <table-filter match-catalog="haw_app" match-name="changemessage"/>
+  <table-filter match-catalog="haw_app" match-name="lecture"/>
+  <table-filter match-catalog="haw_app" match-name="semester"/>
+</hibernate-reverse-engineering>
