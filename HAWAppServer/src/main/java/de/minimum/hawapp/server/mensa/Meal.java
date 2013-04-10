@@ -4,22 +4,22 @@ package de.minimum.hawapp.server.mensa;
 public interface Meal {
 
     /**
-     * Gibt die Beschreibung des Essens zur�ck
+     * Gibt die Beschreibung des Essens zurück
      */
     public String getDescription();
 
     /**
-     * Gibt den Preis f�r Studierende zur�ck
+     * Gibt den Preis für Studierende zurück
      */
     public double getStudentPrice();
 
     /**
-     * Gibt den Preis f�r nicht Studenten zur�ck
+     * Gibt den Preis für nicht Studenten zurück
      */
     public double getOthersPrice();
 
     /**
-     * Gibt das Rating Objekt des Gerichts zur�ck
+     * Gibt das Rating Objekt des Gerichts zurück
      */
     public Rating getRating();
 
