@@ -17,7 +17,6 @@
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
-
             </plugin>
             <plugin>
                 <groupId>org.glassfish</groupId>
@@ -34,6 +33,12 @@
         </resource>
         <resource>
         <directory>src/hibernate_config</directory>
+            <includes>
+                <include> **/*.xml</include>
+            </includes>
+        </resource>
+          <resource>
+        <directory>src/</directory>
             <includes>
                 <include> **/*.xml</include>
             </includes>

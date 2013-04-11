@@ -8,11 +8,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 
 import de.minimum.hawapp.test.util.ServerStartRule;
-
+@Ignore
 public class TestWithServer {
 	/*
 	 * Die Enviroment Variable TOMCAT_HOME muss gesetzt sein!
