@@ -1,4 +1,4 @@
-package de.minimum.hawapp.test;
+package de.minimum.hawapp.test.calendar;
 
 import static org.junit.Assert.*;
 
@@ -7,9 +7,12 @@ import java.util.Set;
 
 import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 
 import de.minimum.hawapp.server.calendar.api.AppointmentBO;
@@ -21,9 +24,11 @@ import de.minimum.hawapp.server.calendar.api.SemesterBO;
 import de.minimum.hawapp.server.calendar.intern.Dates;
 import de.minimum.hawapp.server.context.ManagerFactory;
 import de.minimum.hawapp.server.persistence.HibernateSessionMgr;
-@Ignore
+import de.minimum.hawapp.test.util.AutoCleanUpRule;
+
 public class CalendarManagerCreationTest {
-	public static HibernateSessionMgr hibernateSessionMgr=ManagerFactory.getManager(HibernateSessionMgr.class);
+	@Rule
+	public static AutoCleanUpRule rule=new AutoCleanUpRule();
 	
 	public static CalendarManager calendarMgr=ManagerFactory.getManager(CalendarManager.class);
 	
@@ -38,8 +43,8 @@ public class CalendarManagerCreationTest {
 	private static ChangeMessageBO changeMessage_1;
 	private static ChangeMessageBO changeMessage_2;
 	
-	@BeforeClass
-	public static void setUp(){
+	@Before
+	public void setUp(){
 		newSemester=calendarMgr.createSemesterBO(Dates.getDate("01.02.2012"), Dates.getDate("03.02.2012"));
 		
 		newCategory_1=calendarMgr.createCategoryBO(newSemester, "category_1");
@@ -52,15 +57,7 @@ public class CalendarManagerCreationTest {
 		changeMessage_1=calendarMgr.createChangeMessage(newLecture_1, Dates.getDate("01.02.2012"), "reason_1", "what_1", "person_1");
 		changeMessage_2=calendarMgr.createChangeMessage(newLecture_1, Dates.getDate("01.02.2012"), "reason_2", "what_2", "person_2");
 	}
-	@Test 
-	public void testDates(){
-		Date time=Dates.getTime("15:45");
-		Date day=Dates.getDate("01.05.2012");
-		Date both=Dates.add(day, time);
-		System.out.println(time);
-		System.out.println(day);
-		System.out.println(both);
-	}
+
 	@Test
 	public void testSemesterCreation() {
 		String uuid=newSemester.getUuid();
@@ -132,26 +129,6 @@ public class CalendarManagerCreationTest {
 		assertTrue(categories.size()==2);
 		assertTrue(categories.contains(changeMessage_1));
 		assertTrue(categories.contains(changeMessage_2));
-	}
-	
-	@AfterClass
-	public static void CleanUp(){
-		deleteObject(changeMessage_2);
-		deleteObject(changeMessage_1);
-		deleteObject(appointment_1);
-		deleteObject(appointment_2);
-		deleteObject(newLecture_1);
-		deleteObject(newLecture_2);
-		deleteObject(newCategory_1);
-		deleteObject(newCategory_2);
-		deleteObject(newSemester);
-	}
-	private static void deleteObject(Object object){
-		Session session=hibernateSessionMgr.getCurrentSession();
-		Transaction transaction=session.getTransaction();
-		transaction.begin();
-		session.delete(object);
-		transaction.commit();
 	}
 
 }
