@@ -26,6 +26,7 @@ import de.minimum.hawapp.server.persistence.calendar.Category;
 import de.minimum.hawapp.server.persistence.calendar.Changemessage;
 import de.minimum.hawapp.server.persistence.calendar.Lecture;
 import de.minimum.hawapp.server.persistence.calendar.Semester;
+import de.minimum.hawapp.test.util.CleanUpHelper;;
 
 
 public class HibernateSessionMgrImpl implements HibernateSessionMgr {
@@ -40,7 +41,8 @@ public class HibernateSessionMgrImpl implements HibernateSessionMgr {
 		.addClass(Category.class)
 		.addClass(Changemessage.class)
 		.addClass(Lecture.class)
-		.addClass(Semester.class);
+		.addClass(Semester.class)
+		.setInterceptor(CleanUpHelper.CLEANUPHELPER_INSTANCE);
 	}
     private static SessionFactory buildSessionFactory() {
         try {
