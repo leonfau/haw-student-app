@@ -25,7 +25,7 @@ import de.minimum.hawapp.server.calendar.intern.Dates;
 import de.minimum.hawapp.server.context.ManagerFactory;
 import de.minimum.hawapp.server.persistence.HibernateSessionMgr;
 import de.minimum.hawapp.test.util.AutoCleanUpRule;
-
+@Ignore
 public class CalendarManagerCreationTest {
 	@Rule
 	public static AutoCleanUpRule rule=new AutoCleanUpRule();
