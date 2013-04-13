@@ -43,7 +43,6 @@ public class MensaPlanImpl implements MensaPlan {
         // System.out.println(link);
         String relHref = link.attr("href");
         url += relHref;
-        System.out.println("URL: " + url);
         doc = Jsoup.connect(url).get();
         // Tabelle suchen
         Element table = doc.getElementById("week-menu");
