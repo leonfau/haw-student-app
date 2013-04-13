@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
 
 public class MensaManagerImpl implements MensaManager {
     private MensaPlan plan;
+    private Timer updateTimer= new Timer(true);
+    private UpdateTimerTask updateTask;
 
     public MensaManagerImpl() {
         this.plan = MensaPlanImpl.MensaPlan();
+        updateTask = new UpdateTimerTask(plan);
         try {
             update();
         }
@@ -38,5 +42,17 @@ public class MensaManagerImpl implements MensaManager {
     public Date getUpdateTime() {
         return this.plan.getUpdateTime();
     }
+    
+    @Override
+    public void startScheduledUpdate(Date firstTime, long period){
+    	updateTimer.schedule(updateTask, firstTime, period);
+    	
+    }
 
+    
+    @Override
+    public void stopScheduledUpdate(){
+    	updateTimer.cancel();
+    	
+    }
 }

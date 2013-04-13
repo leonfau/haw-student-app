@@ -14,6 +14,18 @@ public interface MensaManager {
      */
 	public void update() throws IOException;
 	
+	/**
+	 * Startet den Update Task als Deamon
+	 * @param firstTime, Datum und Zeit der ersten Ausführung
+	 * @param period, Zeitabstand der wiederholten Ausführung in ms
+	 */
+	public void startScheduledUpdate(Date firstTime, long period);
+	
+	/**
+	 * Stoppt die Automatische aktualisierung
+	 */
+	public void stopScheduledUpdate();
+	  
     /**
      * Gibt den Essensplan eines speziellen Tages als Liste zurück.
      * @param String des Tages in Deutsch
@@ -33,4 +45,6 @@ public interface MensaManager {
      * Gibt das Datum und die Zeit des letzten Updates zurück
      */
     public Date getUpdateTime();
+    
+  
 }
