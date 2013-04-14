@@ -11,7 +11,7 @@ import de.minimum.hawapp.app.mensa.beans.Meal;
 
 public class MensaService {
 
-	private static final String HOST = "192.168.1.9:8080";
+	private static final String HOST = "Http://192.168.1.9:8080";
 	private static final String BASE_URL = "/server/rest/mensaservice/";
 	
 	    /**
@@ -23,10 +23,11 @@ public class MensaService {
 	     * @return Eine Liste der Speisen des Tages
 	     */
 	    public List<Meal> getDayPlan(String day) {
+	    	System.out.println("REST ZEUG");
 	    	RestTemplate restTemplate = new RestTemplate();
 	        restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
-	        
-	        String url = HOST + BASE_URL + "getDayPlan/day";
+	        String url = HOST + BASE_URL + "dayplan/"+day;
+	        System.out.println(url);
 	        return Arrays.asList(restTemplate.getForObject(url, Meal[].class));
 	    }
 

@@ -17,6 +17,7 @@ public class MensaManagerImpl implements MensaManager {
 
     @Override
     public List<Meal> getDayPlan(String day) {
+    	System.out.println("GET DAY PLAN");
         return mensaService.getDayPlan(day);
     }
     
