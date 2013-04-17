@@ -33,8 +33,8 @@ public class MainActivity extends TabActivity {
 	    tabHost.addTab(spec);
 	 
 	    intent = new Intent().setClass(this, StiSysActivity.class);
-	    spec = tabHost.newTabSpec("songs").setIndicator("",
-	                      res.getDrawable(R.drawable.ic_tab_kalender))
+	    spec = tabHost.newTabSpec("songs").setIndicator("StiSys",
+	                      res.getDrawable(R.drawable.ic_tab_stisys))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 	    
