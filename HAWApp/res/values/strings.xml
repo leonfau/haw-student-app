@@ -2,7 +2,27 @@
 
 	<string name="app_name">HAWApp</string>
 	<string name="hello_world">Hello world!</string>
-	<string name="menu_settings">Settings</string>
+	<string name="menu_settings">Settings</string>  
+    
+	<string name="sb_titel">Schwarzes Brett</string>
+	<string name="sb_main_neue_nachricht">neue Nachricht</string>
+	<string name="sb_main_anfragen">Anfragen</string>
+	<string name="sb_main_angebote">Angebote</string> 
+	<string name="sb_neue_nachricht">Neue Nachricht</string>
+	<string name="sb_neue_nachricht_zurueck">zurück</string>
+	<string name="sb_neue_nachricht_erstellen">erstellen</string>
+	<string name="sb_neue_nachricht_bild">...</string>
+	<string name="sb_neue_nachricht_kontakt_tv">Kontakt:</string>
+	<string name="sb_neue_nachricht_text_tv">Text:</string>
+	<string name="sb_neue_nachricht_bild_tv">Bild:</string>
+	<string name="sb_neue_nachricht_titel_tv">Titel:</string>
+	<string name="sb_nachricht">Nachricht</string>
+	<string name="sb_nachricht_titel">titel</string>
+	<string name="sb_nachricht_autor">autors</string>
+	<string name="sb_nachricht_zurueck">zurück</string>
+	<string name="sb_nachricht_kontakt">Kontakt</string>
+	<string name="sb_nachricht_text">Text</string>
+	<string name="sb_nachricht_datum">Datum</string> 
 	    <string name="name">ListViewBaseAdapter</string>
     <string name="show_dialog">Dialog</string>
 </resources>
