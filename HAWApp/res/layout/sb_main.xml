@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+ 
+    <ListView
+    android:id="@+id/sb_main_listview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="0.89" />
+
+    <LinearLayout
+        android:id="@+id/sb_main_btn_layout"
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:orientation="horizontal"
+        android:padding="5dp" >
+
+        <fragment
+            android:id="@+id/sb_btnlist_frag"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            class="de.minimum.hawapp.gui.schwarzesbrett.ButtonListMainFragment" >
+        </fragment>
+    </LinearLayout>
+
+</LinearLayout>
