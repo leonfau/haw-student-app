@@ -36,6 +36,8 @@
                 <activity android:name="StiSysActivity"></activity>
                 <activity android:name="KalenderActivity"></activity>
                 <activity android:name="MensaActivity"></activity>
-        </application>
+                <activity android:name="de.minimum.hawapp.gui.schwarzesbrett.NeueNachrichtActivity" android:label="@string/sb_neue_nachricht"></activity>
+                <activity android:name="de.minimum.hawapp.gui.schwarzesbrett.NachrichtActivity" android:label="@string/sb_nachricht"></activity>
+</application>
 
 </manifest>
