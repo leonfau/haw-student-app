@@ -2,35 +2,32 @@ package de.minimum.hawapp.server.calendar.api;
 
 import java.util.Date;
 
-import de.minimum.hawapp.server.persistence.calendar.Lecture;
-
 public interface AppointmentBO {
 
-	public String getUuid();
+    public String getUuid();
 
-	public LectureBO getLecture();
+    public LectureBO getLecture();
 
-	public String getName();
+    public String getName();
 
-	public void setName(String name);
+    public void setName(String name);
 
-	public Date getBegin();
+    public Date getBegin();
 
-	public void setBegin(Date begin);
+    public void setBegin(Date begin);
 
-	public Date getEnd();
+    public Date getEnd();
 
-	public void setEnd(Date end);
+    public void setEnd(Date end);
 
-	public String getLocation();
+    public String getLocation();
 
-	public void setLocation(String location);
+    public void setLocation(String location);
 
-	public String getDetails();
+    public String getDetails();
 
-	public void setDetails(String details);
+    public void setDetails(String details);
 
-	public Date getLastModified();
-
+    public Date getLastModified();
 
 }

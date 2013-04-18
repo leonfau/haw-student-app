@@ -1,6 +1,5 @@
 package de.minimum.hawapp.server.persistence;
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.util.Map;
 import java.util.Set;
@@ -26,214 +25,283 @@ import de.minimum.hawapp.server.persistence.calendar.Category;
 import de.minimum.hawapp.server.persistence.calendar.Changemessage;
 import de.minimum.hawapp.server.persistence.calendar.Lecture;
 import de.minimum.hawapp.server.persistence.calendar.Semester;
-import de.minimum.hawapp.test.util.CleanUpHelper;;
-
+import de.minimum.hawapp.test.util.CleanUpHelper;
 
 public class HibernateSessionMgrImpl implements HibernateSessionMgr {
 
-   
+    private static final SessionFactory sessionFactory = HibernateSessionMgrImpl.buildSessionFactory();
 
-	private static final SessionFactory sessionFactory = buildSessionFactory();
-	
-	private static Configuration getConfiguration(){
-		return new Configuration()
-		.addClass(Appointment.class)
-		.addClass(Category.class)
-		.addClass(Changemessage.class)
-		.addClass(Lecture.class)
-		.addClass(Semester.class)
-		.setInterceptor(CleanUpHelper.CLEANUPHELPER_INSTANCE);
-	}
+    private static final Configuration conf = new Configuration().addClass(Appointment.class).addClass(Category.class)
+                    .addClass(Changemessage.class).addClass(Lecture.class).addClass(Semester.class)
+                    .setInterceptor(CleanUpHelper.CLEANUPHELPER_INSTANCE);
+
+    private static Configuration getConfiguration() {
+        return HibernateSessionMgrImpl.conf;
+    }
+
     private static SessionFactory buildSessionFactory() {
         try {
             // Create the SessionFactory from hibernate.cfg.xml
-            return getConfiguration().configure().buildSessionFactory();
+            return HibernateSessionMgrImpl.getConfiguration().configure().buildSessionFactory();
         }
-        catch (Throwable ex) {
+        catch(Throwable ex) {
             // Make sure you log the exception, as it might be swallowed
             System.err.println("Initial SessionFactory creation failed." + ex);
             throw new ExceptionInInitializerError(ex);
         }
     }
 
-    /* (non-Javadoc)
-	 * @see com.testhibernate.HibernateSessionMgr#getSessionFactory()
-	 */
-    /* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getSessionFactory()
-	 */
-	@Override
-	public SessionFactory getSessionFactory() {
-        return sessionFactory;
-    }
-    
-    /* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#close()
-	 */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.testhibernate.HibernateSessionMgr#getSessionFactory()
+     */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getSessionFactory
+     * ()
+     */
     @Override
-	public void close() throws HibernateException {
-		sessionFactory.close();
-	}
+    public SessionFactory getSessionFactory() {
+        return HibernateSessionMgrImpl.sessionFactory;
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#containsFetchProfileDefinition(java.lang.String)
-	 */
-	@Override
-	public boolean containsFetchProfileDefinition(String arg0) {
-		return sessionFactory.containsFetchProfileDefinition(arg0);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#close()
+     */
+    @Override
+    public void close() throws HibernateException {
+        HibernateSessionMgrImpl.sessionFactory.close();
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getAllClassMetadata()
-	 */
-	@Override
-	public Map<String, ClassMetadata> getAllClassMetadata() {
-		return sessionFactory.getAllClassMetadata();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#
+     * containsFetchProfileDefinition(java.lang.String)
+     */
+    @Override
+    public boolean containsFetchProfileDefinition(String arg0) {
+        return HibernateSessionMgrImpl.sessionFactory.containsFetchProfileDefinition(arg0);
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getAllCollectionMetadata()
-	 */
-	@Override
-	public Map getAllCollectionMetadata() {
-		return sessionFactory.getAllCollectionMetadata();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getAllClassMetadata
+     * ()
+     */
+    @Override
+    public Map<String, ClassMetadata> getAllClassMetadata() {
+        return HibernateSessionMgrImpl.sessionFactory.getAllClassMetadata();
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getCache()
-	 */
-	@Override
-	public Cache getCache() {
-		return sessionFactory.getCache();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#
+     * getAllCollectionMetadata()
+     */
+    @Override
+    public Map getAllCollectionMetadata() {
+        return HibernateSessionMgrImpl.sessionFactory.getAllCollectionMetadata();
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getClassMetadata(java.lang.Class)
-	 */
-	@Override
-	public ClassMetadata getClassMetadata(Class arg0) {
-		return sessionFactory.getClassMetadata(arg0);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getCache()
+     */
+    @Override
+    public Cache getCache() {
+        return HibernateSessionMgrImpl.sessionFactory.getCache();
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getClassMetadata(java.lang.String)
-	 */
-	@Override
-	public ClassMetadata getClassMetadata(String arg0) {
-		return sessionFactory.getClassMetadata(arg0);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getClassMetadata
+     * (java.lang.Class)
+     */
+    @Override
+    public ClassMetadata getClassMetadata(Class arg0) {
+        return HibernateSessionMgrImpl.sessionFactory.getClassMetadata(arg0);
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getCollectionMetadata(java.lang.String)
-	 */
-	@Override
-	public CollectionMetadata getCollectionMetadata(String arg0) {
-		return sessionFactory.getCollectionMetadata(arg0);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getClassMetadata
+     * (java.lang.String)
+     */
+    @Override
+    public ClassMetadata getClassMetadata(String arg0) {
+        return HibernateSessionMgrImpl.sessionFactory.getClassMetadata(arg0);
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getCurrentSession()
-	 */
-	@Override
-	public Session getCurrentSession() throws HibernateException {
-		return sessionFactory.getCurrentSession();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#
+     * getCollectionMetadata(java.lang.String)
+     */
+    @Override
+    public CollectionMetadata getCollectionMetadata(String arg0) {
+        return HibernateSessionMgrImpl.sessionFactory.getCollectionMetadata(arg0);
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getDefinedFilterNames()
-	 */
-	@Override
-	public Set getDefinedFilterNames() {
-		return sessionFactory.getDefinedFilterNames();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getCurrentSession
+     * ()
+     */
+    @Override
+    public Session getCurrentSession() throws HibernateException {
+        return HibernateSessionMgrImpl.sessionFactory.getCurrentSession();
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getFilterDefinition(java.lang.String)
-	 */
-	@Override
-	public FilterDefinition getFilterDefinition(String arg0)
-			throws HibernateException {
-		return sessionFactory.getFilterDefinition(arg0);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#
+     * getDefinedFilterNames()
+     */
+    @Override
+    public Set getDefinedFilterNames() {
+        return HibernateSessionMgrImpl.sessionFactory.getDefinedFilterNames();
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getReference()
-	 */
-	@Override
-	public Reference getReference() throws NamingException {
-		return sessionFactory.getReference();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getFilterDefinition
+     * (java.lang.String)
+     */
+    @Override
+    public FilterDefinition getFilterDefinition(String arg0) throws HibernateException {
+        return HibernateSessionMgrImpl.sessionFactory.getFilterDefinition(arg0);
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getStatistics()
-	 */
-	@Override
-	public Statistics getStatistics() {
-		return sessionFactory.getStatistics();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getReference()
+     */
+    @Override
+    public Reference getReference() throws NamingException {
+        return HibernateSessionMgrImpl.sessionFactory.getReference();
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getTypeHelper()
-	 */
-	@Override
-	public TypeHelper getTypeHelper() {
-		return sessionFactory.getTypeHelper();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getStatistics()
+     */
+    @Override
+    public Statistics getStatistics() {
+        return HibernateSessionMgrImpl.sessionFactory.getStatistics();
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#isClosed()
-	 */
-	@Override
-	public boolean isClosed() {
-		return sessionFactory.isClosed();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getTypeHelper()
+     */
+    @Override
+    public TypeHelper getTypeHelper() {
+        return HibernateSessionMgrImpl.sessionFactory.getTypeHelper();
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#openSession()
-	 */
-	@Override
-	public Session openSession() throws HibernateException {
-		return sessionFactory.openSession();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#isClosed()
+     */
+    @Override
+    public boolean isClosed() {
+        return HibernateSessionMgrImpl.sessionFactory.isClosed();
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#openSession(java.sql.Connection, org.hibernate.Interceptor)
-	 */
-	@Override
-	public Session openSession(Connection arg0, Interceptor arg1) {
-		return sessionFactory.openSession(arg0, arg1);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.minimum.hawapp.server.persistence.HibernateSessionMgrd#openSession()
+     */
+    @Override
+    public Session openSession() throws HibernateException {
+        return HibernateSessionMgrImpl.sessionFactory.openSession();
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#openSession(java.sql.Connection)
-	 */
-	@Override
-	public Session openSession(Connection arg0) {
-		return sessionFactory.openSession(arg0);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.minimum.hawapp.server.persistence.HibernateSessionMgrd#openSession
+     * (java.sql.Connection, org.hibernate.Interceptor)
+     */
+    @Override
+    public Session openSession(Connection arg0, Interceptor arg1) {
+        return HibernateSessionMgrImpl.sessionFactory.openSession(arg0, arg1);
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#openSession(org.hibernate.Interceptor)
-	 */
-	@Override
-	public Session openSession(Interceptor arg0) throws HibernateException {
-		return sessionFactory.openSession(arg0);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.minimum.hawapp.server.persistence.HibernateSessionMgrd#openSession
+     * (java.sql.Connection)
+     */
+    @Override
+    public Session openSession(Connection arg0) {
+        return HibernateSessionMgrImpl.sessionFactory.openSession(arg0);
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#openStatelessSession()
-	 */
-	@Override
-	public StatelessSession openStatelessSession() {
-		return sessionFactory.openStatelessSession();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * de.minimum.hawapp.server.persistence.HibernateSessionMgrd#openSession
+     * (org.hibernate.Interceptor)
+     */
+    @Override
+    public Session openSession(Interceptor arg0) throws HibernateException {
+        return HibernateSessionMgrImpl.sessionFactory.openSession(arg0);
+    }
 
-	/* (non-Javadoc)
-	 * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#openStatelessSession(java.sql.Connection)
-	 */
-	@Override
-	public StatelessSession openStatelessSession(Connection arg0) {
-		return sessionFactory.openStatelessSession(arg0);
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#
+     * openStatelessSession()
+     */
+    @Override
+    public StatelessSession openStatelessSession() {
+        return HibernateSessionMgrImpl.sessionFactory.openStatelessSession();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#
+     * openStatelessSession(java.sql.Connection)
+     */
+    @Override
+    public StatelessSession openStatelessSession(Connection arg0) {
+        return HibernateSessionMgrImpl.sessionFactory.openStatelessSession(arg0);
+    }
 
 }
