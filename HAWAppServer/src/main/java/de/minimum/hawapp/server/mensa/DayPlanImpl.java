@@ -4,13 +4,14 @@ import java.util.List;
 
 public class DayPlanImpl implements DayPlan {
 //	public static enum Day {MONTAG, DIENSTAG, MITTWOCH, DONNERSTAG, FREITAG}
-	public static enum Day {Montag, Dienstag, Mittwoch, Donnerstag, Freitag}
-	public Day day;
-	public List<Meal> mealList;
+	
+	
+	private Day day;
+	private List<Meal> meals;
 	
 	public DayPlanImpl(Day day, List<Meal> meals){
 		this.day = day;
-		this.mealList = meals;
+		this.meals = meals;
 	}
 
 	@Override
@@ -20,12 +21,12 @@ public class DayPlanImpl implements DayPlan {
 
 	@Override
 	public List<Meal> getMeals() {
-		return mealList;
+		return meals;
 	}
 	
 	@Override
 	public String toString(){
-		return day.toString() + ": " + mealList.toString();
+		return day.toString() + ": " + this.meals.toString();
 	}
 
 }

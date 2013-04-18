@@ -11,8 +11,8 @@ import javax.ws.rs.core.MediaType;
 import com.sun.jersey.spi.resource.Singleton;
 
 import de.minimum.hawapp.server.context.ManagerFactory;
+import de.minimum.hawapp.server.mensa.Day;
 import de.minimum.hawapp.server.mensa.DayPlan;
-import de.minimum.hawapp.server.mensa.Meal;
 import de.minimum.hawapp.server.mensa.MensaManager;
 
 @Singleton
@@ -27,19 +27,19 @@ public class MensaService {
      * @param day
      *            Tag für den der Speiseplan ermittelt werden soll
      *            ("Montag","Dienstag","Mittwoch","Donnerstag","Freitag")
-     * @return Eine Liste der Speisen des Tages
+     * @return DayPlan Objekt
      */
     @Path("/dayplan/{day}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Meal> getDayPlan(@PathParam("day") String day) {
+    public DayPlan getDayPlan(@PathParam("day") Day day) {
         return this.mensaMngr.getDayPlan(day);
     }
 
     /**
      * Ermittelt den Speiseplan für die aktuelle Woche
      * 
-     * @return Eine Map ('Wochentag' => 'Liste der Speisen')
+     * @return Eine Liste von DayPlan
      */
     @Path("/weekplan")
     @GET

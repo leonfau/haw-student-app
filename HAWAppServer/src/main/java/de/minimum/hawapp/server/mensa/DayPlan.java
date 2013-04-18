@@ -1,9 +1,6 @@
 package de.minimum.hawapp.server.mensa;
 
 import java.util.List;
-
-import de.minimum.hawapp.server.mensa.DayPlanImpl.Day;
-
 public interface DayPlan {
 
 	/**
@@ -17,8 +14,5 @@ public interface DayPlan {
 	 * @return Liste der Speisen für einen Tag
 	 */
 	public List<Meal> getMeals();
- 	
-	
-	
 
 }
