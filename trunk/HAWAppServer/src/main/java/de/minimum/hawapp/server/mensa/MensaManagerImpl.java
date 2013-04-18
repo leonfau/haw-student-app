@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 
-import de.minimum.hawapp.server.mensa.DayPlanImpl.Day;
 
 public class MensaManagerImpl implements MensaManager {
     private MensaPlan plan;
@@ -33,8 +32,10 @@ public class MensaManagerImpl implements MensaManager {
     }
 
     @Override
-    public List<Meal> getDayPlan(String day) {
-        return this.plan.getDayPlan(day);
+    public DayPlan getDayPlan(Day day) {
+    	DayPlan dayPlan;
+    	dayPlan = new DayPlanImpl(day, plan.getWeekPlan().get(day.toString()));
+        return dayPlan;
     }
 
 

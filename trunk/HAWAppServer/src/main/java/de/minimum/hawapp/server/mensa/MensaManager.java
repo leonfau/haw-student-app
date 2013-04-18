@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+
 public interface MensaManager {
     /**
      * Aktuallisiert die Essensliste
@@ -30,7 +31,7 @@ public interface MensaManager {
      * @param String des Tages in Deutsch
      * @return Liste der Gerichte
      */
-    public List<Meal> getDayPlan(String day);
+    public DayPlan getDayPlan(Day day);
 
 
     /**
