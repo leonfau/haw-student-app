@@ -1,7 +1,6 @@
 package de.minimum.hawapp.server.facade.serviceprovider;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -12,6 +11,7 @@ import javax.ws.rs.core.MediaType;
 import com.sun.jersey.spi.resource.Singleton;
 
 import de.minimum.hawapp.server.context.ManagerFactory;
+import de.minimum.hawapp.server.mensa.DayPlan;
 import de.minimum.hawapp.server.mensa.Meal;
 import de.minimum.hawapp.server.mensa.MensaManager;
 
@@ -44,7 +44,7 @@ public class MensaService {
     @Path("/weekplan")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, List<Meal>> getWeekPlan() {
+    public List<DayPlan> getWeekPlan() {
         return this.mensaMngr.getWeekPlan();
     }
 }

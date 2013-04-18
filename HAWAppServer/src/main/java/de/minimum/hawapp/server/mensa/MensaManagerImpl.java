@@ -1,10 +1,13 @@
 package de.minimum.hawapp.server.mensa;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
+
+import de.minimum.hawapp.server.mensa.DayPlanImpl.Day;
 
 public class MensaManagerImpl implements MensaManager {
     private MensaPlan plan;
@@ -21,6 +24,7 @@ public class MensaManagerImpl implements MensaManager {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+       // startScheduledUpdate(firstTime, period)
     }
 
     @Override
@@ -33,11 +37,20 @@ public class MensaManagerImpl implements MensaManager {
         return this.plan.getDayPlan(day);
     }
 
-    @Override
-    public Map<String, List<Meal>> getWeekPlan() {
-        return this.plan.getWeekPlan();
-    }
 
+    @Override
+    public List<DayPlan> getWeekPlan() {
+    	List<DayPlan> dayPlanList = new ArrayList<DayPlan>();
+    	DayPlan dayPlan;
+        Map<String, List<Meal>> mealMap =  this.plan.getWeekPlan();
+        
+        for(Day d : Day.values()){
+        	dayPlan = new DayPlanImpl(d, mealMap.get(d.toString()));
+        	dayPlanList.add(dayPlan);
+        }
+        return dayPlanList;
+    }
+    
     @Override
     public Date getUpdateTime() {
         return this.plan.getUpdateTime();
