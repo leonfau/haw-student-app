@@ -3,7 +3,6 @@ package de.minimum.hawapp.server.mensa;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public interface MensaManager {
     /**
@@ -33,13 +32,13 @@ public interface MensaManager {
      */
     public List<Meal> getDayPlan(String day);
 
+
     /**
      * Gibt die aktuelle Essensliste der Woche zurück;
      * 
-     * @return Map mit Enums für den Tag und Listen der Gerichte
+     * @return Liste von DayPlan
      */
-    public Map<String, List<Meal>> getWeekPlan();
-    
+    public List<DayPlan> getWeekPlan();
     
     /**
      * Gibt das Datum und die Zeit des letzten Updates zurück
