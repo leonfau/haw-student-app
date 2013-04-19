@@ -31,11 +31,13 @@ public class HibernateSessionMgrImpl implements HibernateSessionMgr {
 
     private static final SessionFactory sessionFactory = HibernateSessionMgrImpl.buildSessionFactory();
 
-    private static final Configuration conf = new Configuration().addClass(Appointment.class).addClass(Category.class)
-                    .addClass(Changemessage.class).addClass(Lecture.class).addClass(Semester.class)
-                    .setInterceptor(CleanUpHelper.CLEANUPHELPER_INSTANCE);
+    private static Configuration conf = null;
 
     private static Configuration getConfiguration() {
+        if (HibernateSessionMgrImpl.conf == null)
+            HibernateSessionMgrImpl.conf = new Configuration().addClass(Appointment.class).addClass(Category.class)
+                            .addClass(Changemessage.class).addClass(Lecture.class).addClass(Semester.class)
+                            .setInterceptor(CleanUpHelper.CLEANUPHELPER_INSTANCE);
         return HibernateSessionMgrImpl.conf;
     }
 
