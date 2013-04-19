@@ -1,4 +1,4 @@
-package de.minimum.hawapp.test.calendar;
+package de.minimum.hawapp.server.calendar;
 
 import static org.junit.Assert.*;
 
