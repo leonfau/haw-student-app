@@ -2,7 +2,6 @@ package de.minimum.hawapp.server.facade.serviceprovider;
 
 import java.util.Set;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -24,14 +23,14 @@ public class CalendarService {
     private CalendarManager calMngr = ManagerFactory.getManager(CalendarManager.class);
 
     @GET
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.TEXT_PLAIN)
     public String test() {
         return "calendar rest service";
     }
 
     @GET
     @Path("semester")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public Set<SemesterBO> getAllSemester() {
         return this.calMngr.getAllSemesterBO();
     }
