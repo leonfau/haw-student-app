@@ -17,7 +17,7 @@ public class RatingImpl implements Rating {
     public int getPosRatingInPercent() {
         if (this.positiv + this.negativ == 0)
             return 0;
-        return (100 / (this.positiv + this.negativ)) * 15;
+        return (int) ((100.0 / (this.positiv + this.negativ)) * this.positiv);
     }
 
     @Override
