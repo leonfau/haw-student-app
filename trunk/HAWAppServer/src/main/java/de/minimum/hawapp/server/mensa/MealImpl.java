@@ -52,4 +52,21 @@ public class MealImpl implements Meal {
     public UUID getID(){
     	return id;
     }
+
+    @Override
+    public boolean equals(Object obj){
+    	if (this == obj){
+    		return true;
+    	}
+    	if(obj == null){
+    		return false;
+    	}
+    	if(!(obj instanceof Meal)){
+    		return false;
+    	}
+    	Meal other = (Meal) obj;
+    	return (this.getDescription().equals(other.getDescription())) && 
+    			(this.getStudentPrice() == other.getStudentPrice()) && 
+    			(this.getOthersPrice() == other.getOthersPrice());
+    }
 }
