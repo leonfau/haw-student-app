@@ -1,5 +1,7 @@
 package de.minimum.hawapp.server.mensa;
 
+import java.util.UUID;
+
 
 public interface Meal {
 
@@ -22,5 +24,10 @@ public interface Meal {
      * Gibt das Rating Objekt des Gerichts zurück
      */
     public Rating getRating();
+    
+    /**
+     * Gibt eindeutige ID zur Identifikation des Gerichts zurück
+     */
+    public UUID getID();
 
 }

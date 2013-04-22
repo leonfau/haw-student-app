@@ -1,14 +1,18 @@
 package de.minimum.hawapp.server.mensa;
 
+import java.util.UUID;
+
 
 public class MealImpl implements Meal {
-
+	
+	private UUID id;
     private String description;
     private double studentPrice;
     private double othersPrice;
     private Rating rating;
 
     private MealImpl(String description, double studentPrice, double othersPrice) {
+    	this.id = UUID.randomUUID();
         this.description = description;
         this.studentPrice = studentPrice;
         this.othersPrice = othersPrice;
@@ -42,5 +46,10 @@ public class MealImpl implements Meal {
     @Override
     public Rating getRating() {
         return this.rating;
+    }
+    
+    @Override
+    public UUID getID(){
+    	return id;
     }
 }
