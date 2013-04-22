@@ -30,5 +30,25 @@ public class mealTest {
 		assertFalse(mealC.equals(mealD));
 		
 	}
+	@Test
+	public void testRating(){
+		String descriptionA = "Blabla tolles Mensa essen";
+		double studentPriceA = 2.99;
+		double otherPriceA = 5.99;
+		Meal mealA = MealImpl.Meal(descriptionA, studentPriceA, otherPriceA);
+		assertEquals(0, mealA.getRating().getPosRatingInPercent());
+		mealA.getRating().ratePoitiv();
+		assertEquals(100, mealA.getRating().getPosRatingInPercent());
+		mealA.getRating().ratePoitiv();
+		assertEquals(100, mealA.getRating().getPosRatingInPercent());
+		mealA.getRating().rateNegativ();
+		assertEquals(66, mealA.getRating().getPosRatingInPercent());
+		mealA.getRating().rateNegativ();
+		assertEquals(50, mealA.getRating().getPosRatingInPercent());
+		mealA.getRating().rateNegativ();
+		assertEquals(40, mealA.getRating().getPosRatingInPercent());
+		mealA.getRating().rateNegativ();
+		assertEquals(33, mealA.getRating().getPosRatingInPercent());
+	}
 
 }
