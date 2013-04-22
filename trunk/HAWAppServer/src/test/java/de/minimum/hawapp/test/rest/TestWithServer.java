@@ -9,6 +9,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
+import de.minimum.hawapp.server.facade.serviceprovider.BlackboardServiceTest;
 import de.minimum.hawapp.server.facade.serviceprovider.MensaServiceTest;
 import de.minimum.hawapp.server.facade.serviceprovider.RestTestServiceTest;
 import de.minimum.hawapp.test.util.ServerStartRule;
@@ -38,5 +39,12 @@ public class TestWithServer {
         MensaServiceTest test = new MensaServiceTest(this.client);
         test.dayplanTest();
         test.weekplanTest();
+    }
+
+    @Test
+    public void blackboardServiceTest() {
+        BlackboardServiceTest test = new BlackboardServiceTest(this.client);
+        test.reportTest();
+        test.creationAndDeletionTest();
     }
 }

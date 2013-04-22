@@ -17,32 +17,30 @@ import de.minimum.hawapp.test.rest.entities.mensaservice.DayplanEntity;
 
 public class MensaServiceTest extends RestTest {
 
+    private static final String MENSA_SERVICE_URL = RestTest.REST_SERVICE_ADDRESS + "/mensaservice";
+
     public MensaServiceTest(Client client) {
         super(client);
     }
 
     public void dayplanTest() {
         String day = "Montag";
-        WebResource webResource = this.client.resource(RestTest.REST_SERVICE_ADDRESS + "/mensaservice/dayplan/" + day);
+        WebResource webResource = this.client.resource(MensaServiceTest.MENSA_SERVICE_URL + "/dayplan/" + day);
 
         ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 
-        if (response.getStatus() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-        }
+        checkResponse(response);
 
         DayplanEntity dayplan = response.getEntity(DayplanEntity.class);
         Assert.assertEquals("Day is still the same", day, dayplan.getDay());
     }
 
     public void weekplanTest() {
-        WebResource webResource = this.client.resource(RestTest.REST_SERVICE_ADDRESS + "/mensaservice/weekplan");
+        WebResource webResource = this.client.resource(MensaServiceTest.MENSA_SERVICE_URL + "/weekplan");
 
         ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 
-        if (response.getStatus() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-        }
+        checkResponse(response);
 
         List<DayplanEntity> planList = response.getEntity(new GenericType<List<DayplanEntity>>() {
         });

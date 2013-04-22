@@ -19,9 +19,7 @@ public class RestTestServiceTest extends RestTest {
 
         ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 
-        if (response.getStatus() != 200) {
-            throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
-        }
+        checkResponse(response);
 
         String output = response.getEntity(String.class);
         Assert.assertEquals(
