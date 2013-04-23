@@ -1,4 +1,4 @@
-package mensa;
+package de.minimum.hawapp.test.mensa;
 
 import static org.junit.Assert.*;
 
