@@ -1,7 +1,9 @@
-package de.minimum.hawapp.test.util;
+package de.minimum.hawapp.test.util.rules;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
+
+import de.minimum.hawapp.test.util.CleanUpHelper;
 
 
 

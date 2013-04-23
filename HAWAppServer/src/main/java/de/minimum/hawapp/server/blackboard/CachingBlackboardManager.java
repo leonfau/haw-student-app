@@ -20,6 +20,7 @@ import de.minimum.hawapp.server.blackboard.util.OfferCreationStatus;
 public class CachingBlackboardManager implements BlackboardManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(BlackboardManager.class);
 
+    private static final OfferCreationStatus FAILED_CREATION = new OfferCreationStatus(-1, false, "");
     private Map<String, Category> categories = new HashMap<String, Category>();
     private Map<Long, Offer> offers = new HashMap<>();
     private Map<Long, Image> images = new HashMap<>();
@@ -34,11 +35,13 @@ public class CachingBlackboardManager implements BlackboardManager {
     @Override
     public OfferCreationStatus createOffer(String category, String header, String description, String contact,
                     double price, byte[] image) {
+        if (!checkRequirements(category, header))
+            return CachingBlackboardManager.FAILED_CREATION;
         Category cat = this.categories.get(category);
         if (cat == null) {
             // TODO erstmal in DB nachschauen und falls ja zur Map adden ->
             // Clock???
-            return new OfferCreationStatus(-1, false, "");
+            return CachingBlackboardManager.FAILED_CREATION;
         }
         Image img = BlackboardFactoryManager.newImage(image);
         // TODO erstmal in DB damit Id auch vorhanden
@@ -48,6 +51,10 @@ public class CachingBlackboardManager implements BlackboardManager {
         // TODO offer in DB damit id vorhanden
         this.offers.put(offer.getId(), offer);
         return new OfferCreationStatus(offer.getId(), true, offer.getDeletionKey());
+    }
+
+    private boolean checkRequirements(String category, String header) {
+        return category != null && header != null;
     }
 
     @Override
@@ -101,7 +108,7 @@ public class CachingBlackboardManager implements BlackboardManager {
     }
 
     @Override
-    public Category getOffersBySearchStrAndCategory(String searchStr, String category) {
+    public List<Offer> getOffersBySearchStrAndCategory(String searchStr, String category) {
         // TODO Auto-generated method stub
         return null;
     }

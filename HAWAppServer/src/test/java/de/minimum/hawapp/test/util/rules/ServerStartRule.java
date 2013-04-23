@@ -1,4 +1,4 @@
-package de.minimum.hawapp.test.util;
+package de.minimum.hawapp.test.util.rules;
 
 import java.io.File;
 import java.io.IOException;

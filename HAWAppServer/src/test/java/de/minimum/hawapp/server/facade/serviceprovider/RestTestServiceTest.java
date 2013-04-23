@@ -3,17 +3,14 @@ package de.minimum.hawapp.server.facade.serviceprovider;
 import javax.ws.rs.core.MediaType;
 
 import org.junit.Assert;
+import org.junit.Test;
 
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 public class RestTestServiceTest extends RestTest {
 
-    public RestTestServiceTest(Client client) {
-        super(client);
-    }
-
+    @Test
     public void test() {
         WebResource webResource = this.client.resource(RestTest.REST_SERVICE_ADDRESS + "/testservice");
 
