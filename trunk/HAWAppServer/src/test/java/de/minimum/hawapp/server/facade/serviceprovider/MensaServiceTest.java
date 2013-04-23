@@ -7,8 +7,8 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 
 import org.junit.Assert;
+import org.junit.Test;
 
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
@@ -19,10 +19,7 @@ public class MensaServiceTest extends RestTest {
 
     private static final String MENSA_SERVICE_URL = RestTest.REST_SERVICE_ADDRESS + "/mensaservice";
 
-    public MensaServiceTest(Client client) {
-        super(client);
-    }
-
+    @Test
     public void dayplanTest() {
         String day = "Montag";
         WebResource webResource = this.client.resource(MensaServiceTest.MENSA_SERVICE_URL + "/dayplan/" + day);
@@ -35,6 +32,7 @@ public class MensaServiceTest extends RestTest {
         Assert.assertEquals("Day is still the same", day, dayplan.getDay());
     }
 
+    @Test
     public void weekplanTest() {
         WebResource webResource = this.client.resource(MensaServiceTest.MENSA_SERVICE_URL + "/weekplan");
 

@@ -9,12 +9,12 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
-import org.junit.Rule;
+import org.junit.Test;
 
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.representation.Form;
 import com.sun.jersey.multipart.FormDataMultiPart;
 import com.sun.jersey.multipart.file.FileDataBodyPart;
 
@@ -22,7 +22,6 @@ import de.minimum.hawapp.server.persistence.blackboard.ImageEntity;
 import de.minimum.hawapp.test.rest.entities.blackboardservice.CategoryEntity;
 import de.minimum.hawapp.test.rest.entities.blackboardservice.OfferCreationStatusEntity;
 import de.minimum.hawapp.test.rest.entities.blackboardservice.OfferEntity;
-import de.minimum.hawapp.test.util.AutoCleanUpRule;
 
 public class BlackboardServiceTest extends RestTest {
 
@@ -30,25 +29,27 @@ public class BlackboardServiceTest extends RestTest {
                     + "resources" + File.separator + "images" + File.separator + "hamburg-Elbe-Nacht.jpg";
     private static final String BLACKBOARD_SERVICE_URL = RestTest.REST_SERVICE_ADDRESS + "/blackboardservice";
 
-    @Rule
-    public AutoCleanUpRule cleanUpRule = new AutoCleanUpRule();
+    // @Rule
+    // public AutoCleanUpRule cleanUpRule = new AutoCleanUpRule(); //TODO Wenn
+    // DB Anbindung benötigt
 
-    public BlackboardServiceTest(Client client) {
-        super(client);
-    }
-
+    @Test
     public void reportTest() {
-        WebResource webResource = this.client.resource(BlackboardServiceTest.BLACKBOARD_SERVICE_URL
-                        + "/report/offerid/1/reason/doof");
-
-        ClientResponse response = webResource.post(ClientResponse.class);
+        String reason = "Er hat sich über mich lustig gemacht :,-(";
+        long offerId = 1;
+        WebResource webResource = this.client.resource(BlackboardServiceTest.BLACKBOARD_SERVICE_URL + "/report");
+        Form form = new Form();
+        form.add("offerid", offerId);
+        form.add("reason", reason);
+        ClientResponse response = webResource.post(ClientResponse.class, form);
         Assert.assertEquals("Server sagt ok", 200, response.getStatus());
     }
 
+    @Test
     public void creationAndDeletionTest() {
-        String header = "test";
-        String description = "Test";
-        String contact = "TEST";
+        String header = "Fish and chips";
+        String description = "Englischer genuss!!! Noch Fragen?";
+        String contact = "London in der Telefonzelle :-P";
         double price = 2.0;
         try {
             System.out.println(new File(".").getCanonicalPath());
@@ -95,6 +96,14 @@ public class BlackboardServiceTest extends RestTest {
         Assert.assertTrue("Angebot nicht mehr vorhanden", noContent(getOfferResponse));
         Assert.assertTrue("Bild nicht mehr vorhanden", noContent(getImageResponse));
         Assert.assertFalse("Angebot nicht mehr in Kategorie enthalten", category3.getAllOffers().contains(offer));
+
+        OfferCreationStatusEntity status2 = createOffer(categoryName, header, null, null, null, null);
+        Assert.assertTrue("Optionales Feld", status2.isSuccessfull());
+        OfferEntity offer3 = getOffer(status2.getOfferId());
+        validOfferOnServerTest(offer3, status2.getOfferId(), categoryName, header, null, null, 0.0, null, compDate);
+
+        OfferCreationStatusEntity status3 = createOffer(categoryName, null, null, null, null, null);
+        Assert.assertFalse("Nicht optionales Feld", status3.isSuccessfull());
     }
 
     private CategoryEntity getCategory(String categoryName) {
@@ -129,18 +138,20 @@ public class BlackboardServiceTest extends RestTest {
         Assert.assertTrue("DateOfCreation im Range", compDate.before(offerToCompare.getDateOfCreation()));
         Assert.assertTrue("DateOfCreation im Range", new Date().after(offerToCompare.getDateOfCreation()));
 
-        byte[] imgBefore = null;
-        try {
-            imgBefore = IOUtils.toByteArray(img.toURI());
+        if (img != null) {
+            byte[] imgBefore = null;
+            try {
+                imgBefore = IOUtils.toByteArray(img.toURI());
+            }
+            catch(IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            ImageEntity imgEntity = getImage(offerToCompare.getImageId());
+            byte[] imgAfter = imgEntity.getImage();
+            Assert.assertEquals("Bild Id richtig", offerToCompare.getImageId(), imgEntity.getId());
+            Assert.assertArrayEquals("Dasselbe Bild", imgBefore, imgAfter);
         }
-        catch(IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        ImageEntity imgEntity = getImage(offerToCompare.getImageId());
-        byte[] imgAfter = imgEntity.getImage();
-        Assert.assertEquals("Bild Id richtig", offerToCompare.getImageId(), imgEntity.getId());
-        Assert.assertArrayEquals("Dasselbe Bild", imgBefore, imgAfter);
     }
 
     private ImageEntity getImage(long imageId) {
@@ -164,16 +175,26 @@ public class BlackboardServiceTest extends RestTest {
     }
 
     private OfferCreationStatusEntity createOffer(String category, String header, String description, String contact,
-                    double price, File img) {
+                    Double price, File img) {
         WebResource createOfferResource = this.client.resource(BlackboardServiceTest.BLACKBOARD_SERVICE_URL
-                        + "/newoffer/category/" + category + "/header/" + header + "/description/" + description
-                        + "/contact/" + contact + "/price/" + price);
+                        + "/newoffer");
         FormDataMultiPart form = new FormDataMultiPart();
-        form.bodyPart(new FileDataBodyPart("image", img, MediaType.MULTIPART_FORM_DATA_TYPE));
+        addField(form, "category", category);
+        addField(form, "header", header);
+        addField(form, "description", description);
+        addField(form, "contact", contact);
+        addField(form, "price", price);
+        if (img != null)
+            form.bodyPart(new FileDataBodyPart("image", img, MediaType.MULTIPART_FORM_DATA_TYPE));
         ClientResponse response = createOfferResource.type(MediaType.MULTIPART_FORM_DATA).post(ClientResponse.class,
                         form);
         checkResponse(response);
         return response.getEntity(OfferCreationStatusEntity.class);
+    }
+
+    private void addField(FormDataMultiPart form, String key, Object value) {
+        if (value != null)
+            form.field(key, value.toString());
     }
 
     private List<String> getAllCategories() {

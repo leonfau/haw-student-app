@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -32,13 +33,34 @@ public class BlackboardService {
 
     private final BlackboardManager bbMngr = ManagerFactory.getManager(BlackboardManager.class);
 
+    /**
+     * Erstellt eine neues Angebot Sämtliche Daten müssen im Body übermittelt
+     * werden
+     * 
+     * @param category
+     *            Kategorie in dem das Angebot liegt -> diese muss schon auf dem
+     *            Server vorliegen. Es wird keine neue Kategorie erzeugt
+     * @param header
+     *            Überschrift des Angebots
+     * @param descr
+     *            Beschreibung des Angebots -> darf leer sein
+     * @param contact
+     *            Kontaktdaten -> darf leer sein
+     * @param price
+     *            der geforderte Preis -> darf leer sein
+     * @param uploadedImgStream
+     *            Bild zu dem Angebot werden -> darf leer sein
+     * @return Ein Statusobject mit Information dazu ob erfolgreich, dem
+     *         deletionKey und dem erzeugtem Angebot
+     */
     @POST
-    @Path("newoffer/category/{cat}/header/{header}/description/{descr: .*}/contact/{contact: .*}/price/{price: .*}")
+    @Path("newoffer")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.APPLICATION_JSON)
-    public OfferCreationStatus newOffer(@PathParam("cat") String category, @PathParam("header") String header,
-                    @PathParam("descr") String descr, @PathParam("contact") String contact,
-                    @PathParam("price") double price, @FormDataParam("image") InputStream uploadedImgStream) {
+    public OfferCreationStatus newOffer(@FormDataParam("category") String category,
+                    @FormDataParam("header") String header, @FormDataParam("description") String descr,
+                    @FormDataParam("contact") String contact, @FormDataParam("price") double price,
+                    @FormDataParam("image") InputStream uploadedImgStream) {
         // @FormDataParam("image") FormDataContentDisposition fileDetail -> zu
         // den Parametern hinzu fallse Deatils zu der Datei benötigt werden
         byte[] img = null;
@@ -54,15 +76,16 @@ public class BlackboardService {
         return this.bbMngr.createOffer(category, header, descr, contact, price, img);
     }
 
-    @POST
-    @Path("newoffer/category/{cat}/header/{header}/description/{descr}/contact/{contact}/price/{price}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public OfferCreationStatus newOffer(@PathParam("cat") String category, @PathParam("header") String header,
-                    @PathParam("descr") String descr, @PathParam("contact") String contact,
-                    @PathParam("price") double price) {
-        return newOffer(category, header, descr, contact, price, null);
-    }
-
+    /**
+     * Löscht das Angebiot mit der entsprechenden Id
+     * 
+     * @param offerId
+     *            Id des Angebots zum löschen
+     * @param delKey
+     *            Schlüssel der einen Autorisiert das Angebot zu löschen ->
+     *            diesen hat man beim Erstellen des Angebots erhalten
+     * @return true wenn das Löschen erfolgreich war
+     */
     @DELETE
     @Path("remove/offerid/{offerId}/deletionkey/{delKey}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -70,13 +93,27 @@ public class BlackboardService {
         return this.bbMngr.removeOffer(offerId, delKey);
     }
 
+    /**
+     * Meldet ein Angebot. Sämtliche Daten müssen im Body übermittelt werden
+     * 
+     * @param offerId
+     *            Id des Angebots das gemeldet wird
+     * @param reason
+     *            Begründung warum das Angebot gemeldet wurde
+     * @return
+     */
     @POST
-    @Path("report/offerid/{offerId}/reason/{reason}")
-    public Response report(@PathParam("offerId") long offerId, @PathParam("reason") String reason) {
+    @Path("report")
+    public Response report(@FormParam("offerId") long offerId, @FormParam("reason") String reason) {
         this.bbMngr.reportOffer(offerId, reason);
         return Response.ok().build();
     }
 
+    /**
+     * Besorgt eine Liste mit allen vorliegenden Angeboten
+     * 
+     * @return
+     */
     @GET
     @Path("alloffers")
     @Produces(MediaType.APPLICATION_JSON)
@@ -84,6 +121,13 @@ public class BlackboardService {
         return this.bbMngr.getAllOffers();
     }
 
+    /**
+     * Besorgt das Angebot mit entsprechender Id
+     * 
+     * @param offerId
+     *            Id des Angebots
+     * @return
+     */
     @GET
     @Path("offer/{offerId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -91,6 +135,13 @@ public class BlackboardService {
         return this.bbMngr.getOffer(offerId);
     }
 
+    /**
+     * Basorgt eine Kategorie mit allen in ihr vorliegenden Angeboten
+     * 
+     * @param cat
+     *            Name der zu besorgenden Kategorie
+     * @return
+     */
     @GET
     @Path("category/{category}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -98,6 +149,13 @@ public class BlackboardService {
         return this.bbMngr.getCategory(cat);
     }
 
+    /**
+     * Sucht nach Angeboten
+     * 
+     * @param searchStr
+     *            Sucheingabe nach der in den Angeboten gesucht werden soll
+     * @return Liste aller zutreffenden Angebote
+     */
     @GET
     @Path("search/{searchStr}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -105,14 +163,28 @@ public class BlackboardService {
         return this.bbMngr.getOffersBySearchStr(searchStr);
     }
 
+    /**
+     * Sucht nach Angeboten
+     * 
+     * @param searchStr
+     *            Sucheingabe nach der in den Angeboten gesucht werden soll
+     * @param cat
+     *            Kategorie in der nachgeschaut werden soll
+     * @return Liste aller zutreffenden Angebote
+     */
     @GET
     @Path("search/{searchStr}/category/{category}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Category getOffersBySearchStrAndCategory(@PathParam("searchStr") String searchStr,
+    public List<Offer> getOffersBySearchStrAndCategory(@PathParam("searchStr") String searchStr,
                     @PathParam("category") String cat) {
         return this.bbMngr.getOffersBySearchStrAndCategory(searchStr, cat);
     }
 
+    /**
+     * Besorgt ine Liste aller vorliegenden Kategorien
+     * 
+     * @return
+     */
     @GET
     @Path("allcategories")
     @Produces(MediaType.APPLICATION_JSON)
@@ -120,6 +192,11 @@ public class BlackboardService {
         return this.bbMngr.getAllCategories();
     }
 
+    /**
+     * Besorgt eine Liste aller Kategorienamen
+     * 
+     * @return
+     */
     @GET
     @Path("allcategorynames")
     @Produces(MediaType.APPLICATION_JSON)
@@ -127,6 +204,13 @@ public class BlackboardService {
         return this.bbMngr.getAllCategoryNames();
     }
 
+    /**
+     * Besorgt das Bild zur entsprechenden ID
+     * 
+     * @param imageId
+     *            Id des Bildes
+     * @return
+     */
     @GET
     @Path("image/{imageId}")
     @Produces(MediaType.APPLICATION_JSON)
