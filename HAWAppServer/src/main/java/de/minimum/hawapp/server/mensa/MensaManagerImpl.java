@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
+import java.util.UUID;
 
 
 public class MensaManagerImpl implements MensaManager {
@@ -65,4 +66,21 @@ public class MensaManagerImpl implements MensaManager {
     	updateTimer.cancel();
     	
     }
+
+	@Override
+	public int rateMealPositive(UUID id) {
+		plan.getMealByID(id).getRating().ratePoitiv();
+		return getMealRaiting(id);
+	}
+
+	@Override
+	public int rateMealNegative(UUID id) {
+		// TODO Auto-generated method stub
+		return getMealRaiting(id);
+	}
+
+	@Override
+	public int getMealRaiting(UUID id) {
+		return plan.getMealByID(id).getRating().getPosRatingInPercent();
+	}
 }

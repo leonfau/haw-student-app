@@ -3,6 +3,7 @@ package de.minimum.hawapp.server.mensa;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 
 public interface MensaManager {
@@ -42,9 +43,30 @@ public interface MensaManager {
     public List<DayPlan> getWeekPlan();
     
     /**
-     * Gibt das Datum und die Zeit des letzten Updates zurück
+     * @return  Datum und die Zeit des letzten Updates 
      */
     public Date getUpdateTime();
+    
+    /**
+     * Bewertet das Gericht mit einer Stimme positiv
+     * @param id: id des Gerichts, das Bewertet wird
+     * @return Prozent der positiven Bewertungen (zwischen 0 und 100)
+     */
+    public int rateMealPositive(UUID id);
+    
+    /**
+     * Bewertet das Gericht mit einer Stimme negativ
+     * @param id: id des Gerichts, das Bewertet wird
+     * @return Prozent der positiven Bewertungen (zwischen 0 und 100)
+     */
+    public int rateMealNegative(UUID id);
+    
+    /**
+     * 
+     * @param id des Gerichts
+     * @return Bewertung des Gerichts als Prozent positiver Rating zwisch 0 und 100
+     */
+    public int getMealRaiting(UUID id);
     
   
 }

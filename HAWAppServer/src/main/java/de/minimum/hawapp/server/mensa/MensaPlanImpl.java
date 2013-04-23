@@ -1,6 +1,8 @@
 package de.minimum.hawapp.server.mensa;
 
 import java.io.IOException;
+
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -18,6 +20,7 @@ public class MensaPlanImpl implements MensaPlan {
 
 	Map<String, List<Meal>> weekPlan;
 	Map<String, List<Meal>> weekPlanUpdated;
+	Map<UUID, Meal> mealList;
 	List<String> dayList;
 
 	private Date updateTime;
@@ -35,6 +38,8 @@ public class MensaPlanImpl implements MensaPlan {
 		for (String day : this.dayList) {
 			this.weekPlanUpdated.put(day, new ArrayList<Meal>());
 		}
+		
+		mealList = new HashMap<UUID, Meal>();
 	}
 
 	public static MensaPlanImpl MensaPlan() {
@@ -95,12 +100,14 @@ public class MensaPlanImpl implements MensaPlan {
 			for(Meal oldMeal: oldDayPlan){
 				if(!updatedDayPlan.contains(oldMeal)){
 					oldDayPlan.remove(oldMeal);
+					mealList.remove(oldMeal.getID());
 				}
 			}
 			//Neue Gerichte einfügen
 			for(Meal updatedMeal: updatedDayPlan){
 				if(!oldDayPlan.contains(updatedMeal)){
 					oldDayPlan.add(updatedMeal);
+					mealList.put(updatedMeal.getID(), updatedMeal);
 				}
 
 			}
@@ -120,6 +127,10 @@ public class MensaPlanImpl implements MensaPlan {
 	@Override
 	public Date getUpdateTime() {
 		return this.updateTime;
+	}
+	
+	public Meal getMealByID(UUID id){
+		return mealList.get(id);
 	}
 
 }
