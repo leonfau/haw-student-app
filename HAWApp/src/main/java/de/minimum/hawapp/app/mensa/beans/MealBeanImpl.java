@@ -16,6 +16,8 @@ public class MealBeanImpl implements Meal {
 	@JsonProperty("rating")
 	private Rating rating;
 
+	public MealBeanImpl(){};
+	
 	@Override
 	public String getDescription() {
 		return description;

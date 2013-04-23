@@ -7,6 +7,8 @@ public class RatingBeanImpl implements Rating {
 	@JsonProperty("posRatingInPercent")
 	private int posRatingInPercent;
 
+	public RatingBeanImpl(){};
+	
 	@Override
 	public int getPosRatingInPercent() {
 		return posRatingInPercent;
