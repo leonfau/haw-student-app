@@ -16,13 +16,9 @@ public class MensaManagerImpl implements MensaManager {
     public MensaManagerImpl() {
         this.plan = MensaPlanImpl.MensaPlan();
         updateTask = new UpdateTimerTask(plan);
-        try {
-            update();
-        }
-        catch(IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        
+        //update jede Stunde
+        startScheduledUpdate(new Date(System.currentTimeMillis()), 3600000);
        // startScheduledUpdate(firstTime, period)
     }
 
