@@ -2,6 +2,7 @@ package de.minimum.hawapp.server.mensa;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,76 +13,113 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+
 public class MensaPlanImpl implements MensaPlan {
 
-    Map<String, List<Meal>> weekPlan;
-    List<String> dayList = new ArrayList<String>();
-    private Date updateTime;
+	Map<String, List<Meal>> weekPlan;
+	Map<String, List<Meal>> weekPlanUpdated;
+	List<String> dayList;
 
-    private MensaPlanImpl() {
-        this.weekPlan = new HashMap<String, List<Meal>>();
-        this.dayList.add("Montag");
-        this.dayList.add("Dienstag");
-        this.dayList.add("Mittwoch");
-        this.dayList.add("Donnerstag");
-        this.dayList.add("Freitag");
-        for(String day : this.dayList) {
-            this.weekPlan.put(day, new ArrayList<Meal>());
-        }
-    }
+	private Date updateTime;
 
-    public static MensaPlanImpl MensaPlan() {
-        return new MensaPlanImpl();
-    }
+	private MensaPlanImpl() {
+		dayList = new ArrayList<String>(Arrays.asList("Montag", "Dienstag",
+				"Mittwoch", "Donnerstag", "Freitag"));
+		this.weekPlan = new HashMap<String, List<Meal>>();
+				
+		for (String day : this.dayList) {
+			this.weekPlan.put(day, new ArrayList<Meal>());
+		}
+		
+		this.weekPlanUpdated = new HashMap<String, List<Meal>>();
+		for (String day : this.dayList) {
+			this.weekPlanUpdated.put(day, new ArrayList<Meal>());
+		}
+	}
 
-    @Override
-    public synchronized void update() throws IOException {
-        this.updateTime = new Date();
-        String url = "http://speiseplan.studwerk.uptrade.de";
-        Document doc = Jsoup.connect(url + "/de/cafeteria/show/id/530").get();
-        Elements link = doc.getElementsContainingText("Diese Woche");// doc.select("a");
-        // System.out.println(link);
-        String relHref = link.attr("href");
-        url += relHref;
-        doc = Jsoup.connect(url).get();
-        // Tabelle suchen
-        Element table = doc.getElementById("week-menu");
-        // Tage raussuchen
-        Elements days = table.getElementsByClass("day");
+	public static MensaPlanImpl MensaPlan() {
+		return new MensaPlanImpl();
+	}
 
-        int dayIndex = 0;
-        for(Element meal : days) {
-            if (dayIndex >= 5) {
-                dayIndex = 0;
-            }
+	@Override
+	public synchronized void update() throws IOException {
+		this.updateTime = new Date();
+		updateWithoutMerge();
+		mergeWeekPlans();
+	}
 
-            if (meal.hasText() && !this.dayList.contains(meal.text())) {
-                double studentPrice = Double.parseDouble(meal.getElementsByClass("price").text()
-                                .replaceAll(".€.\\/.[0-9],[0-9][0-9].€", "").replace(",", "."));
-                double othersPrice = Double.parseDouble(meal.getElementsByClass("price").text()
-                                .replaceAll("[0-9],[0-9][0-9].€.\\/.", "").replaceAll(".€", "").replace(",", "."));
-                String description = meal.getElementsByTag("strong").text().replaceAll("\\((.*?)\\)", "")
-                                .replaceAll(" +", " ").replaceAll(" , ", ", ");
-                this.weekPlan.get(this.dayList.get(dayIndex))
-                                .add(MealImpl.Meal(description, studentPrice, othersPrice));
-            }
-            dayIndex++;
-        }
-    }
+	private void updateWithoutMerge() throws IOException {
+		String url = "http://speiseplan.studwerk.uptrade.de";
+		Document doc = Jsoup.connect(url + "/de/cafeteria/show/id/530").get();
+		Elements link = doc.getElementsContainingText("Diese Woche");// doc.select("a");
+		// System.out.println(link);
+		String relHref = link.attr("href");
+		url += relHref;
+		doc = Jsoup.connect(url).get();
+		// Tabelle suchen
+		Element table = doc.getElementById("week-menu");
+		// Tage raussuchen
+		Elements days = table.getElementsByClass("day");
 
-    @Override
-    public List<Meal> getDayPlan(String day) {
-        return this.weekPlan.get(day);
-    }
+		int dayIndex = 0;
+		for (Element meal : days) {
+			if (dayIndex >= 5) {
+				dayIndex = 0;
+			}
 
-    @Override
-    public Map<String, List<Meal>> getWeekPlan() {
-        return this.weekPlan;
-    }
+			if (meal.hasText() && !this.dayList.contains(meal.text())) {
+				double studentPrice = Double.parseDouble(meal
+						.getElementsByClass("price").text()
+						.replaceAll(".€.\\/.[0-9],[0-9][0-9].€", "")
+						.replace(",", "."));
+				double othersPrice = Double.parseDouble(meal
+						.getElementsByClass("price").text()
+						.replaceAll("[0-9],[0-9][0-9].€.\\/.", "")
+						.replaceAll(".€", "").replace(",", "."));
+				String description = meal.getElementsByTag("strong").text()
+						.replaceAll("\\((.*?)\\)", "").replaceAll(" +", " ")
+						.replaceAll(" , ", ", ");
+				this.weekPlanUpdated.get(this.dayList.get(dayIndex)).add(
+						MealImpl.Meal(description, studentPrice, othersPrice));
+			}
+			dayIndex++;
+		}
+	}
+	
+	private void mergeWeekPlans(){
+		for(Map.Entry<String, List<Meal>> dayPlanEntry: weekPlan.entrySet()){
+			List<Meal> oldDayPlan = dayPlanEntry.getValue();
+			List<Meal> updatedDayPlan = weekPlanUpdated.get(dayPlanEntry.getKey());
+			
+			//Alte nicht mehr vorhandene Gerichte entfernen
+			for(Meal oldMeal: oldDayPlan){
+				if(!updatedDayPlan.contains(oldMeal)){
+					oldDayPlan.remove(oldMeal);
+				}
+			}
+			//Neue Gerichte einfügen
+			for(Meal updatedMeal: updatedDayPlan){
+				if(!oldDayPlan.contains(updatedMeal)){
+					oldDayPlan.add(updatedMeal);
+				}
 
-    @Override
-    public Date getUpdateTime() {
-        return this.updateTime;
-    }
+			}
+		}
+	}
+
+	@Override
+	public List<Meal> getDayPlan(String day) {
+		return this.weekPlan.get(day);
+	}
+
+	@Override
+	public Map<String, List<Meal>> getWeekPlan() {
+		return this.weekPlan;
+	}
+
+	@Override
+	public Date getUpdateTime() {
+		return this.updateTime;
+	}
 
 }
