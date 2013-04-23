@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import de.minimum.hawapp.app.mensa.beans.DayPlan;
 import de.minimum.hawapp.app.mensa.beans.Meal;
 import de.minimum.hawapp.app.rest.MensaService;
 
@@ -16,13 +17,13 @@ public class MensaManagerImpl implements MensaManager {
     }
 
     @Override
-    public List<Meal> getDayPlan(String day) {
+    public DayPlan getDayPlan(String day) {
     	System.out.println("GET DAY PLAN");
         return mensaService.getDayPlan(day);
     }
     
     @Override
-    public List<Meal> getPlanForToday() {
+    public DayPlan getPlanForToday() {
     	Calendar calendar = Calendar.getInstance();
     	int day = calendar.get(Calendar.DAY_OF_WEEK);
     	
@@ -37,8 +38,7 @@ public class MensaManagerImpl implements MensaManager {
     }
     
     @Override
-    public Map<String, List<Meal>> getWeekPlan() {
-    	//Noch unklar ob so beibehalten werden kann. Siehe Mensaservice
-        return null;
+    public List<DayPlan> getWeekPlan() {
+    	return (List<DayPlan>) mensaService.getWeekPlan();
     }
 }

@@ -1,13 +1,17 @@
 package de.minimum.hawapp.app.rest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
+import org.springframework.http.converter.FormHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import de.minimum.hawapp.app.mensa.beans.Meal;
+import de.minimum.hawapp.app.mensa.beans.DayPlan;
+import de.minimum.hawapp.app.mensa.beans.DayPlanBeanImpl;
 
 public class MensaService {
 
@@ -22,13 +26,16 @@ public class MensaService {
 	     *            ("Montag","Dienstag","Mittwoch","Donnerstag","Freitag")
 	     * @return Eine Liste der Speisen des Tages
 	     */
-	    public List<Meal> getDayPlan(String day) {
-	    	System.out.println("REST ZEUG");
+	    public DayPlan getDayPlan(String day) {
 	    	RestTemplate restTemplate = new RestTemplate();
-	        restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
+	    	List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
+	    	messageConverters.add(new FormHttpMessageConverter());
+	    	messageConverters.add(new StringHttpMessageConverter());
+	    	messageConverters.add(new MappingJacksonHttpMessageConverter());
+	    	restTemplate.setMessageConverters(messageConverters);
+	    			
 	        String url = HOST + BASE_URL + "dayplan/"+day;
-	        System.out.println(url);
-	        return Arrays.asList(restTemplate.getForObject(url, Meal[].class));
+	        return restTemplate.getForObject(url, DayPlanBeanImpl.class);
 	    }
 
 	    /**
@@ -36,10 +43,11 @@ public class MensaService {
 	     * 
 	     * @return Eine Map ('Wochentag' => 'Liste der Speisen')
 	     */
-	    public Map<String, List<Meal>> getWeekPlan() {
-	    	//TODO Muss geklärt werden ob Map<String, Liste<Meal>> möglich ist/Sinn macht oder ob eine
-	    	//Datenstruktur draufgelegt werden sollte
-	        return null;
+	    public List<? extends DayPlan> getWeekPlan() {
+	    	RestTemplate restTemplate = new RestTemplate();
+	        restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
+	        String url = HOST + BASE_URL + "weekplan";
+	        return Arrays.asList(restTemplate.getForObject(url, DayPlanBeanImpl[].class));
 	    }
 }
 

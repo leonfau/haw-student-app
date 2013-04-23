@@ -3,6 +3,7 @@ package de.minimum.hawapp.app.mensa.management;
 import java.util.List;
 import java.util.Map;
 
+import de.minimum.hawapp.app.mensa.beans.DayPlan;
 import de.minimum.hawapp.app.mensa.beans.Meal;
 
 /**
@@ -16,19 +17,19 @@ public interface MensaManager {
      * @param String des Tages in Deutsch
      * @return Liste der Gerichte
      */
-    public List<Meal> getDayPlan(String day);
+    public DayPlan getDayPlan(String day);
 
     /**
      * Gibt den Essensplan des aktuellen Tages zurück
      * @param String des Tages in Deutsch
      * @return Liste der Gerichte
      */
-    public List<Meal> getPlanForToday();
+    public DayPlan getPlanForToday();
     
     /**
      * Gibt die aktuelle Essensliste der Woche zur�ck;
      * 
      * @return Map mit Enums f�r den Tag und Listen der Gerichte
      */
-    public Map<String, List<Meal>> getWeekPlan();
+    public List<DayPlan> getWeekPlan();
 }
