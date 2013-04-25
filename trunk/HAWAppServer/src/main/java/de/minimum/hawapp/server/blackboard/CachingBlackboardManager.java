@@ -30,6 +30,8 @@ public class CachingBlackboardManager implements BlackboardManager {
 
     private static final OfferCreationStatus FAILED_CREATION = new OfferCreationStatus(-1, false, "");
     private static final int OFFER_MAX_AGE_IN_DAYS = 7;// TODO abklären
+    private static final int DELETION_TIMERINTERVAL_IN_HOURS = 24;// TODO
+                                                                  // abklären
 
     private Map<String, Category> categories = new HashMap<String, Category>();
     private Map<Long, Offer> offers = new HashMap<>();
@@ -61,8 +63,8 @@ public class CachingBlackboardManager implements BlackboardManager {
         // next day
         date.add(Calendar.DAY_OF_MONTH, 1);
         this.offerDeletionTimer = new Timer();
-        this.offerDeletionTimer.schedule(deleteAction, date.getTime(),
-                        TimeUnit.MILLISECONDS.convert(24, TimeUnit.HOURS));
+        this.offerDeletionTimer.schedule(deleteAction, date.getTime(), TimeUnit.MILLISECONDS.convert(
+                        CachingBlackboardManager.DELETION_TIMERINTERVAL_IN_HOURS, TimeUnit.HOURS));
 
     }
 
