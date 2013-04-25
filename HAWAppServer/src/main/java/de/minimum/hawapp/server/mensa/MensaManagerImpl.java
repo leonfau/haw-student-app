@@ -8,19 +8,18 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.UUID;
 
-
 public class MensaManagerImpl implements MensaManager {
     private MensaPlan plan;
-    private Timer updateTimer= new Timer(true);
+    private Timer updateTimer = new Timer(true);
     private UpdateTimerTask updateTask;
 
     public MensaManagerImpl() {
         this.plan = MensaPlanImpl.MensaPlan();
-        updateTask = new UpdateTimerTask(plan);
-        
-        //update jede Stunde
+        this.updateTask = new UpdateTimerTask(this.plan);
+
+        // update jede Stunde
         startScheduledUpdate(new Date(System.currentTimeMillis()), 3600000);
-       // startScheduledUpdate(firstTime, period)
+        // startScheduledUpdate(firstTime, period)
     }
 
     @Override
@@ -30,57 +29,55 @@ public class MensaManagerImpl implements MensaManager {
 
     @Override
     public DayPlan getDayPlan(Day day) {
-    	DayPlan dayPlan;
-    	dayPlan = new DayPlanImpl(day, plan.getWeekPlan().get(day.toString()));
+        DayPlan dayPlan;
+        dayPlan = new DayPlanImpl(day, this.plan.getWeekPlan().get(day.toString()));
         return dayPlan;
     }
 
-
     @Override
     public List<DayPlan> getWeekPlan() {
-    	List<DayPlan> dayPlanList = new ArrayList<DayPlan>();
-    	DayPlan dayPlan;
-        Map<String, List<Meal>> mealMap =  this.plan.getWeekPlan();
-        
-        for(Day d : Day.values()){
-        	dayPlan = new DayPlanImpl(d, mealMap.get(d.toString()));
-        	dayPlanList.add(dayPlan);
+        List<DayPlan> dayPlanList = new ArrayList<DayPlan>();
+        DayPlan dayPlan;
+        Map<String, List<Meal>> mealMap = this.plan.getWeekPlan();
+
+        for(Day d : Day.values()) {
+            dayPlan = new DayPlanImpl(d, mealMap.get(d.toString()));
+            dayPlanList.add(dayPlan);
         }
         return dayPlanList;
     }
-    
+
     @Override
     public Date getUpdateTime() {
         return this.plan.getUpdateTime();
     }
-    
+
     @Override
-    public void startScheduledUpdate(Date firstTime, long period){
-    	updateTimer.schedule(updateTask, firstTime, period);
-    	
+    public void startScheduledUpdate(Date firstTime, long period) {
+        this.updateTimer.schedule(this.updateTask, firstTime, period);
+
     }
 
-    
     @Override
-    public void stopScheduledUpdate(){
-    	updateTimer.cancel();
-    	
+    public void stopScheduledUpdate() {
+        this.updateTimer.cancel();
+
     }
 
-	@Override
-	public int rateMealPositive(UUID id) {
-		plan.getMealByID(id).getRating().ratePoitiv();
-		return getMealRaiting(id);
-	}
+    @Override
+    public int rateMealPositive(UUID id) {
+        this.plan.getMealByID(id).getRating().ratePoitiv();
+        return getMealRaiting(id);
+    }
 
-	@Override
-	public int rateMealNegative(UUID id) {
-		// TODO Auto-generated method stub
-		return getMealRaiting(id);
-	}
+    @Override
+    public int rateMealNegative(UUID id) {
+        this.plan.getMealByID(id).getRating().rateNegativ();
+        return getMealRaiting(id);
+    }
 
-	@Override
-	public int getMealRaiting(UUID id) {
-		return plan.getMealByID(id).getRating().getPosRatingInPercent();
-	}
+    @Override
+    public int getMealRaiting(UUID id) {
+        return this.plan.getMealByID(id).getRating().getPosRatingInPercent();
+    }
 }
