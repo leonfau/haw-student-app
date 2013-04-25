@@ -16,7 +16,6 @@ public class OfferEntity implements Offer {
     private String header;
     private String description;
     private String contact;
-    private double price;
     private Date dateOfCreation;
     private long imageId;
     private String deletionKey;
@@ -36,10 +35,6 @@ public class OfferEntity implements Offer {
 
     public void setContact(String contact) {
         this.contact = contact;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     public void setDateOfCreation(Date dateOfCreation) {
@@ -87,11 +82,6 @@ public class OfferEntity implements Offer {
     }
 
     @Override
-    public double getPrice() {
-        return this.price;
-    }
-
-    @Override
     public Date getDateOfCreation() {
         return this.dateOfCreation;
     }
@@ -128,9 +118,6 @@ public class OfferEntity implements Offer {
         result = prime * result + ((this.header == null) ? 0 : this.header.hashCode());
         result = prime * result + (int)(this.id ^ (this.id >>> 32));
         result = prime * result + (int)(this.imageId ^ (this.imageId >>> 32));
-        long temp;
-        temp = Double.doubleToLongBits(this.price);
-        result = prime * result + (int)(temp ^ (temp >>> 32));
         return result;
     }
 
@@ -182,8 +169,6 @@ public class OfferEntity implements Offer {
         if (this.id != other.id)
             return false;
         if (this.imageId != other.imageId)
-            return false;
-        if (Double.doubleToLongBits(this.price) != Double.doubleToLongBits(other.price))
             return false;
         return true;
     }

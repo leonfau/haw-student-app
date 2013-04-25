@@ -8,12 +8,11 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 
-import de.minimum.hawapp.test.util.rules.ServerStartRule;
 import de.minimum.hawapp.test.util.runner.RunningServerRunner;
 
 @RunWith(RunningServerRunner.class)
 public abstract class RestTest {
-    public static final String REST_SERVICE_ADDRESS = ServerStartRule.SERVER_ADDRESS + "/rest";
+    public static final String REST_SERVICE_ADDRESS = RunningServerRunner.SERVER_ADDRESS + "/rest";
 
     protected Client client;
 
