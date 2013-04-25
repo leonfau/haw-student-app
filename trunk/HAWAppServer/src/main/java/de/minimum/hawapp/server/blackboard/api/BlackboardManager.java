@@ -18,15 +18,12 @@ public interface BlackboardManager {
      *            Beschreibung des Angebots -> darf null sein
      * @param contact
      *            Kontaktdaten -> darf null sein
-     * @param price
-     *            der geforderte Preis -> darf null sein
      * @param image
      *            Bild zu dem Angebot werden -> darf null sein
      * @return Ein Statusobject mit Information dazu ob erfolgreich, dem
      *         deletionKey und dem erzeugtem Angebot
      */
-    OfferCreationStatus createOffer(String category, String header, String description, String contact, double price,
-                    byte[] image);
+    OfferCreationStatus createOffer(String category, String header, String description, String contact, byte[] image);
 
     /**
      * Löscht das Angebiot mit der entsprechenden Id

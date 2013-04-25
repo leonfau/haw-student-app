@@ -46,8 +46,6 @@ public class BlackboardService {
      *            Beschreibung des Angebots -> darf leer sein
      * @param contact
      *            Kontaktdaten -> darf leer sein
-     * @param price
-     *            der geforderte Preis -> darf leer sein
      * @param uploadedImgStream
      *            Bild zu dem Angebot werden -> darf leer sein
      * @return Ein Statusobject mit Information dazu ob erfolgreich, dem
@@ -59,8 +57,7 @@ public class BlackboardService {
     @Produces(MediaType.APPLICATION_JSON)
     public OfferCreationStatus newOffer(@FormDataParam("category") String category,
                     @FormDataParam("header") String header, @FormDataParam("description") String descr,
-                    @FormDataParam("contact") String contact, @FormDataParam("price") double price,
-                    @FormDataParam("image") InputStream uploadedImgStream) {
+                    @FormDataParam("contact") String contact, @FormDataParam("image") InputStream uploadedImgStream) {
         // @FormDataParam("image") FormDataContentDisposition fileDetail -> zu
         // den Parametern hinzu fallse Deatils zu der Datei benötigt werden
         byte[] img = null;
@@ -73,7 +70,7 @@ public class BlackboardService {
                 e.printStackTrace();
             }
         }
-        return this.bbMngr.createOffer(category, header, descr, contact, price, img);
+        return this.bbMngr.createOffer(category, header, descr, contact, img);
     }
 
     /**

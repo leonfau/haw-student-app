@@ -14,8 +14,6 @@ public interface Offer extends Persistent<Offer> {
 
     String getContact();
 
-    double getPrice();
-
     Date getDateOfCreation();
 
     long getImageId();

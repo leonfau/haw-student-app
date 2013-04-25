@@ -11,6 +11,7 @@ import org.junit.runners.model.InitializationError;
 
 public class RunningServerRunner extends Runner {
     private static final Server SERVER = new Server();
+    public static final String SERVER_ADDRESS = Server.SERVER_ADDRESS;
 
     private Runner runner;
 

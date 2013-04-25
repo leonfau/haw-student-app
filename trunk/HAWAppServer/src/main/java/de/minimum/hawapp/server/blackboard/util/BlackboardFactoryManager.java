@@ -28,14 +28,13 @@ public class BlackboardFactoryManager {
         return BlackboardFactoryManager.persistenceCon;
     }
 
-    public static Offer newOffer(Category category, String header, String description, String contact, double price,
+    public static Offer newOffer(Category category, String header, String description, String contact,
                     Date dateOfCreation, long imageId) {
         OfferEntity offer = new OfferEntity();
         offer.setCategory(category);
         offer.setHeader(header);
         offer.setDescription(description);
         offer.setContact(contact);
-        offer.setPrice(price);
         offer.setDateOfCreation(dateOfCreation);
         offer.setImageId(imageId);
         offer.setDeletionKey(BlackboardFactoryManager.generateDeletionKey(offer));

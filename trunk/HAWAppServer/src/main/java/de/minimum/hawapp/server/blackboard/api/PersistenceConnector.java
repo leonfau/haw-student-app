@@ -1,38 +1,34 @@
 package de.minimum.hawapp.server.blackboard.api;
 
-import de.minimum.hawapp.server.blackboard.util.PersistenceResult;
+import de.minimum.hawapp.server.blackboard.exceptions.PersistenceException;
 
 public interface PersistenceConnector {
 
-    PersistenceResult<Image> persistImage(byte[] image);
+    Image persistImage(byte[] image) throws PersistenceException;
 
-    PersistenceResult<Offer> persistOffer(Offer offer, String deletionKey);
+    Image persistImage(Image image) throws PersistenceException;
 
-    PersistenceResult<Category> persistCategory(Category category);
+    Offer persistOffer(Offer offer) throws PersistenceException;
 
-    PersistenceResult<Report> persistReport(Report report);
+    Category persistCategory(Category category) throws PersistenceException;
 
-    boolean deleteOffer(Offer offer);
+    Report persistReport(Report report) throws PersistenceException;
 
-    boolean deleteCategory(Category category);
+    boolean deleteOffer(Offer offer) throws PersistenceException;
 
-    boolean deleteReport(Report report);
+    boolean deleteCategory(Category category) throws PersistenceException;
 
-    boolean deleteImage(Image image);
+    boolean deleteReport(Report report) throws PersistenceException;
 
-    boolean deleteOffer(long offerId);
+    boolean deleteImage(Image image) throws PersistenceException;
 
-    boolean deleteCategory(long categoryId);
+    boolean deleteOffer(long offerId) throws PersistenceException;
 
-    boolean deleteReport(long reportId);
+    boolean deleteCategory(long categoryId) throws PersistenceException;
 
-    boolean deleteImage(long imageId);
+    boolean deleteReport(long reportId) throws PersistenceException;
 
-    PersistenceResult<Offer> updateOffer(Offer offer);
+    boolean deleteImage(long imageId) throws PersistenceException;
 
-    PersistenceResult<Category> updateCategory(Category category);
-
-    PersistenceResult<Report> updateReport(Report report);
-
-    PersistenceResult<Image> updateImage(Image image);
+    Category updateCategory(Category category) throws PersistenceException;
 }

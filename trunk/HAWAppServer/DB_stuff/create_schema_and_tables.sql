@@ -211,8 +211,7 @@ CREATE TABLE IF NOT EXISTS haw_app.Blackboard_Offer (
 	categoryName varchar(125) NOT NULL, 
 	imageId bigint(20), 
 	description varchar(255), 
-	contact varchar(255), 
-	price double, 
+	contact varchar(255),
 	dateOfCreation date, 
 	deletionKey varchar(11) NOT NULL, 
 	PRIMARY KEY (id)) ENGINE=InnoDB;
