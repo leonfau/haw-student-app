@@ -6,7 +6,9 @@ import java.util.Map;
 import de.minimum.hawapp.server.blackboard.CachingBlackboardManager;
 import de.minimum.hawapp.server.blackboard.api.BlackboardManager;
 import de.minimum.hawapp.server.calendar.api.CalendarManager;
+import de.minimum.hawapp.server.calendar.api.CalendarParseManager;
 import de.minimum.hawapp.server.calendar.intern.CalendarManagerImpl;
+import de.minimum.hawapp.server.calendar.parser.CalendarParseMgrImpl;
 import de.minimum.hawapp.server.mensa.MensaManager;
 import de.minimum.hawapp.server.mensa.MensaManagerImpl;
 import de.minimum.hawapp.server.persistence.HibernateSessionMgr;
@@ -23,13 +25,14 @@ public class ManagerFactory {
         ManagerFactory.managerMap.put(HibernateSessionMgr.class, new HibernateSessionMgrImpl());
         ManagerFactory.managerMap.put(CalendarManager.class, new CalendarManagerImpl());
         ManagerFactory.managerMap.put(BlackboardManager.class, new CachingBlackboardManager());
+        ManagerFactory.managerMap.put(CalendarParseManager.class, new CalendarParseMgrImpl());
     }
 
     private ManagerFactory() {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> T getManager(Class<?> mgrInterface) {
+    public static <T> T getManager(final Class<?> mgrInterface) {
         return (T)ManagerFactory.managerMap.get(mgrInterface);
     }
 }

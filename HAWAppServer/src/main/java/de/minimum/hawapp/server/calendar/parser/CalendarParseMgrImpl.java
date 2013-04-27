@@ -15,6 +15,7 @@ import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
 
 import de.minimum.hawapp.server.calendar.api.CalendarManager;
+import de.minimum.hawapp.server.calendar.api.CalendarParseManager;
 import de.minimum.hawapp.server.calendar.api.CategoryBO;
 import de.minimum.hawapp.server.calendar.api.LectureBO;
 import de.minimum.hawapp.server.calendar.intern.CalendarManagerImpl;
@@ -22,9 +23,10 @@ import de.minimum.hawapp.server.context.ManagerFactory;
 import de.minimum.hawapp.server.persistence.HibernateSessionMgr;
 import de.minimum.hawapp.server.persistence.calendar.AppointmentPO;
 import de.minimum.hawapp.server.persistence.calendar.CategoryPO;
+import de.minimum.hawapp.server.persistence.calendar.ChangeMessagePO;
 import de.minimum.hawapp.server.persistence.calendar.LecturePO;
 
-public class CalendarParseMgr {
+public class CalendarParseMgrImpl implements CalendarParseManager {
 	HibernateSessionMgr hibernateMgr=ManagerFactory.getManager(HibernateSessionMgr.class); 
 	
 	public List<AppointmentPO> parseFromFile(String path, String encoding) throws IOException{
@@ -47,6 +49,18 @@ public class CalendarParseMgr {
 			appointment.setLecture((LecturePO) lectures.get(name));
 			appointment.setLastModified(new Date(System.currentTimeMillis()));
 		}
+		List<ChangeMessagePO> changeMessages=new ArrayList<ChangeMessagePO>();
+		for(LecturePO lecture:lectures.values()){
+			ChangeMessagePO newChangeMessage=new ChangeMessagePO();
+			newChangeMessage.setReason("Neue Termine");
+			newChangeMessage.setPerson("Automatisch generiert");
+			newChangeMessage.setWhat("Alle Termine neu erstellt!");
+			newChangeMessage.setLecture(lecture);
+			newChangeMessage.setUuid(UUID.randomUUID().toString());
+			newChangeMessage.setChangeat(new Date(System.currentTimeMillis()));
+			newChangeMessage.setLastModified(new Date(System.currentTimeMillis()));
+			changeMessages.add(newChangeMessage);
+		}
 		Session session = hibernateMgr.getCurrentSession();
         Transaction transaction = session.getTransaction();
         transaction.begin();
@@ -58,6 +72,9 @@ public class CalendarParseMgr {
         }
         for(AppointmentPO appointment:appointments){
         	session.persist(appointment);
+        }
+        for(ChangeMessagePO changemessage: changeMessages){
+        	session.persist(changemessage);
         }
         transaction.commit();
 		
