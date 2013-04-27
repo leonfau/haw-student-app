@@ -16,19 +16,17 @@ USE `haw_app` ;
 
 -- -----------------------------------------------------
 
--- Table `haw_app`.`Semester`
+-- Table `haw_app`.`Calendar_Category`
 
 -- -----------------------------------------------------
 
-CREATE  TABLE IF NOT EXISTS `haw_app`.`Semester` (
+CREATE  TABLE IF NOT EXISTS `haw_app`.`Calendar_Category` (
 
   `uuid` VARCHAR(255) NOT NULL DEFAULT '' ,
 
-  `begin` DATE NULL ,
+  `name` VARCHAR(255) NULL ,
 
-  `end` DATE NULL ,
-
-  `lastModified` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
+  `lastModified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
 
   PRIMARY KEY (`uuid`) )
 
@@ -40,51 +38,15 @@ ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 
--- Table `haw_app`.`Category`
+-- Table `haw_app`.`Calendar_Lecture`
 
 -- -----------------------------------------------------
 
-CREATE  TABLE IF NOT EXISTS `haw_app`.`Category` (
-
-  `uuid` VARCHAR(255) NOT NULL DEFAULT '' ,
-
-  `name` VARCHAR(255) NULL ,
-
-  `lastModified` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
-
-  `Semester_uuid` VARCHAR(255) NOT NULL ,
-
-  PRIMARY KEY (`uuid`) ,
-
-  INDEX `fk_Category_Semester_idx` (`Semester_uuid` ASC) ,
-
-  CONSTRAINT `fk_Category_Semester`
-
-    FOREIGN KEY (`Semester_uuid` )
-
-    REFERENCES `haw_app`.`Semester` (`uuid` )
-
-    ON DELETE NO ACTION
-
-    ON UPDATE NO ACTION)
-
-ENGINE = InnoDB;
-
-
-
-
-
--- -----------------------------------------------------
-
--- Table `haw_app`.`Lecture`
-
--- -----------------------------------------------------
-
-CREATE  TABLE IF NOT EXISTS `haw_app`.`Lecture` (
+CREATE  TABLE IF NOT EXISTS `haw_app`.`Calendar_Lecture` (
 
   `uuid` VARCHAR(255) NOT NULL ,
 
-  `lastModified` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
+  `lastModified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
 
   `Category_uuid` VARCHAR(255) NOT NULL ,
 
@@ -100,7 +62,7 @@ CREATE  TABLE IF NOT EXISTS `haw_app`.`Lecture` (
 
     FOREIGN KEY (`Category_uuid` )
 
-    REFERENCES `haw_app`.`Category` (`uuid` )
+    REFERENCES `haw_app`.`Calendar_Category` (`uuid` )
 
     ON DELETE NO ACTION
 
@@ -114,11 +76,11 @@ ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 
--- Table `haw_app`.`Appointment`
+-- Table `haw_app`.`Calendar_Appointment`
 
 -- -----------------------------------------------------
 
-CREATE  TABLE IF NOT EXISTS `haw_app`.`Appointment` (
+CREATE  TABLE IF NOT EXISTS `haw_app`.`Calendar_Appointment` (
 
   `uuid` VARCHAR(255) NOT NULL ,
 
@@ -132,7 +94,7 @@ CREATE  TABLE IF NOT EXISTS `haw_app`.`Appointment` (
 
   `details` VARCHAR(1000) NULL ,
 
-  `lastModified` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
+  `lastModified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
 
   `Lecture_uuid` VARCHAR(255) NOT NULL ,
 
@@ -144,7 +106,7 @@ CREATE  TABLE IF NOT EXISTS `haw_app`.`Appointment` (
 
     FOREIGN KEY (`Lecture_uuid` )
 
-    REFERENCES `haw_app`.`Lecture` (`uuid` )
+    REFERENCES `haw_app`.`Calendar_Lecture` (`uuid` )
 
     ON DELETE NO ACTION
 
@@ -158,15 +120,15 @@ ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 
--- Table `haw_app`.`ChangeMessage`
+-- Table `haw_app`.`Calendar_ChangeMessage`
 
 -- -----------------------------------------------------
 
-CREATE  TABLE IF NOT EXISTS `haw_app`.`ChangeMessage` (
+CREATE  TABLE IF NOT EXISTS `haw_app`.`Calendar_ChangeMessage` (
 
   `uuid` VARCHAR(255) NOT NULL ,
 
-  `lastModified` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
+  `lastModified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ,
 
   `changeat` DATETIME NULL ,
 
@@ -186,59 +148,13 @@ CREATE  TABLE IF NOT EXISTS `haw_app`.`ChangeMessage` (
 
     FOREIGN KEY (`Lecture_uuid` )
 
-    REFERENCES `haw_app`.`Lecture` (`uuid` )
+    REFERENCES `haw_app`.`Calendar_Lecture` (`uuid` )
 
     ON DELETE NO ACTION
 
     ON UPDATE NO ACTION)
 
 ENGINE = InnoDB;
-
--- -----------------------------------------------------
-
--- Tabellen für das Schwarze Brett
-
--- -----------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS haw_app.Blackboard_Image (
-	id bigint(20) NOT NULL AUTO_INCREMENT, 
-	image blob NOT NULL, 
-	PRIMARY KEY (id)) ENGINE=InnoDB;
-	
-CREATE TABLE IF NOT EXISTS haw_app.Blackboard_Offer (
-	id bigint(20) NOT NULL AUTO_INCREMENT, 
-	header varchar(125) NOT NULL, 
-	categoryName varchar(125) NOT NULL, 
-	imageId bigint(20), 
-	description varchar(255), 
-	contact varchar(255),
-	dateOfCreation date, 
-	deletionKey varchar(11) NOT NULL, 
-	PRIMARY KEY (id)) ENGINE=InnoDB;
-	
-CREATE TABLE IF NOT EXISTS haw_app.Blackboard_Category (
-	name varchar(125) NOT NULL, 
-	PRIMARY KEY (name)) ENGINE=InnoDB;
-	
-CREATE TABLE IF NOT EXISTS haw_app.Blackboard_Report (
-	id bigint(20) NOT NULL AUTO_INCREMENT, 
-	reason varchar(255) NOT NULL, 
-	offerId bigint(20) NOT NULL, 
-	PRIMARY KEY (id)) ENGINE=InnoDB;
-
--- -----------------------------------------------------
-
--- Erzeugen der Fremdschlüsselbeziehungen
-
--- -----------------------------------------------------
-
-ALTER TABLE haw_app.Blackboard_Offer ADD INDEX fk_image (imageId), 
-	ADD CONSTRAINT fk_image FOREIGN KEY (imageId) REFERENCES haw_app.Blackboard_Image (id);
-ALTER TABLE haw_app.Blackboard_Offer ADD INDEX fk_category (categoryName), 
-	ADD CONSTRAINT fk_category FOREIGN KEY (categoryName) REFERENCES haw_app.Blackboard_Category (name);
-ALTER TABLE haw_app.Blackboard_Report ADD INDEX fk_offer (offerId), 
-	ADD CONSTRAINT fk_offer FOREIGN KEY (offerId) REFERENCES haw_app.Blackboard_Offer (id);
-
 
 
 
@@ -253,4 +169,3 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-

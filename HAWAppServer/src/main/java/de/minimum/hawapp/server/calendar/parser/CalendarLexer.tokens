@@ -1,0 +1,16 @@
+WORD=8
+VOM=1
+WS=10
+DAY=7
+VERSION=2
+NEWLINE=9
+KOMMA=6
+TERMINBLOCK_HEADER=5
+SEMESTERGRUPPE=4
+STUNDENPLAN=3
+'Semestergruppe'=4
+'Vers'=2
+','=6
+'Stundenplan'=3
+'Name,Dozent,Raum,Tag,Anfang,Ende'=5
+'vom'=1
