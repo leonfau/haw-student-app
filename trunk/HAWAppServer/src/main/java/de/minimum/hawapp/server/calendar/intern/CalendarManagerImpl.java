@@ -24,18 +24,18 @@ public class CalendarManagerImpl implements CalendarManager {
     private static HibernateSessionMgr hibernateSessionMgr = ManagerFactory.getManager(HibernateSessionMgr.class);
 
     @Override
-    public CategoryBO createCategoryBO(String categoryName) {
-        CategoryPO category = new CategoryPO();
+    public CategoryBO createCategoryBO(final String categoryName) {
+        final CategoryPO category = new CategoryPO();
         category.setName(categoryName);
         return createCategoryBO(category);
     }
 
     @Override
-    public CategoryBO createCategoryBO(CategoryBO transientCategoryBO) {
-        CategoryPO category = (CategoryPO)transientCategoryBO;
-        Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
-        Transaction transaction = session.getTransaction();
-        String uuid = UUID.randomUUID().toString();
+    public CategoryBO createCategoryBO(final CategoryBO transientCategoryBO) {
+        final CategoryPO category = (CategoryPO)transientCategoryBO;
+        final Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
+        final Transaction transaction = session.getTransaction();
+        final String uuid = UUID.randomUUID().toString();
         category.setUuid(uuid);
         category.setLastModified(new Date(System.currentTimeMillis()));
         transaction.begin();
@@ -45,19 +45,19 @@ public class CalendarManagerImpl implements CalendarManager {
     }
 
     @Override
-    public LectureBO createLectureBO(CategoryBO category, String lectureName) {
-        LecturePO lecture = new LecturePO();
+    public LectureBO createLectureBO(final CategoryBO category, final String lectureName) {
+        final LecturePO lecture = new LecturePO();
         lecture.setName(lectureName);
         lecture.setCategory((CategoryPO)category);
         return createLectureBO(lecture);
     }
 
     @Override
-    public LectureBO createLectureBO(LectureBO transientLecture) {
-        LecturePO lecture = (LecturePO)transientLecture;
-        Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
-        Transaction transaction = session.getTransaction();
-        String uuid = UUID.randomUUID().toString();
+    public LectureBO createLectureBO(final LectureBO transientLecture) {
+        final LecturePO lecture = (LecturePO)transientLecture;
+        final Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
+        final Transaction transaction = session.getTransaction();
+        final String uuid = UUID.randomUUID().toString();
         lecture.setUuid(uuid);
         lecture.setLastModified(new Date(System.currentTimeMillis()));
         transaction.begin();
@@ -67,8 +67,9 @@ public class CalendarManagerImpl implements CalendarManager {
     }
 
     @Override
-    public AppointmentBO createAppointment(LectureBO lecture, String appoinmentName, Date begin, Date end) {
-        AppointmentPO appointment = new AppointmentPO();
+    public AppointmentBO createAppointment(final LectureBO lecture, final String appoinmentName, final Date begin,
+                    final Date end) {
+        final AppointmentPO appointment = new AppointmentPO();
         appointment.setLecture((LecturePO)lecture);
         appointment.setBegin(begin);
         appointment.setEnd(end);
@@ -77,11 +78,11 @@ public class CalendarManagerImpl implements CalendarManager {
     }
 
     @Override
-    public AppointmentBO createAppointment(AppointmentBO transientAppointment) {
-        AppointmentPO appointment = (AppointmentPO)transientAppointment;
-        Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
-        Transaction transaction = session.getTransaction();
-        String uuid = UUID.randomUUID().toString();
+    public AppointmentBO createAppointment(final AppointmentBO transientAppointment) {
+        final AppointmentPO appointment = (AppointmentPO)transientAppointment;
+        final Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
+        final Transaction transaction = session.getTransaction();
+        final String uuid = UUID.randomUUID().toString();
         appointment.setUuid(uuid);
         appointment.setLastModified(new Date(System.currentTimeMillis()));
         transaction.begin();
@@ -91,9 +92,9 @@ public class CalendarManagerImpl implements CalendarManager {
     }
 
     @Override
-    public ChangeMessageBO createChangeMessage(LectureBO lecture, Date changeAt, String reason, String what,
-                    String fromPerson) {
-        ChangeMessagePO changemsg = new ChangeMessagePO();
+    public ChangeMessageBO createChangeMessage(final LectureBO lecture, final Date changeAt, final String reason,
+                    final String what, final String fromPerson) {
+        final ChangeMessagePO changemsg = new ChangeMessagePO();
         changemsg.setChangeat(changeAt);
         changemsg.setLecture((LecturePO)lecture);
         changemsg.setReason(reason);
@@ -103,11 +104,11 @@ public class CalendarManagerImpl implements CalendarManager {
     }
 
     @Override
-    public ChangeMessageBO createChangeMessage(ChangeMessageBO transientMessage) {
-        ChangeMessagePO changemessage = (ChangeMessagePO)transientMessage;
-        Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
-        Transaction transaction = session.getTransaction();
-        String uuid = UUID.randomUUID().toString();
+    public ChangeMessageBO createChangeMessage(final ChangeMessageBO transientMessage) {
+        final ChangeMessagePO changemessage = (ChangeMessagePO)transientMessage;
+        final Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
+        final Transaction transaction = session.getTransaction();
+        final String uuid = UUID.randomUUID().toString();
         changemessage.setUuid(uuid);
         changemessage.setLastModified(new Date(System.currentTimeMillis()));
         transaction.begin();
@@ -117,128 +118,139 @@ public class CalendarManagerImpl implements CalendarManager {
     }
 
     @Override
-	public Set<? extends CategoryBO> getAllCategories() {
-    	 Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
-    	 Transaction transaction = session.getTransaction();
-    	 transaction.begin();
-    	 @SuppressWarnings("unchecked")
-		Set<CategoryPO> set = new HashSet<CategoryPO>(session.createCriteria(CategoryPO.class).list());
-    	 transaction.commit();
-    	 return set;
-	}
+    public Set<? extends CategoryBO> getAllCategories() {
+        final Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
+        final Transaction transaction = session.getTransaction();
+        transaction.begin();
+        @SuppressWarnings("unchecked")
+        final Set<CategoryPO> set = new HashSet<CategoryPO>(session.createCriteria(CategoryPO.class).list());
+        transaction.commit();
+        return set;
+    }
+
     @Override
-    public CategoryBO getCategoryBO(String uuid) {
+    public CategoryBO getCategoryBO(final String uuid) {
         return (CategoryBO)getPOObject(CategoryPO.class, uuid);
     }
 
     @Override
-    public LectureBO getLectureBO(String uuid) {
+    public LectureBO getLectureBO(final String uuid) {
         return (LectureBO)getPOObject(LecturePO.class, uuid);
     }
 
     @Override
-    public ChangeMessageBO getChangeMessage(String uuid) {
+    public ChangeMessageBO getChangeMessage(final String uuid) {
         return (ChangeMessageBO)getPOObject(ChangeMessagePO.class, uuid);
     }
 
     @Override
-    public AppointmentBO getAppointment(String uuid) {
+    public AppointmentBO getAppointment(final String uuid) {
         return (AppointmentBO)getPOObject(AppointmentPO.class, uuid);
     }
 
-   
-
     @Override
-    public Set<? extends AppointmentBO> getAppointmentsFromLecture(String LectureUuid) {
+    public Set<? extends AppointmentBO> getAppointmentsFromLecture(final String LectureUuid) {
         return getLectureBO(LectureUuid).getAppointments();
     }
 
     @Override
-    public Set<? extends LectureBO> getLecturesFromCategory(String categoryUuid) {
+    public Set<? extends LectureBO> getLecturesFromCategory(final String categoryUuid) {
         return getCategoryBO(categoryUuid).getLectures();
     }
 
     @Override
-    public Set<? extends ChangeMessageBO> getChangeMessageFromLecture(String LectureUuid) {
+    public Set<? extends ChangeMessageBO> getChangeMessageFromLecture(final String LectureUuid) {
         return getLectureBO(LectureUuid).getChangeMessages();
     }
 
     @Override
-    public void modify(CategoryBO category) {
-    	CategoryPO categoryPO=(CategoryPO)category;
-    	categoryPO.setLastModified(new Date(System.currentTimeMillis()));
-    	modifyObject(categoryPO);
+    public void modify(final CategoryBO category) {
+        final CategoryPO categoryPO = (CategoryPO)category;
+        categoryPO.setLastModified(new Date(System.currentTimeMillis()));
+        modifyObject(categoryPO);
     }
 
     @Override
-    public void modify(LectureBO lecture) {
-    	LecturePO lecturePO=(LecturePO)lecture;
-    	lecturePO.setLastModified(new Date(System.currentTimeMillis()));
-    	modifyObject(lecturePO);
+    public void modify(final LectureBO lecture) {
+        final LecturePO lecturePO = (LecturePO)lecture;
+        lecturePO.setLastModified(new Date(System.currentTimeMillis()));
+        modifyObject(lecturePO);
 
     }
 
     @Override
-    public void modify(AppointmentBO appointment) {
-    	AppointmentPO appointmentPO=(AppointmentPO)appointment;
-    	appointmentPO.setLastModified(new Date(System.currentTimeMillis()));
+    public void modify(final AppointmentBO appointment) {
+        final AppointmentPO appointmentPO = (AppointmentPO)appointment;
+        appointmentPO.setLastModified(new Date(System.currentTimeMillis()));
         modifyObject(appointmentPO);
     }
 
     @Override
-    public void modify(ChangeMessageBO changemessage) {
-    	ChangeMessagePO changeMessagePO=(ChangeMessagePO)changemessage;
-    	changeMessagePO.setLastModified(new Date(System.currentTimeMillis()));
+    public void modify(final ChangeMessageBO changemessage) {
+        final ChangeMessagePO changeMessagePO = (ChangeMessagePO)changemessage;
+        changeMessagePO.setLastModified(new Date(System.currentTimeMillis()));
         modifyObject(changeMessagePO);
 
     }
 
-
     @Override
-    public void delete(CategoryBO category) {
+    public void delete(final CategoryBO category) {
         deleteObject(category);
     }
 
     @Override
-    public void delete(LectureBO lecture) {
+    public void delete(final LectureBO lecture) {
         deleteObject(lecture);
     }
 
     @Override
-    public void delete(ChangeMessageBO changemessage) {
+    public void delete(final ChangeMessageBO changemessage) {
         deleteObject(changemessage);
     }
 
     @Override
-    public void delete(AppointmentBO appointment) {
+    public void delete(final AppointmentBO appointment) {
         deleteObject(appointment);
     }
 
-    private void modifyObject(Object object) {
-        Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
-        Transaction transaction = session.getTransaction();
+    private void modifyObject(final Object object) {
+        final Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
+        final Transaction transaction = session.getTransaction();
         transaction.begin();
         session.merge(object);
         transaction.commit();
     }
 
-    private void deleteObject(Object object) {
-        Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
-        Transaction transaction = session.getTransaction();
+    private void deleteObject(final Object object) {
+        final Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
+        final Transaction transaction = session.getTransaction();
         transaction.begin();
         session.delete(object);
         transaction.commit();
     }
 
-    private Object getPOObject(Class<?> clazz, String uuid) {
-        Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
-        Transaction transaction = session.getTransaction();
+    private Object getPOObject(final Class<?> clazz, final String uuid) {
+        final Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
+        final Transaction transaction = session.getTransaction();
         transaction.begin();
-        Object object = session.get(clazz, uuid);
+        final Object object = session.get(clazz, uuid);
         transaction.commit();
         return object;
     }
 
-	
+    @Override
+    @SuppressWarnings("unchecked")
+    public void deleteAllCalendarDataFromDB() {
+        final Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
+        final Transaction transaction = session.getTransaction();
+        transaction.begin();
+
+        session.createSQLQuery("delete from haw_app.calendar_appointment where uuid!=''").executeUpdate();
+        session.createSQLQuery("delete from haw_app.calendar_changemessage where uuid!=''").executeUpdate();
+        session.createSQLQuery("delete from haw_app.calendar_lecture where uuid!=''").executeUpdate();
+        session.createSQLQuery("delete from haw_app.calendar_category where uuid!=''").executeUpdate();
+        transaction.commit();
+
+    }
 
 }
