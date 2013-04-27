@@ -2,14 +2,14 @@
 <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
                                          "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
- <session-factory name="">
+ <session-factory name="MainSessionFactory">
   <property name="hibernate.connection.driver_class">org.gjt.mm.mysql.Driver</property>
   <property name="hibernate.connection.password">password</property>
   <property name="hibernate.connection.url">jdbc:mysql://localhost/haw_app</property>
   <property name="hibernate.connection.username">admin</property>
   <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
   <!-- JDBC connection pool (use the built-in) -->
-  <property name="connection.pool_size">1</property>
+  <property name="connection.pool_size">10</property>
   <!-- SQL dialect -->
   <property name="dialect">org.hibernate.dialect.HSQLDialect</property>
   <!-- Enable Hibernate's automatic session context management -->

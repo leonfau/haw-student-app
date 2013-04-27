@@ -18,8 +18,8 @@ public interface LectureBO {
 	public void setLecturerName(String lecturerName);
 	
 	public CategoryBO getCategory();
-	public Set<AppointmentBO> getAppointmentBOs();
+	public Set<? extends AppointmentBO> getAppointments();
 
-	public Set<ChangeMessageBO> getChangeMessageBOs();
+	public Set<? extends ChangeMessageBO> getChangeMessages();
 
 }

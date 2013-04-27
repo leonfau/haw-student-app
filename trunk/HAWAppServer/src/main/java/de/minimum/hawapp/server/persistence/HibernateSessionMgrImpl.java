@@ -20,11 +20,10 @@ import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.metadata.CollectionMetadata;
 import org.hibernate.stat.Statistics;
 
-import de.minimum.hawapp.server.persistence.calendar.Appointment;
-import de.minimum.hawapp.server.persistence.calendar.Category;
-import de.minimum.hawapp.server.persistence.calendar.Changemessage;
-import de.minimum.hawapp.server.persistence.calendar.Lecture;
-import de.minimum.hawapp.server.persistence.calendar.Semester;
+import de.minimum.hawapp.server.persistence.calendar.AppointmentPO;
+import de.minimum.hawapp.server.persistence.calendar.CategoryPO;
+import de.minimum.hawapp.server.persistence.calendar.ChangeMessagePO;
+import de.minimum.hawapp.server.persistence.calendar.LecturePO;
 import de.minimum.hawapp.test.util.CleanUpHelper;
 
 public class HibernateSessionMgrImpl implements HibernateSessionMgr {
@@ -35,8 +34,8 @@ public class HibernateSessionMgrImpl implements HibernateSessionMgr {
 
     private static Configuration getConfiguration() {
         if (HibernateSessionMgrImpl.conf == null)
-            HibernateSessionMgrImpl.conf = new Configuration().addClass(Appointment.class).addClass(Category.class)
-                            .addClass(Changemessage.class).addClass(Lecture.class).addClass(Semester.class)
+            HibernateSessionMgrImpl.conf = new Configuration().addAnnotatedClass(AppointmentPO.class).addAnnotatedClass(CategoryPO.class)
+                            .addAnnotatedClass(ChangeMessagePO.class).addAnnotatedClass(LecturePO.class)
                             .setInterceptor(CleanUpHelper.CLEANUPHELPER_INSTANCE);
         return HibernateSessionMgrImpl.conf;
     }
@@ -109,7 +108,8 @@ public class HibernateSessionMgrImpl implements HibernateSessionMgr {
      * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#
      * getAllCollectionMetadata()
      */
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public Map getAllCollectionMetadata() {
         return HibernateSessionMgrImpl.sessionFactory.getAllCollectionMetadata();
     }
@@ -131,7 +131,8 @@ public class HibernateSessionMgrImpl implements HibernateSessionMgr {
      * de.minimum.hawapp.server.persistence.HibernateSessionMgrd#getClassMetadata
      * (java.lang.Class)
      */
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public ClassMetadata getClassMetadata(Class arg0) {
         return HibernateSessionMgrImpl.sessionFactory.getClassMetadata(arg0);
     }
@@ -177,7 +178,8 @@ public class HibernateSessionMgrImpl implements HibernateSessionMgr {
      * @see de.minimum.hawapp.server.persistence.HibernateSessionMgrd#
      * getDefinedFilterNames()
      */
-    @Override
+    @SuppressWarnings("rawtypes")
+	@Override
     public Set getDefinedFilterNames() {
         return HibernateSessionMgrImpl.sessionFactory.getDefinedFilterNames();
     }

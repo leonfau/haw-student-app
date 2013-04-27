@@ -32,10 +32,12 @@ public interface HibernateSessionMgr {
 
 	public Map<String, ClassMetadata> getAllClassMetadata();
 
+	@SuppressWarnings("rawtypes")
 	public Map getAllCollectionMetadata();
 
 	public Cache getCache();
 
+	@SuppressWarnings("rawtypes")
 	public ClassMetadata getClassMetadata(Class arg0);
 
 	public ClassMetadata getClassMetadata(String arg0);
@@ -44,6 +46,7 @@ public interface HibernateSessionMgr {
 
 	public Session getCurrentSession() throws HibernateException;
 
+	@SuppressWarnings("rawtypes")
 	public Set getDefinedFilterNames();
 
 	public FilterDefinition getFilterDefinition(String arg0)

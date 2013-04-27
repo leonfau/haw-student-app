@@ -7,15 +7,13 @@ public interface CategoryBO {
 
 	public String getUuid();
 
-	public SemesterBO getSemester();
-
 	public String getName();
 
 	public void setName(String name);
 
 	public Date getLastModified();
 
-	public Set<LectureBO> getLectureBOs();
-	
+	public Set<? extends LectureBO> getLectures();
+	//public Set<String> getLectureUuids();
 
 }
