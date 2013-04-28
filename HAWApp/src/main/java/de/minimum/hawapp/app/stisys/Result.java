@@ -5,6 +5,13 @@ import java.util.Date;
 public interface Result {
 
     /**
+     * Gibt das Semester der Pruefung / der Uebung / des Praktikums wieder
+     * 
+     * @return the semester
+     */
+    public int getSemester();
+
+    /**
      * Gibt den Namen der Pruefung / der Uebung / des Praktikums wieder
      * 
      * @return the name
