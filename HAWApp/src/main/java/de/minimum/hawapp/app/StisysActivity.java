@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.ExpandableListActivity;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,16 +19,13 @@ public class StisysActivity extends ExpandableListActivity {
 
     private ExpandableListAdapter mAdapter;
 
+    protected static String login = "";
+    protected static String password = "";
     private static String cookie = "";
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        final Intent intent = getIntent();
-
-        final LoginTask login = new LoginTask();
-        login.execute(intent.getStringExtra("login"), intent.getStringExtra("password"));
 
         final List<Map<String, String>> groupData = new ArrayList<Map<String, String>>();
         final List<List<Map<String, String>>> childData = new ArrayList<List<Map<String, String>>>();
@@ -57,6 +53,13 @@ public class StisysActivity extends ExpandableListActivity {
                                         android.R.id.text1, android.R.id.text2 });
         setListAdapter(mAdapter);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        final LoginTask loginTask = new LoginTask();
+        loginTask.execute(login, password);
+    };
 
     class LoginTask extends AsyncTask<String, Void, String> {
         @Override
