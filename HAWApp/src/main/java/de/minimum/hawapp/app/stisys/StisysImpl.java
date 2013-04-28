@@ -15,6 +15,8 @@ public class StisysImpl implements Stisys {
 
     @Override
     public String login(final String name, final String password) {
+        // Log.i("StisysImpl login", "Login: " + login);
+        // Log.i("StisysImpl login", "Password: " + password);
         HttpsURLConnection conn = null;
         List<String> cookies = null;
 
