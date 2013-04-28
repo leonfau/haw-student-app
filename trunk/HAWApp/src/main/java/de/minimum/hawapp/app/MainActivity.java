@@ -32,7 +32,7 @@ public class MainActivity extends TabActivity {
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 	 
-	    intent = new Intent().setClass(this, StiSysActivity.class);
+	    intent = new Intent().setClass(this, StisysActivity.class);
 	    spec = tabHost.newTabSpec("songs").setIndicator("StiSys",
 	                      res.getDrawable(R.drawable.ic_tab_stisys))
 	                  .setContent(intent);
