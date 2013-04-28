@@ -27,6 +27,7 @@
                 <!-- Logo Ends -->
         </LinearLayout>
         <!--  Header Ends -->
+        
         <!-- Footer Start -->
         <LinearLayout android:id="@+id/footer"
                 android:layout_width="fill_parent"
@@ -44,27 +45,38 @@
           android:padding="10dip"
           android:layout_below="@id/header">
           <!--  Email Label -->
-          <TextView android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#372c24"
-                android:text="Email"/>
-          <EditText android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:layout_marginBottom="20dip"
-                android:singleLine="true"/>
+
+          <TextView
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:text="E-Mail"
+              android:textColor="#372c24" />
+
+          <EditText
+              android:id="@+id/editLogin"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="20dip"
+              android:layout_marginTop="5dip"
+              android:inputType="text"
+              android:singleLine="true" />
+
           <!--  Password Label -->
           <TextView android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#372c24"
                 android:text="Password"/>
-          <EditText android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dip"
-                android:singleLine="true"
-                android:password="true"/>
+
+          <EditText
+              android:id="@+id/editPassword"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="5dip"
+              android:inputType="textPassword"
+              android:singleLine="true" />
+
           <!-- Login button -->
-          <Button android:id="@+id/btnLogin"
+          <Button android:id="@+id/buttonLogin"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
