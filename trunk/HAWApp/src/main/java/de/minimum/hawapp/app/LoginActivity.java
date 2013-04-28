@@ -9,7 +9,7 @@ import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
 
-@EActivity(R.layout.login)
+@EActivity(R.layout.activity_login)
 public class LoginActivity extends Activity {
     @ViewById
     EditText editLogin;
