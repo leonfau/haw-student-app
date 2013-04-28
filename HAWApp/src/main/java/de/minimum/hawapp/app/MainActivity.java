@@ -9,7 +9,7 @@ import android.widget.TabHost;
 public class MainActivity extends TabActivity {
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    setContentView(R.layout.main);
+	    setContentView(R.layout.activity_main);
 	 
 	    Resources res = getResources(); // Resource object to get Drawables
 	    TabHost tabHost = getTabHost();  // The activity TabHost
@@ -20,35 +20,37 @@ public class MainActivity extends TabActivity {
 	    intent = new Intent().setClass(this, LoginActivity_.class);
 	 
 	    // Initialize a TabSpec for each tab and add it to the TabHost
-	    spec = tabHost.newTabSpec("artists").setIndicator("",
+	    spec = tabHost.newTabSpec("Anmeldung").setIndicator("",
 	                      res.getDrawable(R.drawable.ic_tab_anmeldung))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 	 
 	    // Do the same for the other tabs
 	    intent = new Intent().setClass(this, MensaActivity.class);
-	    spec = tabHost.newTabSpec("albums").setIndicator("",
+	    spec = tabHost.newTabSpec("Mensa").setIndicator("",
 	                      res.getDrawable(R.drawable.ic_tab_mensa))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 	 
 	    intent = new Intent().setClass(this, StisysActivity.class);
-	    spec = tabHost.newTabSpec("songs").setIndicator("StiSys",
+	    spec = tabHost.newTabSpec("StiSys").setIndicator("StiSys",
 	                      res.getDrawable(R.drawable.ic_tab_stisys))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 	    
 	    intent = new Intent().setClass(this, KalenderActivity.class);
-	    spec = tabHost.newTabSpec("songs").setIndicator("",
+	    spec = tabHost.newTabSpec("Kalender").setIndicator("",
 	                      res.getDrawable(R.drawable.ic_tab_kalender))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 	    
 	    intent = new Intent().setClass(this, SchwarzesBrettActivity.class);
-	    spec = tabHost.newTabSpec("songs").setIndicator("",
+	    spec = tabHost.newTabSpec("Blackboard").setIndicator("",
 	                      res.getDrawable(R.drawable.ic_tab_kalender))
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
+	    
+	    
 	 
 	    tabHost.setCurrentTab(0);
 	}

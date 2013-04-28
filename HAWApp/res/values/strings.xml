@@ -25,4 +25,7 @@
 	<string name="sb_nachricht_datum">Datum</string> 
 	    <string name="name">ListViewBaseAdapter</string>
     <string name="show_dialog">Dialog</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="anmeldungSpeichern">Anmeldung speichern</string>
 </resources>
