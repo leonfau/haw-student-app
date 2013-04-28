@@ -3,6 +3,7 @@ package de.minimum.hawapp.app.stisys;
 import java.util.Date;
 
 public class ResultImpl implements Result {
+    private final int semester;
     private final String name;
     private final String prof;
     private final Date date;
@@ -17,7 +18,8 @@ public class ResultImpl implements Result {
      * @param date
      * @param points
      */
-    public ResultImpl(final String name, final String prof, final Date date, final int points) {
+    public ResultImpl(final int semester, final String name, final String prof, final Date date, final int points) {
+        this.semester = semester;
         this.name = name;
         this.prof = prof;
         this.date = date;
@@ -33,7 +35,8 @@ public class ResultImpl implements Result {
      * @param date
      * @param success
      */
-    public ResultImpl(final String name, final String prof, final Date date, final boolean success) {
+    public ResultImpl(final int semester, final String name, final String prof, final Date date, final boolean success) {
+        this.semester = semester;
         this.name = name;
         this.prof = prof;
         this.date = date;
@@ -42,10 +45,21 @@ public class ResultImpl implements Result {
     }
 
     /**
+     * Gibt das Semester der Pruefung / der Uebung / des Praktikums wieder
+     * 
+     * @return the semester
+     */
+    @Override
+    public int getSemester() {
+        return semester;
+    }
+
+    /**
      * Gibt den Namen der Pruefung / der Uebung / des Praktikums wieder
      * 
      * @return the name
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -55,6 +69,7 @@ public class ResultImpl implements Result {
      * 
      * @return the prof
      */
+    @Override
     public String getProf() {
         return prof;
     }
@@ -64,6 +79,7 @@ public class ResultImpl implements Result {
      * 
      * @return the date
      */
+    @Override
     public Date getDate() {
         return date;
     }
@@ -73,6 +89,7 @@ public class ResultImpl implements Result {
      * 
      * @return the points
      */
+    @Override
     public int getPoints() {
         return points;
     }
@@ -82,6 +99,7 @@ public class ResultImpl implements Result {
      * 
      * @return the success
      */
+    @Override
     public boolean isSuccess() {
         return success;
     };
