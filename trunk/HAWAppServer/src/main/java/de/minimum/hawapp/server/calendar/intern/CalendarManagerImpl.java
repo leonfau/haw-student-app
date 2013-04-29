@@ -239,7 +239,6 @@ public class CalendarManagerImpl implements CalendarManager {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void deleteAllCalendarDataFromDB() {
         final Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
         final Transaction transaction = session.getTransaction();

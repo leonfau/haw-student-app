@@ -1,5 +1,9 @@
 package de.minimum.hawapp.server.blackboard;
 
+import java.io.Serializable;
+
+import org.hibernate.Transaction;
+import org.hibernate.classic.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,21 +11,24 @@ import de.minimum.hawapp.server.blackboard.api.Category;
 import de.minimum.hawapp.server.blackboard.api.Image;
 import de.minimum.hawapp.server.blackboard.api.Offer;
 import de.minimum.hawapp.server.blackboard.api.PersistenceConnector;
+import de.minimum.hawapp.server.blackboard.api.Persistent;
 import de.minimum.hawapp.server.blackboard.api.Report;
 import de.minimum.hawapp.server.blackboard.exceptions.PersistenceException;
 import de.minimum.hawapp.server.blackboard.util.BlackboardFactoryManager;
+import de.minimum.hawapp.server.context.ManagerFactory;
+import de.minimum.hawapp.server.persistence.HibernateSessionMgr;
+import de.minimum.hawapp.server.persistence.blackboard.CategoryEntity;
 import de.minimum.hawapp.server.persistence.blackboard.ImageEntity;
 import de.minimum.hawapp.server.persistence.blackboard.OfferEntity;
+import de.minimum.hawapp.server.persistence.blackboard.ReportEntity;
 
+//TODO alle Hibernate Gesch. mit try Catch umrunden um die sachen als PersistenceExceptions rauszuhauen
+//TODO: delete return anpassen
 public class HibernateConnector implements PersistenceConnector {
 
     private Logger logger = LoggerFactory.getLogger(HibernateConnector.class);
 
-    private volatile static long offerId = 0;// TODO entfernen sobald DB
-                                             // vorhanden ist
-
-    private volatile static long imageId = 0;// TODO entfernen sobald DB
-                                             // vorhanden ist
+    private static HibernateSessionMgr hibernateSessionMgr = ManagerFactory.getManager(HibernateSessionMgr.class);
 
     @Override
     public Image persistImage(byte[] image) throws PersistenceException {
@@ -32,104 +39,174 @@ public class HibernateConnector implements PersistenceConnector {
     @Override
     public Image persistImage(Image image) throws PersistenceException {
         if (image instanceof ImageEntity) {
-            ((ImageEntity)image).setId(HibernateConnector.imageId);// TODO mit
-                                                                   // Datenbank
-                                                                   // arbeiten
-            HibernateConnector.imageId++;
+            persist(image);
             return image;
         }
         else {
-            String msg = "The class " + image.getClass() + " of " + image
-                            + " is not usable to persist an Image in this Hibernate-Context. " + ImageEntity.class
-                            + " is needed.";
-            PersistenceException ex = new PersistenceException(msg);
-            this.logger.error(msg, ex);
-            throw ex;
+            throw generatePersistenceException(image, ImageEntity.class);
         }
     }
 
     @Override
     public Offer persistOffer(Offer offer) throws PersistenceException {
         if (offer instanceof OfferEntity) {
-            ((OfferEntity)offer).setId(HibernateConnector.offerId);// TODO mit
-                                                                   // Datenbank
-                                                                   // arbeiten
-            HibernateConnector.offerId++;
+            persist(offer);
             return offer;
         }
         else {
-            String msg = "The class " + offer.getClass() + " of " + offer
-                            + " is not usable to persist an Offer in this Hibernate-Context. " + OfferEntity.class
-                            + " is needed.";
-            PersistenceException ex = new PersistenceException(msg);
-            this.logger.error(msg, ex);
-            throw ex;
+            throw generatePersistenceException(offer, OfferEntity.class);
         }
     }
 
     @Override
     public Category persistCategory(Category category) throws PersistenceException {
-        // TODO Auto-generated method stub
-        return null;
+        if (category instanceof CategoryEntity) {
+            persist(category);
+            return category;
+        }
+        else {
+            throw generatePersistenceException(category, CategoryEntity.class);
+        }
     }
 
     @Override
     public Report persistReport(Report report) throws PersistenceException {
-        // TODO Auto-generated method stub
-        return null;
+        if (report instanceof ReportEntity) {
+            persist(report);
+            return report;
+        }
+        else {
+            throw generatePersistenceException(report, ReportEntity.class);
+        }
     }
 
     @Override
     public boolean deleteOffer(Offer offer) throws PersistenceException {
-        // TODO Auto-generated method stub
-        return false;
+        delete(offer);
+        return true;
     }
 
     @Override
     public boolean deleteCategory(Category category) throws PersistenceException {
-        // TODO Auto-generated method stub
-        return false;
+        delete(category);
+        return true;
     }
 
     @Override
     public boolean deleteReport(Report report) throws PersistenceException {
-        // TODO Auto-generated method stub
-        return false;
+        delete(report);
+        return true;
     }
 
     @Override
     public boolean deleteImage(Image image) throws PersistenceException {
-        // TODO Auto-generated method stub
-        return false;
+        delete(image);
+        return true;
     }
 
     @Override
     public boolean deleteOffer(long offerId) throws PersistenceException {
-        // TODO Auto-generated method stub
-        return false;
+        deleteById("OfferEntity", "id", offerId);
+        return true;
     }
 
     @Override
-    public boolean deleteCategory(long categoryId) throws PersistenceException {
-        // TODO Auto-generated method stub
-        return false;
+    public boolean deleteCategory(String categoryName) throws PersistenceException {
+        deleteById("CategoryEntity", "name", categoryName);
+        return true;
     }
 
     @Override
     public boolean deleteReport(long reportId) throws PersistenceException {
-        // TODO Auto-generated method stub
-        return false;
+        deleteById("ReportEntity", "id", reportId);
+        return true;
     }
 
     @Override
     public boolean deleteImage(long imageId) throws PersistenceException {
-        // TODO Auto-generated method stub
-        return false;
+        deleteById("ImageEntity", "id", imageId);
+        return true;
     }
 
     @Override
     public Category updateCategory(Category category) throws PersistenceException {
-        // TODO Auto-generated method stub
-        return null;
+        if (category instanceof CategoryEntity) {
+            update(category);
+            return category;
+        }
+        else {
+            throw generatePersistenceException(category, CategoryEntity.class);
+        }
+    }
+
+    @Override
+    public Image loadImage(long id) throws PersistenceException {
+        return loadPersistent(ImageEntity.class, id);
+    }
+
+    @Override
+    public Offer loadOffer(long id) throws PersistenceException {
+        return loadPersistent(OfferEntity.class, id);
+    }
+
+    @Override
+    public Report loadReport(long id) throws PersistenceException {
+        return loadPersistent(ReportEntity.class, id);
+    }
+
+    @Override
+    public Category loadCategory(String name) throws PersistenceException {
+        return loadPersistent(CategoryEntity.class, name);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends Persistent<T>> T loadPersistent(final Class<?> clazz, final Serializable id) {
+        Session session = HibernateConnector.hibernateSessionMgr.getCurrentSession();
+        Transaction trans = session.getTransaction();
+        trans.begin();
+        T obj = (T)session.get(clazz, id);
+        trans.commit();
+        return obj;
+    }
+
+    private void persist(Persistent<?> pers) {
+        Session session = HibernateConnector.hibernateSessionMgr.getCurrentSession();
+        Transaction trans = session.getTransaction();
+        trans.begin();
+        session.persist(pers);
+        trans.commit();
+    }
+
+    private void delete(Persistent<?> pers) {
+        Session session = HibernateConnector.hibernateSessionMgr.getCurrentSession();
+        Transaction trans = session.getTransaction();
+        trans.begin();
+        session.delete(pers);
+        trans.commit();
+    }
+
+    private void update(Persistent<?> pers) {
+        Session session = HibernateConnector.hibernateSessionMgr.getCurrentSession();
+        Transaction trans = session.getTransaction();
+        trans.begin();
+        session.update(pers);
+        trans.commit();
+    }
+
+    private void deleteById(String table, String idName, Serializable id) {
+        Session session = HibernateConnector.hibernateSessionMgr.getCurrentSession();
+        Transaction trans = session.getTransaction();
+        trans.begin();
+        session.createQuery("delete from " + table + " where " + idName + "= :id").setString("id", id.toString())
+                        .executeUpdate();
+        trans.commit();
+    }
+
+    private PersistenceException generatePersistenceException(Object isObj, Class<?> should) {
+        String msg = "The class " + isObj.getClass() + " of " + isObj
+                        + " is not usable to persist an Image in this Hibernate-Context. " + should + " is needed.";
+        PersistenceException ex = new PersistenceException(msg);
+        this.logger.error(msg, ex);
+        return ex;
     }
 }

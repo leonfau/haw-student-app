@@ -157,6 +157,8 @@ public class BlackboardService {
     @Path("search/{searchStr}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Offer> getOffersBySearchStr(@PathParam("searchStr") String searchStr) {
+        // TODO URLDecoder verwenden um den SearchString wieder zu einem
+        // regulären String zu machen
         return this.bbMngr.getOffersBySearchStr(searchStr);
     }
 
@@ -174,6 +176,8 @@ public class BlackboardService {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Offer> getOffersBySearchStrAndCategory(@PathParam("searchStr") String searchStr,
                     @PathParam("category") String cat) {
+        // TODO URLDecoder verwenden um den SearchString wieder zu einem
+        // regulären String zu machen
         return this.bbMngr.getOffersBySearchStrAndCategory(searchStr, cat);
     }
 

@@ -2,22 +2,34 @@ package de.minimum.hawapp.server.persistence.blackboard;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import de.minimum.hawapp.server.blackboard.api.Category;
 import de.minimum.hawapp.server.blackboard.api.Offer;
 
 //TODO kommt die DB mit der rekursiven Strunktur zurecht: Offer -> Category -> Offer -> usw.
+@Entity
+@Table(name = "blackboard_offer", catalog = "haw_app")
 public class OfferEntity implements Offer {
 
     /**
      * 
      */
     private static final long serialVersionUID = 3580355548763084727L;
-    private long id;
+    private long id = -1;
     private String header;
     private String description;
     private String contact;
     private Date dateOfCreation;
-    private long imageId;
+    private Long imageId = null;
     private String deletionKey;
     private Category category;
 
@@ -41,7 +53,7 @@ public class OfferEntity implements Offer {
         this.dateOfCreation = dateOfCreation;
     }
 
-    public void setImageId(long imageId) {
+    public void setImageId(Long imageId) {
         this.imageId = imageId;
     }
 
@@ -49,45 +61,58 @@ public class OfferEntity implements Offer {
         this.deletionKey = deletionKey;
     }
 
+    @Column(name = "deletionKey")
     @Override
     public String getDeletionKey() {
         return this.deletionKey;
+    }
+
+    public void setCategoryName(String categoryName) {
+
     }
 
     public void setCategory(Category category) {
         if (this.category != null)
             this.category.removeOffer(this);
         this.category = category;
-        category.addOffer(this);
+        // category.addOffer(this);
     }
 
+    @Id
+    @Column(name = "id", unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Override
     public long getId() {
         return this.id;
     }
 
+    @Column(name = "header")
     @Override
     public String getHeader() {
         return this.header;
     }
 
+    @Column(name = "description")
     @Override
     public String getDescription() {
         return this.description;
     }
 
+    @Column(name = "contact")
     @Override
     public String getContact() {
         return this.contact;
     }
 
+    @Column(name = "dateOfCreation")
     @Override
     public Date getDateOfCreation() {
         return this.dateOfCreation;
     }
 
+    @Column(name = "imageId")
     @Override
-    public long getImageId() {
+    public Long getImageId() {
         return this.imageId;
     }
 
@@ -96,6 +121,8 @@ public class OfferEntity implements Offer {
         return this.category.getName();
     }
 
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = CategoryEntity.class)
+    @JoinColumn(name = "categoryName", nullable = false, insertable = false, updatable = false)
     @Override
     public Category getCategory() {
         return this.category;

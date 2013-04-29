@@ -2,8 +2,17 @@ package de.minimum.hawapp.server.persistence.blackboard;
 
 import java.util.Arrays;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import de.minimum.hawapp.server.blackboard.api.Image;
 
+@Entity
+@Table(name = "blackboard_image", catalog = "haw_app")
 public class ImageEntity implements Image {
 
     /**
@@ -11,12 +20,13 @@ public class ImageEntity implements Image {
      */
     private static final long serialVersionUID = -5657084710401175143L;
     private byte[] image;
-    private long id;
+    private long id = -1;
 
     public void setImage(byte[] image) {
         this.image = image;
     }
 
+    @Column(name = "image")
     @Override
     public byte[] getImage() {
         return this.image;
@@ -26,6 +36,9 @@ public class ImageEntity implements Image {
         this.id = id;
     }
 
+    @Id
+    @Column(name = "id", unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Override
     public long getId() {
         return this.id;

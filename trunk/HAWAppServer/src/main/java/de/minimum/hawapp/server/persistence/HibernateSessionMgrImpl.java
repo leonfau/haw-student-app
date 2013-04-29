@@ -20,6 +20,10 @@ import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.metadata.CollectionMetadata;
 import org.hibernate.stat.Statistics;
 
+import de.minimum.hawapp.server.persistence.blackboard.CategoryEntity;
+import de.minimum.hawapp.server.persistence.blackboard.ImageEntity;
+import de.minimum.hawapp.server.persistence.blackboard.OfferEntity;
+import de.minimum.hawapp.server.persistence.blackboard.ReportEntity;
 import de.minimum.hawapp.server.persistence.calendar.AppointmentPO;
 import de.minimum.hawapp.server.persistence.calendar.CategoryPO;
 import de.minimum.hawapp.server.persistence.calendar.ChangeMessagePO;
@@ -34,9 +38,11 @@ public class HibernateSessionMgrImpl implements HibernateSessionMgr {
 
     private static Configuration getConfiguration() {
         if (HibernateSessionMgrImpl.conf == null)
-            HibernateSessionMgrImpl.conf = new Configuration().addAnnotatedClass(AppointmentPO.class).addAnnotatedClass(CategoryPO.class)
-                            .addAnnotatedClass(ChangeMessagePO.class).addAnnotatedClass(LecturePO.class)
-                            .setInterceptor(CleanUpHelper.CLEANUPHELPER_INSTANCE);
+            HibernateSessionMgrImpl.conf = new Configuration().addAnnotatedClass(AppointmentPO.class)
+                            .addAnnotatedClass(CategoryPO.class).addAnnotatedClass(ChangeMessagePO.class)
+                            .addAnnotatedClass(LecturePO.class).addAnnotatedClass(CategoryEntity.class)
+                            .addAnnotatedClass(ImageEntity.class).addAnnotatedClass(OfferEntity.class)
+                            .addAnnotatedClass(ReportEntity.class).setInterceptor(CleanUpHelper.CLEANUPHELPER_INSTANCE);
         return HibernateSessionMgrImpl.conf;
     }
 
@@ -109,7 +115,7 @@ public class HibernateSessionMgrImpl implements HibernateSessionMgr {
      * getAllCollectionMetadata()
      */
     @SuppressWarnings("rawtypes")
-	@Override
+    @Override
     public Map getAllCollectionMetadata() {
         return HibernateSessionMgrImpl.sessionFactory.getAllCollectionMetadata();
     }
@@ -132,7 +138,7 @@ public class HibernateSessionMgrImpl implements HibernateSessionMgr {
      * (java.lang.Class)
      */
     @SuppressWarnings("rawtypes")
-	@Override
+    @Override
     public ClassMetadata getClassMetadata(Class arg0) {
         return HibernateSessionMgrImpl.sessionFactory.getClassMetadata(arg0);
     }
@@ -179,7 +185,7 @@ public class HibernateSessionMgrImpl implements HibernateSessionMgr {
      * getDefinedFilterNames()
      */
     @SuppressWarnings("rawtypes")
-	@Override
+    @Override
     public Set getDefinedFilterNames() {
         return HibernateSessionMgrImpl.sessionFactory.getDefinedFilterNames();
     }
