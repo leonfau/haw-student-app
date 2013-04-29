@@ -1,6 +1,8 @@
 package de.minimum.hawapp.app.mensa.beans;
 
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
+@JsonDeserialize(as=MealBeanImpl.class)
 public interface Meal {
 
     /**

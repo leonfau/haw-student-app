@@ -1,4 +1,4 @@
-package de.minimum.hawapp.app;
+package de.minimum.hawapp.app.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,6 +8,10 @@ import android.widget.Toast;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
 import com.googlecode.androidannotations.annotations.ViewById;
+
+import de.minimum.hawapp.app.R;
+import de.minimum.hawapp.app.R.id;
+import de.minimum.hawapp.app.R.layout;
 
 @EActivity(R.layout.activity_login)
 public class LoginActivity extends Activity {

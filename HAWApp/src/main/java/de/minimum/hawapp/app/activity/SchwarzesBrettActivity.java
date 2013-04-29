@@ -1,9 +1,12 @@
-package de.minimum.hawapp.app;
+package de.minimum.hawapp.app.activity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List; 
 
+import de.minimum.hawapp.app.R;
+import de.minimum.hawapp.app.R.id;
+import de.minimum.hawapp.app.R.layout;
 import de.minimum.hawapp.gui.schwarzesbrett.NachrichtActivity;
 import de.minimum.hawapp.gui.schwarzesbrett.NeueNachrichtActivity; 
 import android.app.Activity; 

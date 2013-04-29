@@ -2,10 +2,8 @@ package de.minimum.hawapp.app.mensa.management;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 import de.minimum.hawapp.app.mensa.beans.DayPlan;
-import de.minimum.hawapp.app.mensa.beans.Meal;
 import de.minimum.hawapp.app.rest.MensaService;
 
 public class MensaManagerImpl implements MensaManager {
@@ -18,7 +16,6 @@ public class MensaManagerImpl implements MensaManager {
 
     @Override
     public DayPlan getDayPlan(String day) {
-    	System.out.println("GET DAY PLAN");
         return mensaService.getDayPlan(day);
     }
     
@@ -33,7 +30,7 @@ public class MensaManagerImpl implements MensaManager {
     	case Calendar.WEDNESDAY: return getDayPlan("Mittwoch");
     	case Calendar.THURSDAY: return getDayPlan("Donnerstag");
     	case Calendar.FRIDAY: return getDayPlan("Freitag");
-    	default: return null; //TODO ordentliche Fehlerbehebung
+    	default: return null;
     	}
     }
     

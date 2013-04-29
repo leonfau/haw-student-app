@@ -1,9 +1,14 @@
 package de.minimum.hawapp.app.mensa.beans;
 
+import java.util.UUID;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class MealBeanImpl implements Meal {
 
+	@JsonProperty("id")
+	private UUID id;
+	
 	@JsonProperty("description")
 	private String description;
 	
@@ -18,6 +23,15 @@ public class MealBeanImpl implements Meal {
 
 	public MealBeanImpl(){};
 	
+	
+	public UUID getId() {
+		return id;
+	}
+
+	public void setId(UUID id) {
+		this.id = id;
+	}
+
 	@Override
 	public String getDescription() {
 		return description;

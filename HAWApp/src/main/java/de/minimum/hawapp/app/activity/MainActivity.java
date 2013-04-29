@@ -1,10 +1,11 @@
-package de.minimum.hawapp.app;
+package de.minimum.hawapp.app.activity;
 
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TabHost;
+import de.minimum.hawapp.app.R;
 
 public class MainActivity extends TabActivity {
 	public void onCreate(Bundle savedInstanceState) {

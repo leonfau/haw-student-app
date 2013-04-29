@@ -18,13 +18,13 @@
 		android:theme="@style/AppTheme" >
 		<!-- android:label="@string/app_name" android:permission="android.permission.INTERNET" -->
 		<activity
-			android:name="LoginActivity_"
+			android:name="de.minimum.hawapp.app.activity.LoginActivity_"
 			android:label="@string/app_name" >
 		</activity>
 		<activity android:name="AlbumsActivity"></activity>
 		<activity android:name="SongsActivity"></activity>
 		<activity android:name="ArtistsActivity"></activity>
-		<activity android:name="MainActivity"  
+		<activity android:name="de.minimum.hawapp.app.activity.MainActivity"  
 		    android:label="@string/app_name"
 			android:theme="@android:style/Theme.NoTitleBar" >
 			<intent-filter>
@@ -32,10 +32,10 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name="SchwarzesBrettActivity"></activity>
-		<activity android:name="StisysActivity"></activity>
-		<activity android:name="KalenderActivity"></activity>
-		<activity android:name="MensaActivity"></activity>
+		<activity android:name="de.minimum.hawapp.app.activity.SchwarzesBrettActivity"></activity>
+		<activity android:name="de.minimum.hawapp.app.activity.StisysActivity"></activity>
+		<activity android:name="de.minimum.hawapp.app.activity.KalenderActivity"></activity>
+		<activity android:name="de.minimum.hawapp.app.activity.MensaActivity"></activity>
 		<activity android:name="de.minimum.hawapp.gui.schwarzesbrett.NeueNachrichtActivity" android:label="@string/sb_neue_nachricht"></activity>
 		<activity android:name="de.minimum.hawapp.gui.schwarzesbrett.NachrichtActivity" android:label="@string/sb_nachricht"></activity>
 	</application>
