@@ -1,4 +1,4 @@
-package de.minimum.hawapp.app;
+package de.minimum.hawapp.app.activity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ExpandableListAdapter;
 import android.widget.SimpleExpandableListAdapter;
+import de.minimum.hawapp.app.R;
+import de.minimum.hawapp.app.R.layout;
 import de.minimum.hawapp.app.stisys.StisysImpl;
 
 public class StisysActivity extends ExpandableListActivity {

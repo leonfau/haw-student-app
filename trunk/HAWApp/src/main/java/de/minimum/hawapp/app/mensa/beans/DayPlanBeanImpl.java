@@ -16,14 +16,12 @@ public class DayPlanBeanImpl implements DayPlan {
 	
 	@Override
 	public String getDay() {
-		// TODO Auto-generated method stub
-		return null;
+		return day;
 	}
 
 	@Override
 	public List<Meal> getMeals() {
-		// TODO Auto-generated method stub
-		return null;
+		return meals;
 	}
 	
 	public void setDay(String day) {

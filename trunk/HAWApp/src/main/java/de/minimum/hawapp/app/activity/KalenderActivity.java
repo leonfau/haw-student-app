@@ -1,4 +1,4 @@
-package de.minimum.hawapp.app;
+package de.minimum.hawapp.app.activity;
 
 import android.app.Activity;
 import android.os.Bundle;

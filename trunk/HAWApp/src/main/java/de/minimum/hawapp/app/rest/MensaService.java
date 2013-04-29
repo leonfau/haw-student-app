@@ -11,11 +11,10 @@ import org.springframework.http.converter.json.MappingJacksonHttpMessageConverte
 import org.springframework.web.client.RestTemplate;
 
 import de.minimum.hawapp.app.mensa.beans.DayPlan;
-import de.minimum.hawapp.app.mensa.beans.DayPlanBeanImpl;
 
 public class MensaService {
 
-	private static final String HOST = "Http://192.168.1.9:8080";
+	private static final String HOST = "Http://192.168.1.78:8080";
 	private static final String BASE_URL = "/server/rest/mensaservice/";
 	
 	    /**
@@ -35,7 +34,7 @@ public class MensaService {
 	    	restTemplate.setMessageConverters(messageConverters);
 	    			
 	        String url = HOST + BASE_URL + "dayplan/"+day;
-	        return restTemplate.getForObject(url, DayPlanBeanImpl.class);
+	        return restTemplate.getForObject(url, DayPlan.class);
 	    }
 
 	    /**
@@ -47,7 +46,7 @@ public class MensaService {
 	    	RestTemplate restTemplate = new RestTemplate();
 	        restTemplate.getMessageConverters().add(new MappingJacksonHttpMessageConverter());
 	        String url = HOST + BASE_URL + "weekplan";
-	        return Arrays.asList(restTemplate.getForObject(url, DayPlanBeanImpl[].class));
+	        return Arrays.asList(restTemplate.getForObject(url, DayPlan[].class));
 	    }
 }
 
