@@ -1,15 +1,27 @@
 package de.minimum.hawapp.server.persistence.blackboard;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import de.minimum.hawapp.server.blackboard.api.Offer;
 import de.minimum.hawapp.server.blackboard.api.Report;
 
+@Entity
+@Table(name = "blackboard_report", catalog = "haw_app")
 public class ReportEntity implements Report {
 
     /**
      * 
      */
     private static final long serialVersionUID = -5167919085435902773L;
-    private long id;
+    private long id = -1;
     private String reason;
     private Offer offer;
 
@@ -61,16 +73,22 @@ public class ReportEntity implements Report {
         return true;
     }
 
+    @Column(name = "reason")
     @Override
     public String getReason() {
         return this.reason;
     }
 
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = OfferEntity.class)
+    @JoinColumn(name = "offerId", nullable = false)
     @Override
     public Offer getOffer() {
         return this.offer;
     }
 
+    @Id
+    @Column(name = "id", unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Override
     public long getId() {
         return this.id;

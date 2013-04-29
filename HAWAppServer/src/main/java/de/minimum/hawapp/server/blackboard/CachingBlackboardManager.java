@@ -41,10 +41,19 @@ public class CachingBlackboardManager implements BlackboardManager {
     private Timer offerDeletionTimer;
 
     public CachingBlackboardManager() {
-        this.categories.put("Angebote", BlackboardFactoryManager.newCategory("Angebote"));// TODO
-                                                                                          // aus
-                                                                                          // Datenbank
-                                                                                          // beziehen
+        try {
+            this.categories.put("Angebote", this.persConnector.loadCategory("Angebote"));// TODO
+                                                                                         // Dynamisch
+                                                                                         // aus
+                                                                                         // DB
+                                                                                         // holen
+                                                                                         // &
+                                                                                         // Exceptionhandling
+        }
+        catch(PersistenceException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
         TimerTask deleteAction = new TimerTask() {
             @Override
@@ -88,7 +97,8 @@ public class CachingBlackboardManager implements BlackboardManager {
                 return CachingBlackboardManager.FAILED_CREATION;
             }
             Image img = BlackboardFactoryManager.newImage(image);
-            img = this.persConnector.persistImage(image);
+            if (image != null)
+                img = this.persConnector.persistImage(image);
             this.images.put(img.getId(), img);
             Offer offer = BlackboardFactoryManager.newOffer(cat, header, description, contact, new Date(), img.getId());
             offer = this.persConnector.persistOffer(offer);
@@ -112,9 +122,16 @@ public class CachingBlackboardManager implements BlackboardManager {
             return false;
         }
         offer.getCategory().removeOffer(offer);
-        // TODO evtl. archivieren?
-        this.images.remove(offer.getImageId());// TODO auch aus DB löschen
-        this.offers.remove(offer.getId());// TODO auch aus DB löschen
+        this.images.remove(offer.getImageId());
+        this.offers.remove(offer.getId());
+        try {
+            this.persConnector.deleteOffer(offer);// TODO evtl. archivieren?
+            this.persConnector.deleteImage(offer.getImageId());
+        }
+        catch(PersistenceException ex) {
+            // TODO
+            return false;
+        }
         return true;
     }
 
@@ -144,9 +161,16 @@ public class CachingBlackboardManager implements BlackboardManager {
 
     @Override
     public Offer getOffer(long offerId) {
-        return this.offers.get(offerId);// TODO falls nicht vorhanden in DB
-                                        // schauen und ggf in Map hinzufügen ->
-                                        // Clock???
+        Offer offer = this.offers.get(offerId);
+        if (offer == null)
+            try {
+                offer = this.persConnector.loadOffer(offerId);
+            }
+            catch(PersistenceException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        return offer;
     }
 
     @Override
@@ -170,8 +194,9 @@ public class CachingBlackboardManager implements BlackboardManager {
 
     @Override
     public List<Category> getAllCategories() {
-        // TODO Auto-generated method stub
-        return null;
+        return new ArrayList<>(this.categories.values());// TODO auch in
+                                                         // Datenbank
+                                                         // nachschauen
     }
 
     @Override

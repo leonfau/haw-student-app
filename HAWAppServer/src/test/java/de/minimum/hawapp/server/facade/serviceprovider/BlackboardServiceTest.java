@@ -9,6 +9,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
 
 import com.sun.jersey.api.client.ClientResponse;
@@ -22,6 +23,7 @@ import de.minimum.hawapp.server.persistence.blackboard.ImageEntity;
 import de.minimum.hawapp.test.rest.entities.blackboardservice.CategoryEntity;
 import de.minimum.hawapp.test.rest.entities.blackboardservice.OfferCreationStatusEntity;
 import de.minimum.hawapp.test.rest.entities.blackboardservice.OfferEntity;
+import de.minimum.hawapp.test.util.rules.AutoCleanUpRule;
 
 public class BlackboardServiceTest extends RestTest {
 
@@ -29,17 +31,18 @@ public class BlackboardServiceTest extends RestTest {
                     + "resources" + File.separator + "images" + File.separator + "hamburg-Elbe-Nacht.jpg";
     private static final String BLACKBOARD_SERVICE_URL = RestTest.REST_SERVICE_ADDRESS + "/blackboardservice";
 
-    // @Rule
-    // public AutoCleanUpRule cleanUpRule = new AutoCleanUpRule(); //TODO Wenn
-    // DB Anbindung benötigt
+    @Rule
+    public AutoCleanUpRule cleanUpRule = new AutoCleanUpRule();
 
     @Test
     public void reportTest() {
+        OfferCreationStatusEntity offer = createOffer(getAllCategories().get(0), "Böse", "Ich erzähle böse Sachen",
+                        "Idiot", null);
         String reason = "Er hat sich über mich lustig gemacht :,-(";
-        long offerId = 1;
+        long offerId = offer.getOfferId();
         WebResource webResource = this.client.resource(BlackboardServiceTest.BLACKBOARD_SERVICE_URL + "/report");
         Form form = new Form();
-        form.add("offerid", offerId);
+        form.add("offerId", offerId);
         form.add("reason", reason);
         ClientResponse response = webResource.post(ClientResponse.class, form);
         Assert.assertEquals("Server sagt ok", 200, response.getStatus());

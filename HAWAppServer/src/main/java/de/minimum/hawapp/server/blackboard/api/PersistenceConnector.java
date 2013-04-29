@@ -24,11 +24,19 @@ public interface PersistenceConnector {
 
     boolean deleteOffer(long offerId) throws PersistenceException;
 
-    boolean deleteCategory(long categoryId) throws PersistenceException;
+    boolean deleteCategory(String categoryName) throws PersistenceException;
 
     boolean deleteReport(long reportId) throws PersistenceException;
 
     boolean deleteImage(long imageId) throws PersistenceException;
 
     Category updateCategory(Category category) throws PersistenceException;
+
+    Image loadImage(long id) throws PersistenceException;
+
+    Offer loadOffer(long id) throws PersistenceException;
+
+    Report loadReport(long id) throws PersistenceException;
+
+    Category loadCategory(String name) throws PersistenceException;
 }

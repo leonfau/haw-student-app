@@ -6,4 +6,8 @@
   <table-filter match-catalog="haw_app" match-name="calendar_category"/>
   <table-filter match-catalog="haw_app" match-name="calendar_changemessage"/>
   <table-filter match-catalog="haw_app" match-name="calendar_lecture"/>
+  <table-filter match-catalog="haw_app" match-name="blackboard_category"/>
+  <table-filter match-catalog="haw_app" match-name="blackboard_image"/>
+  <table-filter match-catalog="haw_app" match-name="blackboard_offer"/>
+  <table-filter match-catalog="haw_app" match-name="blackboard_report"/>
 </hibernate-reverse-engineering>

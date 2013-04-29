@@ -156,7 +156,50 @@ CREATE  TABLE IF NOT EXISTS `haw_app`.`Calendar_ChangeMessage` (
 
 ENGINE = InnoDB;
 
+-- -----------------------------------------------------
 
+-- Tabellen für das Schwarze Brett
+
+-- -----------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS haw_app.Blackboard_Image (
+	id bigint(20) NOT NULL AUTO_INCREMENT, 
+	image mediumblob NOT NULL, 
+	PRIMARY KEY (id)) ENGINE=InnoDB;
+	
+CREATE TABLE IF NOT EXISTS haw_app.Blackboard_Offer (
+	id bigint(20) NOT NULL AUTO_INCREMENT, 
+	header varchar(125) NOT NULL, 
+	categoryName varchar(125) NOT NULL, 
+	imageId bigint(20), 
+	description varchar(255), 
+	contact varchar(255),
+	dateOfCreation date, 
+	deletionKey varchar(11) NOT NULL, 
+	PRIMARY KEY (id)) ENGINE=InnoDB;
+	
+CREATE TABLE IF NOT EXISTS haw_app.Blackboard_Category (
+	name varchar(125) NOT NULL, 
+	PRIMARY KEY (name)) ENGINE=InnoDB;
+	
+CREATE TABLE IF NOT EXISTS haw_app.Blackboard_Report (
+	id bigint(20) NOT NULL AUTO_INCREMENT, 
+	reason varchar(255) NOT NULL, 
+	offerId bigint(20) NOT NULL, 
+	PRIMARY KEY (id)) ENGINE=InnoDB;
+
+-- -----------------------------------------------------
+
+-- Erzeugen der Fremdschlüsselbeziehungen
+
+-- -----------------------------------------------------
+
+ALTER TABLE haw_app.Blackboard_Offer ADD INDEX fk_image (imageId), 
+	ADD CONSTRAINT fk_image FOREIGN KEY (imageId) REFERENCES haw_app.Blackboard_Image (id);
+ALTER TABLE haw_app.Blackboard_Offer ADD INDEX fk_category (categoryName), 
+	ADD CONSTRAINT fk_category FOREIGN KEY (categoryName) REFERENCES haw_app.Blackboard_Category (name);
+ALTER TABLE haw_app.Blackboard_Report ADD INDEX fk_offer (offerId), 
+	ADD CONSTRAINT fk_offer FOREIGN KEY (offerId) REFERENCES haw_app.Blackboard_Offer (id);
 
 USE `haw_app` ;
 

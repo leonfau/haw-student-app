@@ -36,8 +36,10 @@ public class BlackboardFactoryManager {
         offer.setDescription(description);
         offer.setContact(contact);
         offer.setDateOfCreation(dateOfCreation);
-        offer.setImageId(imageId);
+        if (imageId > -1)
+            offer.setImageId(imageId);
         offer.setDeletionKey(BlackboardFactoryManager.generateDeletionKey(offer));
+        category.addOffer(offer);
         return offer;
     }
 

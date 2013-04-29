@@ -16,10 +16,10 @@ public interface Offer extends Persistent<Offer> {
 
     Date getDateOfCreation();
 
-    long getImageId();
+    Long getImageId();
 
     @JsonIgnore
-    public Category getCategory();
+    Category getCategory();
 
     String getCategoryName();
 
