@@ -83,7 +83,13 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-android</artifactId>
 			<version>1.6.1-RC1</version>
-		</dependency>     
+		</dependency>
+ 		<dependency>
+ 	   	<groupId>net.sf.proguard</groupId>
+   		<artifactId>proguard</artifactId>
+    	<version>4.4</version>
+    	<scope>runtime</scope>
+  		</dependency>
 	</dependencies>
 
 	<build>
@@ -99,7 +105,7 @@
 					</sdk>
 					<!-- Proguard is not skipped by default -->
 					<proguard>
-						<skip>false</skip>
+						<skip>true</skip>
 					</proguard>
 				</configuration>
 			</plugin>
