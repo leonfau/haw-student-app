@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import android.app.Dialog;
 import android.app.ExpandableListActivity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ExpandableListAdapter;
@@ -25,6 +27,23 @@ public class StisysActivity extends ExpandableListActivity {
 	protected static String login = "";
 	protected static String password = "";
 	private static Map<Integer, List<Result>> results;
+	public static final int DIALOG_DOWNLOAD_JSON_PROGRESS = 0;
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		ProgressDialog mProgressDialog;
+		switch (id) {
+		case DIALOG_DOWNLOAD_JSON_PROGRESS:
+			mProgressDialog = new ProgressDialog(this);
+			mProgressDialog.setMessage("Downloading.....");
+			mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			mProgressDialog.setCancelable(true);
+			mProgressDialog.show();
+			return mProgressDialog;
+		default:
+			return null;
+		}
+	}
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -34,7 +53,7 @@ public class StisysActivity extends ExpandableListActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		showDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
 		final ParseTask parseTask = new ParseTask();
 		parseTask.execute(login, password);
 
@@ -98,6 +117,8 @@ public class StisysActivity extends ExpandableListActivity {
 		protected void onPostExecute(final Map<Integer, List<Result>> result) {
 			results = result;
 			fillFields();
+			dismissDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+			removeDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
 		}
 	}
 
