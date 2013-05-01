@@ -58,7 +58,7 @@ public class MensaActivity extends NetworkingActivity {
 
 			@Override
 			protected Void doInBackground(Void... arg0) {
-//				mealsToday = manager.getPlanForToday();
+				mealsToday = manager.getPlanForToday();
 				return null;
 			}
         }.execute();
@@ -70,22 +70,22 @@ public class MensaActivity extends NetworkingActivity {
 		myArrList = new ArrayList<HashMap<String,Object>>();
 		
 //GUI TEST	
-		for (int i = 0; i < 25; i++) {
-			HashMap<String, Object> e = new HashMap<String, Object>();
-			e.put("BESCHREIBUNG", "Broccoliauflauf mit gekochtem Schinken und Penne (1,2,3,4,14,20,22) Napoli Soße (19) "+i);
-			e.put("RATING", (i % 5)+"");		
-			e.put("PREIS", "10.50 € / 20.10 €");
-			myArrList.add(e);
-		}
-		
-//		for (Meal meal : mealsToday.getMeals()) {
+//		for (int i = 0; i < 25; i++) {
 //			HashMap<String, Object> e = new HashMap<String, Object>();
-//			e.put(BESCHREIBUNG, meal.getDescription());
-//			e.put(RATING, meal.getRating()+"");	
-//			String price = String.valueOf(meal.getStudentPrice() + "€ / " + String.valueOf(meal.getOthersPrice() +"€")).replace('.', ',');
-//			e.put(PREIS, price);
+//			e.put("BESCHREIBUNG", "Broccoliauflauf mit gekochtem Schinken und Penne (1,2,3,4,14,20,22) Napoli Soße (19) "+i);
+//			e.put("RATING", (i % 5)+"");		
+//			e.put("PREIS", "10.50 € / 20.10 €");
 //			myArrList.add(e);
 //		}
+		
+		for (Meal meal : mealsToday.getMeals()) {
+			HashMap<String, Object> e = new HashMap<String, Object>();
+			e.put(BESCHREIBUNG, meal.getDescription());
+			e.put(RATING, meal.getRating()+"");	
+			String price = String.valueOf(meal.getStudentPrice() + "€ / " + String.valueOf(meal.getOthersPrice() +"€")).replace('.', ',');
+			e.put(PREIS, price);
+			myArrList.add(e);
+		}
 
 		listView.setAdapter(new MealAdapter(MensaActivity.this,myArrList));
 	}
