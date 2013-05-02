@@ -1,10 +1,9 @@
 package de.minimum.hawapp.gui.schwarzesbrett;
 
-import de.minimum.hawapp.app.R;
 import android.app.Activity;
-import android.os.Bundle; 
-import android.view.View;
+import android.os.Bundle;
 import android.widget.TextView;
+import de.minimum.hawapp.app.R;
 
 public class NachrichtActivity extends Activity {
 	private String titel;
@@ -14,31 +13,33 @@ public class NachrichtActivity extends Activity {
 	private String kontakt;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sb_nachricht);
-		
-		Bundle b = getIntent().getExtras();
+
+		final Bundle b = getIntent().getExtras();
 		titel = b.getString("titel");
 		autor = b.getString("autor");
 		datum = b.getString("datum");
 		text = b.getString("text");
 		kontakt = b.getString("kontakt");
-			
-		TextView vTitel = (TextView) findViewById(R.id.sb_nachricht_titel);
-		TextView vAutor = (TextView) findViewById(R.id.sb_nachricht_autor);
-		TextView vDatum = (TextView) findViewById(R.id.sb_nachricht_datum);
-		TextView vText = (TextView) findViewById(R.id.sb_nachricht_text);
-		TextView vKontakt = (TextView) findViewById(R.id.sb_nachricht_kontakt);
-		
-		vTitel.setText("Titel: "+titel);
-		vAutor.setText("Autor: "+autor);
-		vDatum.setText("Datum: "+datum);
-		vText.setText("Text:\n"+text);
+
+		final TextView vTitel = (TextView) findViewById(R.id.sb_nachricht_titel_text_view);
+		final TextView vAutor = (TextView) findViewById(R.id.sb_nachricht_autor_text_view);
+		final TextView vDatum = (TextView) findViewById(R.id.sb_nachricht_datum_text_view);
+		final TextView vText = (TextView) findViewById(R.id.sb_nachricht_text_text_view);
+		final TextView vKontakt = (TextView) findViewById(R.id.sb_nachricht_kontakt_text_view);
+
+		vTitel.setText("Titel: " + titel);
+		vAutor.setText("Autor: " + autor);
+		vDatum.setText("Datum: " + datum);
+		vText.setText("Text:\n" + text);
 		vKontakt.setText(kontakt);
 	}
-	
-	public void finish(View view) {
-		this.finish();
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		finish();
 	}
 }

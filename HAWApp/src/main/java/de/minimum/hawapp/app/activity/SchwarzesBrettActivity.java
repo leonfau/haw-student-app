@@ -1,29 +1,34 @@
 package de.minimum.hawapp.app.activity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List; 
+import java.util.List;
 
-import de.minimum.hawapp.app.R;
-import de.minimum.hawapp.app.R.id;
-import de.minimum.hawapp.app.R.layout;
-import de.minimum.hawapp.gui.schwarzesbrett.NachrichtActivity;
-import de.minimum.hawapp.gui.schwarzesbrett.NeueNachrichtActivity; 
-import android.app.Activity; 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle; 
-import android.view.View; 
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter; 
-import android.widget.ListView; 
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+import de.minimum.hawapp.app.R;
+import de.minimum.hawapp.gui.schwarzesbrett.NachrichtActivity;
+import de.minimum.hawapp.gui.schwarzesbrett.NeueNachrichtActivity;
 
 public class SchwarzesBrettActivity extends Activity {
 
 	/*
-	 * ####################################################################################################
-	 * Test Daten
-	 * ####################################################################################################
+	 * ##########################################################################
+	 * ########################## Test Daten
+	 * ####################################
+	 * ################################################################
 	 */
 	// Anfragen
 	String[] titelAnfragen = { "Fahrrad zu verkaufen", "neuer Drucker",
@@ -52,97 +57,213 @@ public class SchwarzesBrettActivity extends Activity {
 	String[] kontaktAngebote = { "Alex S. Tel. 040123456", "Str. Rosenstr 14",
 			"Berliner Tor R565" };
 	int anzahlAngebote = titelAngebote.length;
-
 	// ####################################################################################################
 
-	public void onCreate(Bundle savedInstanceState) {
+	// Nachrichten attribute
+	private String[] titel = titelAnfragen;
+	private String[] autor = autorenAnfragen;
+	private String[] datum = datumAnfragen;
+	private String[] text = textAnfragen;
+	private String[] kontakt = kontaktAnfragen;
+
+	// Button Edit im Menu
+	private MenuItem menuitemEdit;
+	// Modus Flag true = Nachrichten markieren false = Nachrichten lesen
+	private boolean editFlag;
+	// die Pinnwand
+	private ListView pinnwand;
+	// Markierte Nachrichten
+	private final List<TextView> editNachricht = new ArrayList<TextView>();
+
+	@Override
+	protected void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.sb_main);
 
-		createPinnwand(titelAnfragen, autorenAnfragen, datumAnfragen,
-				anzahlAnfragen, textAnfragen, kontaktAnfragen);
-	}
- 
+		createPinnwand();
 
-	/*
+		if (menuitemEdit != null) {
+			editFlag = menuitemEdit.isChecked();
+		} else {
+			editFlag = false;
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(final Menu menu) {
+		final MenuInflater menuInflater = getMenuInflater();
+		menuInflater.inflate(R.layout.sb_main_menu, menu);
+		menuitemEdit = menu.getItem(1);
+		menuitemEdit.setChecked(true);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(final MenuItem item) {
+		// Menubuttons OnClick
+		switch (item.getItemId()) {
+		case R.id.sb_main_menu_delete:
+
+			if (!editNachricht.isEmpty()) {
+
+				String str = "";
+				for (int i = 0; i < editNachricht.size(); i++) {
+					str += editNachricht.get(i).getText();
+					str += i == editNachricht.size() - 1 ? "" : ", ";
+				}
+
+				Toast.makeText(SchwarzesBrettActivity.this, "Delete = " + str,
+						Toast.LENGTH_SHORT).show();
+			}
+
+			return true;
+		case R.id.sb_main_menu_edit:
+			editFlag = item.isChecked();
+			item.setChecked(!editFlag);
+
+			if (editFlag) {
+				item.setIcon(R.drawable.ic_menu_edit);
+			} else {
+				item.setIcon(R.drawable.ic_menu_edit_disable);
+			}
+
+			final String text = editFlag ? "an" : "aus";
+			Toast.makeText(SchwarzesBrettActivity.this,
+					"Markier Modus " + text, Toast.LENGTH_SHORT).show();
+
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	public void loadNeueNachricht(final View view) {
+		final Intent intent = new Intent(getBaseContext(),
+				NeueNachrichtActivity.class);
+		startActivity(intent);
+		editNachricht.clear();
+
+	}
+
+	public void loadAnfragen(final View view) {
+		setTitel(titelAnfragen);
+		setAutor(autorenAnfragen);
+		setDatum(datumAnfragen);
+		setText(textAnfragen);
+		setKontakt(kontaktAnfragen);
+		editNachricht.clear();
+		createPinnwand();
+	}
+
+	public void loadAngebote(final View view) {
+		setTitel(titelAngebote);
+		setAutor(autorenAngebote);
+		setDatum(datumAngebote);
+		setText(textAngebote);
+		setKontakt(kontaktAngebote);
+		editNachricht.clear();
+		createPinnwand();
+	}
+
+	/**
 	 * erstellt die Pinnwand
 	 */
-	private void createPinnwand(final String[] titel, final String[] autor,
-			final String[] datum, int anzahl, final String[] text,
-			final String[] kontakt) {
-		ListView listview = (ListView) findViewById(R.id.sb_main_listview);
-		String[] values = titel;
+	private void createPinnwand() {
 
-		final ArrayList<String> list = new ArrayList<String>();
-		for (int i = 0; i < values.length; ++i) {
-			list.add(values[i]);
-		}
-		final StableArrayAdapter adapter = new StableArrayAdapter(this,
-				android.R.layout.simple_list_item_1, list);
-		listview.setAdapter(adapter);
+		pinnwand = (ListView) findViewById(R.id.sb_main_pinnwand_list_view);
 
-		listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				R.layout.sb_main_pinnwand_elem, getTitel());
+		pinnwand.setAdapter(adapter);
+		pinnwand.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+		pinnwand.setOnItemClickListener(new OnPinnwandClickListener());
+	}
 
-				int i = (int) id;
-				Intent intent = new Intent(SchwarzesBrettActivity.this,
+	// ####### GETTER & SETTER
+
+	public String[] getTitel() {
+		return titel;
+	}
+
+	public void setTitel(final String[] titel) {
+		this.titel = titel;
+	}
+
+	public String[] getAutor() {
+		return autor;
+	}
+
+	public void setAutor(final String[] autor) {
+		this.autor = autor;
+	}
+
+	public String[] getDatum() {
+		return datum;
+	}
+
+	public void setDatum(final String[] datum) {
+		this.datum = datum;
+	}
+
+	public String[] getText() {
+		return text;
+	}
+
+	public void setText(final String[] text) {
+		this.text = text;
+	}
+
+	public String[] getKontakt() {
+		return kontakt;
+	}
+
+	public void setKontakt(final String[] kontakt) {
+		this.kontakt = kontakt;
+	}
+
+	// ########## Innere Klasse
+	private class OnPinnwandClickListener implements OnItemClickListener {
+
+		@Override
+		public void onItemClick(final AdapterView<?> arg0, final View arg1,
+				final int arg2, final long arg3) {
+
+			final CheckedTextView tv = (CheckedTextView) pinnwand
+					.getChildAt(arg2);
+			final String s = tv.getText().toString();
+			int index = -1;
+			for (int i = 0; i < titel.length; i++) {
+				if (titel[i] == s) {
+					index = i;
+				}
+			}
+
+			pinnwand.getCheckItemIds();
+			if (editNachricht.contains(tv)) {
+				editNachricht.remove(tv);
+			} else {
+				editNachricht.add(tv);
+			}
+
+			// Wenn Nicht im Markieren Modus
+			if (!editFlag) {
+				pinnwand.clearChoices();
+				editNachricht.clear();
+				final Intent intent = new Intent(SchwarzesBrettActivity.this,
 						NachrichtActivity.class);
-
-				Bundle b = new Bundle();
-				b.putString("titel", titel[i]);
-				b.putString("autor", autor[i]);
-				b.putString("datum", datum[i]);
-				b.putString("text", text[i]);
-				b.putString("kontakt", kontakt[i]);
+				final Bundle b = new Bundle();
+				b.putString("titel", titel[index]);
+				b.putString("autor", autor[index]);
+				b.putString("datum", datum[index]);
+				b.putString("text", text[index]);
+				b.putString("kontakt", kontakt[index]);
 				intent.putExtras(b);
 
 				startActivity(intent);
 			}
-
-		});
-	}
-
-	public void loadNeueNachricht(View view) {
-		Intent intent = new Intent(getBaseContext(),
-				NeueNachrichtActivity.class);
-		startActivity(intent);
-	}
-
-	public void loadAnfragen(View view) { 
-		createPinnwand(titelAnfragen, autorenAnfragen, datumAnfragen,
-				anzahlAnfragen, textAnfragen, kontaktAnfragen);
-	}
-
-	public void loadAngebote(View view) { 
-		createPinnwand(titelAngebote, autorenAngebote, datumAngebote,
-				anzahlAngebote, textAngebote, kontaktAngebote);
-	}
-
-	private class StableArrayAdapter extends ArrayAdapter<String> {
-
-		HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
-
-		public StableArrayAdapter(Context context, int textViewResourceId,
-				List<String> objects) {
-			super(context, textViewResourceId, objects);
-			for (int i = 0; i < objects.size(); ++i) {
-				mIdMap.put(objects.get(i), i);
-			}
-		}
-
-		@Override
-		public long getItemId(int position) {
-			String item = getItem(position);
-			return mIdMap.get(item);
-		}
-
-		@Override
-		public boolean hasStableIds() {
-			return true;
 		}
 
 	}
+
 }
