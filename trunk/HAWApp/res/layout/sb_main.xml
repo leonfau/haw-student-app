@@ -1,47 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@layout/sb_bg_repeat"
+    android:baselineAligned="false"
     android:orientation="vertical" >
 
     <ListView
-        android:id="@+id/sb_main_listview"
+        android:id="@+id/sb_main_pinnwand_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.89" />
- 
+        android:layout_height="0dp"
+        android:layout_margin="20dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="#00ffffff"
+        android:dividerHeight="10dp" >
+    </ListView>
+
     <LinearLayout
-        android:id="@+id/sb_main_btn_layout"
+        android:id="@+id/sb_main_btnlayout"
         android:layout_width="match_parent"
-        android:layout_height="74dp"
+        android:layout_height="56dp"
         android:orientation="horizontal"
         android:padding="5dp" >
 
         <Button
-            android:id="@+id/btn_sb_main_neue_nachricht"
+            android:id="@+id/sb_main_btn_neue_nachricht"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
             android:layout_gravity="bottom"
             android:onClick="loadNeueNachricht"
-            android:text="@string/sb_main_neue_nachricht" />
+            android:text="@string/sb_main_btn_neue_nachricht"
+            tools:ignore="ButtonStyle" />
 
         <Button
-            android:id="@+id/btn_sb_main_anfragen"
+            android:id="@+id/sb_main_btn_anfragen"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_gravity="bottom"
             android:layout_weight="2"
             android:onClick="loadAnfragen"
-            android:text="@string/sb_main_anfragen" />
+            android:text="@string/sb_main_btn_anfragen"
+            tools:ignore="ButtonStyle" />
 
         <Button
-            android:id="@+id/btn_sb_main_angebote"
+            android:id="@+id/sb_main_btn_angebote"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_gravity="bottom"
             android:layout_weight="2"
             android:onClick="loadAngebote"
-            android:text="@string/sb_main_angebote" /> 
+            android:text="@string/sb_main_btn_angebote"
+            tools:ignore="ButtonStyle" />
     </LinearLayout>
 
 </LinearLayout>
