@@ -15,13 +15,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.sun.istack.logging.Logger;
+
 
 public class MensaPlanImpl implements MensaPlan {
 
-	Map<String, List<Meal>> weekPlan;
-	Map<String, List<Meal>> weekPlanUpdated;
-	Map<UUID, Meal> mealList;
-	List<String> dayList;
+	private Map<String, List<Meal>> weekPlan;
+	private Map<String, List<Meal>> weekPlanUpdated;
+	private Map<UUID, Meal> mealList;
+	private List<String> dayList;
+	private static Logger LOGGER = Logger.getLogger(MensaPlanImpl.class);
 
 	private Date updateTime;
 
@@ -51,6 +54,7 @@ public class MensaPlanImpl implements MensaPlan {
 		this.updateTime = new Date();
 		updateWithoutMerge();
 		mergeWeekPlans();
+		LOGGER.info("update and merge");
 	}
 
 	private void updateWithoutMerge() throws IOException {
@@ -95,11 +99,10 @@ public class MensaPlanImpl implements MensaPlan {
 		for(Map.Entry<String, List<Meal>> dayPlanEntry: weekPlan.entrySet()){
 			List<Meal> oldDayPlan = dayPlanEntry.getValue();
 			List<Meal> updatedDayPlan = weekPlanUpdated.get(dayPlanEntry.getKey());
-			
 			//Alte nicht mehr vorhandene Gerichte entfernen
 			for(Meal oldMeal: oldDayPlan){
 				if(!updatedDayPlan.contains(oldMeal)){
-					oldDayPlan.remove(oldMeal);
+				//	oldDayPlan.remove(oldMeal);
 					mealList.remove(oldMeal.getID());
 				}
 			}
