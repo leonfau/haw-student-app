@@ -75,9 +75,12 @@ public class MealAdapter implements ListAdapter {
 		
 		RatingBar rating = (RatingBar) convertView.findViewById(R.id.ColratingBar);
 		rating.setEnabled(false);
-		rating.setMax(5);
-		//Rating.setRating(Integer.parseInt(""+myArr.get(position).get("RATING")));
-		rating.setRating(Float.parseFloat(myArr.get(position).get("RATING").toString()));
+		int numStars = 5; 
+		rating.setMax(numStars);
+		rating.setStepSize((float) 0.5);
+		
+		float ratingAktuell = (float) (numStars * Double.parseDouble(String.valueOf(myArr.get(position).get("RATING"))) / 100.0);
+		rating.setRating(ratingAktuell);
 		
 		
 		
