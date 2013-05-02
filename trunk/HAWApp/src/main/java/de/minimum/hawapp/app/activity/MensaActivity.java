@@ -18,7 +18,7 @@ import android.widget.RatingBar;
 import android.widget.SimpleAdapter;
 
 public class MensaActivity extends NetworkingActivity {
-    private static final String BESCHREIBUNG = "DESCRIPTION";
+    private static final String BESCHREIBUNG = "BESCHREIBUNG";
     private static final String PREIS = "PREIS";
     private static final String RATING = "RATING";
     ArrayList<HashMap<String, Object>> myArrList;
@@ -69,19 +69,12 @@ public class MensaActivity extends NetworkingActivity {
 		listView = (ListView)findViewById(R.id.mensaList);
 		myArrList = new ArrayList<HashMap<String,Object>>();
 		
-//GUI TEST	
-//		for (int i = 0; i < 25; i++) {
-//			HashMap<String, Object> e = new HashMap<String, Object>();
-//			e.put("BESCHREIBUNG", "Broccoliauflauf mit gekochtem Schinken und Penne (1,2,3,4,14,20,22) Napoli Soße (19) "+i);
-//			e.put("RATING", (i % 5)+"");		
-//			e.put("PREIS", "10.50 € / 20.10 €");
-//			myArrList.add(e);
-//		}
+
 		
 		for (Meal meal : mealsToday.getMeals()) {
 			HashMap<String, Object> e = new HashMap<String, Object>();
 			e.put(BESCHREIBUNG, meal.getDescription());
-			e.put(RATING, meal.getRating()+"");	
+			e.put(RATING, String.valueOf(meal.getRating().getPosRatingInPercent()));	
 			String price = String.valueOf(meal.getStudentPrice() + "€ / " + String.valueOf(meal.getOthersPrice() +"€")).replace('.', ',');
 			e.put(PREIS, price);
 			myArrList.add(e);
