@@ -9,6 +9,8 @@ import de.minimum.hawapp.app.mensa.beans.DayPlan;
 import de.minimum.hawapp.app.mensa.beans.Meal;
 import de.minimum.hawapp.app.mensa.management.MensaManager;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +23,7 @@ public class MensaActivity extends NetworkingActivity {
     private static final String BESCHREIBUNG = "BESCHREIBUNG";
     private static final String PREIS = "PREIS";
     private static final String RATING = "RATING";
+	private static final int DIALOG_DOWNLOAD_JSON_PROGRESS = 0;
     ArrayList<HashMap<String, Object>> myArrList;
 	private ArrayList<HashMap<String, String>>  mylist;
     
@@ -36,8 +39,25 @@ public class MensaActivity extends NetworkingActivity {
 	}
 	
 	@Override
+	protected Dialog onCreateDialog(int id) {
+		ProgressDialog mProgressDialog;
+		switch (id) {
+		case DIALOG_DOWNLOAD_JSON_PROGRESS:
+			mProgressDialog = new ProgressDialog(this);
+			mProgressDialog.setMessage("Downloading.....");
+			mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			mProgressDialog.setCancelable(true);
+			mProgressDialog.show();
+			return mProgressDialog;
+		default:
+			return null;
+		}
+	}
+	
+	@Override
 	public void onResume() {
 		super.onResume();
+		showDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
 		get();
 	}
 	
@@ -54,6 +74,8 @@ public class MensaActivity extends NetworkingActivity {
             protected void onPostExecute(Void arg0) {
                super.onPostExecute(arg0);
                display();
+               dismissDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+   			   removeDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
             }
 
 			@Override
