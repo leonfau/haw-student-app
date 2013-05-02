@@ -74,7 +74,7 @@ public class MensaActivity extends NetworkingActivity {
 		for (Meal meal : mealsToday.getMeals()) {
 			HashMap<String, Object> e = new HashMap<String, Object>();
 			e.put(BESCHREIBUNG, meal.getDescription());
-			e.put(RATING, String.valueOf(meal.getRating().getPosRatingInPercent()));	
+			e.put(RATING, meal.getRating().getPosRatingInPercent());	
 			String price = String.valueOf(meal.getStudentPrice() + "€ / " + String.valueOf(meal.getOthersPrice() +"€")).replace('.', ',');
 			e.put(PREIS, price);
 			myArrList.add(e);
