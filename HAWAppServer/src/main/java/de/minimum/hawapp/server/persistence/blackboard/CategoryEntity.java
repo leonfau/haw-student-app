@@ -14,7 +14,7 @@ import de.minimum.hawapp.server.blackboard.api.Category;
 import de.minimum.hawapp.server.blackboard.api.Offer;
 
 @Entity
-@Table(name = "blackboard_category", catalog = "haw_app")
+@Table(name = "Blackboard_Category", catalog = "haw_app")
 public class CategoryEntity implements Category {
 
     /**

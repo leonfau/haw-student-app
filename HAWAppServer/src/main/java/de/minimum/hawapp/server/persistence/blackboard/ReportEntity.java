@@ -14,7 +14,7 @@ import de.minimum.hawapp.server.blackboard.api.Offer;
 import de.minimum.hawapp.server.blackboard.api.Report;
 
 @Entity
-@Table(name = "blackboard_report", catalog = "haw_app")
+@Table(name = "Blackboard_Report", catalog = "haw_app")
 public class ReportEntity implements Report {
 
     /**
