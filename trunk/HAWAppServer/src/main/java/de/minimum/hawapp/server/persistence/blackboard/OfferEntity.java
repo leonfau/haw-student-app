@@ -18,7 +18,7 @@ import de.minimum.hawapp.server.blackboard.api.Offer;
 
 //TODO kommt die DB mit der rekursiven Strunktur zurecht: Offer -> Category -> Offer -> usw.
 @Entity
-@Table(name = "blackboard_offer", catalog = "haw_app")
+@Table(name = "Blackboard_Offer", catalog = "haw_app")
 public class OfferEntity implements Offer {
 
     /**
@@ -51,9 +51,6 @@ public class OfferEntity implements Offer {
     }
 
     public void setDateOfCreation(Date dateOfCreation) {
-        // dateOfCreation.setHours(0);
-        // dateOfCreation.setMinutes(0);
-        // dateOfCreation.setSeconds(0);// TODO ok so?
         this.dateOfCreation = dateOfCreation;
     }
 

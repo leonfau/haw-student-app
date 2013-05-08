@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import de.minimum.hawapp.server.blackboard.api.Image;
 
 @Entity
-@Table(name = "blackboard_image", catalog = "haw_app")
+@Table(name = "Blackboard_Image", catalog = "haw_app")
 public class ImageEntity implements Image {
 
     /**
