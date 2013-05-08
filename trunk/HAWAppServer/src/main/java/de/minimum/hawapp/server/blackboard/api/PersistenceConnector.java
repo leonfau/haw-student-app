@@ -1,5 +1,7 @@
 package de.minimum.hawapp.server.blackboard.api;
 
+import java.util.List;
+
 import de.minimum.hawapp.server.blackboard.exceptions.PersistenceException;
 
 public interface PersistenceConnector {
@@ -39,4 +41,8 @@ public interface PersistenceConnector {
     Report loadReport(long id) throws PersistenceException;
 
     Category loadCategory(String name) throws PersistenceException;
+
+    List<Category> loadAllCategories() throws PersistenceException;
+
+    boolean removeOldOffers(int ageInDays) throws PersistenceException;
 }

@@ -42,13 +42,10 @@ public class CachingBlackboardManager implements BlackboardManager {
 
     public CachingBlackboardManager() {
         try {
-            this.categories.put("Angebote", this.persConnector.loadCategory("Angebote"));// TODO
-                                                                                         // Dynamisch
-                                                                                         // aus
-                                                                                         // DB
-                                                                                         // holen
-                                                                                         // &
-                                                                                         // Exceptionhandling
+            List<Category> allCategories = this.persConnector.loadAllCategories();
+            for(Category cat : allCategories) {
+                this.categories.put(cat.getName(), cat);
+            }
         }
         catch(PersistenceException e) {
             // TODO Auto-generated catch block
@@ -58,7 +55,14 @@ public class CachingBlackboardManager implements BlackboardManager {
         TimerTask deleteAction = new TimerTask() {
             @Override
             public void run() {
-                removeOldOffers();
+                try {
+                    CachingBlackboardManager.this.persConnector
+                                    .removeOldOffers(CachingBlackboardManager.OFFER_MAX_AGE_IN_DAYS);
+                }
+                catch(PersistenceException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
         };
         // today
@@ -75,13 +79,6 @@ public class CachingBlackboardManager implements BlackboardManager {
         this.offerDeletionTimer.schedule(deleteAction, date.getTime(), TimeUnit.MILLISECONDS.convert(
                         CachingBlackboardManager.DELETION_TIMERINTERVAL_IN_HOURS, TimeUnit.HOURS));
 
-    }
-
-    private void removeOldOffers() {
-        // TODO alle besorgen die älter als
-        // OFFER_MAX_AGE_IN_DAYS sind und löschen -> oder geht das auch über
-        // SQL-Statement??? -> ggf Persistentconnector anpassen ->
-        // removeOldOffers
     }
 
     @Override

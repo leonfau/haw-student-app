@@ -2,6 +2,7 @@ package de.minimum.hawapp.server.facade.serviceprovider;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -130,6 +131,15 @@ public class BlackboardServiceTest extends RestTest {
         return removed;
     }
 
+    private boolean isSameDay(Date d1, Date d2) {
+        Calendar d1Cal = Calendar.getInstance();
+        d1Cal.setTime(d1);
+        Calendar d2Cal = Calendar.getInstance();
+        d2Cal.setTime(d2);
+        return ((d1Cal.get(Calendar.DAY_OF_YEAR) == d2Cal.get(Calendar.DAY_OF_YEAR)) && (d1Cal.get(Calendar.YEAR) == d2Cal
+                        .get(Calendar.YEAR)));
+    }
+
     private void validOfferOnServerTest(OfferEntity offerToCompare, long offerId, String categoryName, String header,
                     String description, String contact, File img, Date compDate) {
         Assert.assertEquals("Id richtig", offerId, offerToCompare.getId());
@@ -138,8 +148,7 @@ public class BlackboardServiceTest extends RestTest {
         Assert.assertEquals("Beschreibung richtig", description, offerToCompare.getDescription());
         Assert.assertEquals("Kontakt richtig", contact, offerToCompare.getContact());
         Assert.assertTrue("Datum != null", offerToCompare.getDateOfCreation() != null);
-        Assert.assertTrue("DateOfCreation im Range", compDate.before(offerToCompare.getDateOfCreation()));
-        Assert.assertTrue("DateOfCreation im Range", new Date().after(offerToCompare.getDateOfCreation()));
+        Assert.assertTrue("DateOfCreation am selben Tag", isSameDay(compDate, offerToCompare.getDateOfCreation()));
 
         if (img != null) {
             byte[] imgBefore = null;

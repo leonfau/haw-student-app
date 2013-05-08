@@ -1,5 +1,6 @@
 package de.minimum.hawapp.server.persistence.blackboard;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -50,6 +51,9 @@ public class OfferEntity implements Offer {
     }
 
     public void setDateOfCreation(Date dateOfCreation) {
+        // dateOfCreation.setHours(0);
+        // dateOfCreation.setMinutes(0);
+        // dateOfCreation.setSeconds(0);// TODO ok so?
         this.dateOfCreation = dateOfCreation;
     }
 
@@ -144,7 +148,8 @@ public class OfferEntity implements Offer {
         result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
         result = prime * result + ((this.header == null) ? 0 : this.header.hashCode());
         result = prime * result + (int)(this.id ^ (this.id >>> 32));
-        result = prime * result + (int)(this.imageId ^ (this.imageId >>> 32));
+        if (this.imageId != null)
+            result = prime * result + (int)(this.imageId ^ (this.imageId >>> 32));
         return result;
     }
 
@@ -161,7 +166,7 @@ public class OfferEntity implements Offer {
             if (other.category != null)
                 return false;
         }
-        else if (!this.category.equals(other.category))
+        else if (!this.category.getName().equals(other.category.getName()))
             return false;
         if (this.contact == null) {
             if (other.contact != null)
@@ -173,7 +178,13 @@ public class OfferEntity implements Offer {
             if (other.dateOfCreation != null)
                 return false;
         }
-        else if (!this.dateOfCreation.equals(other.dateOfCreation))
+        Calendar thisCal = Calendar.getInstance();
+        thisCal.setTime(this.dateOfCreation);
+        Calendar otherCal = Calendar.getInstance();
+        otherCal.setTime(this.dateOfCreation);
+        if (!(thisCal.get(Calendar.DAY_OF_YEAR) == otherCal.get(Calendar.DAY_OF_YEAR) && (thisCal.get(Calendar.YEAR) == otherCal
+                        .get(Calendar.YEAR))))// Weil die Uhrzeit in der DB
+                                              // nicht gespeichert wird
             return false;
         if (this.deletionKey == null) {
             if (other.deletionKey != null)
