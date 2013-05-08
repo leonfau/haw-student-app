@@ -8,6 +8,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sun.jersey.spi.resource.Singleton;
 
 import de.minimum.hawapp.server.calendar.api.AppointmentBO;
@@ -23,25 +26,26 @@ import de.minimum.hawapp.test.util.CleanUpHelper;
 @Path("/calendarservice")
 public class CalendarService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CalendarService.class);
     private final CalendarManager calMngr = ManagerFactory.getManager(CalendarManager.class);
 
-    public final String TEST_CONTEXT = "testContext";
-    public final String CATEGORY = "category";
-    public final String CATEGORIES = "categories";
-    public final String LECTURE = "lecture";
-    public final String LECTURES = "lectures";
-    public final String APPOINTMENT = "appointment";
-    public final String APPOINTMENTS = "appointments";
-    public final String CHANGEMESSAGE = "changeMessage";
-    public final String CHANGEMESSAGES = "changeMessages";
+    public static final String TEST_CONTEXT = "testContext";
+    public static final String CATEGORY = "category";
+    public static final String CATEGORIES = "categories";
+    public static final String LECTURE = "lecture";
+    public static final String LECTURES = "lectures";
+    public static final String APPOINTMENT = "appointment";
+    public static final String APPOINTMENTS = "appointments";
+    public static final String CHANGEMESSAGE = "changeMessage";
+    public static final String CHANGEMESSAGES = "changeMessages";
 
     @GET
-    @Path(TEST_CONTEXT + "/start")
+    @Path(CalendarService.TEST_CONTEXT + "/start")
     @Produces(MediaType.TEXT_PLAIN)
     public String startTestContext() {
         String path = "";
         try {
-            calMngr.deleteAllCalendarDataFromDB();
+            this.calMngr.deleteAllCalendarDataFromDB();
             CleanUpHelper.CLEANUPHELPER_INSTANCE.startAutoCleanUp();
             final CalendarParseManager cl = ManagerFactory.getManager(CalendarParseManager.class);
             path = cl.getClass().getClassLoader()
@@ -56,7 +60,7 @@ public class CalendarService {
     }
 
     @GET
-    @Path(TEST_CONTEXT + "/stop")
+    @Path(CalendarService.TEST_CONTEXT + "/stop")
     @Produces(MediaType.TEXT_PLAIN)
     public String stopTestContext() {
         try {
@@ -77,53 +81,48 @@ public class CalendarService {
     }
 
     @GET
-    @Path(CATEGORIES)
+    @Path(CalendarService.CATEGORIES)
     @Produces(MediaType.APPLICATION_JSON)
     public Set<? extends CategoryBO> getallCategory() {
-        return calMngr.getAllCategories();
+        return this.calMngr.getAllCategories();
     }
 
     @GET
-    @Path(CATEGORY + "/{categoryUuid}")
+    @Path(CalendarService.CATEGORY + "/{categoryUuid}")
     @Produces(MediaType.APPLICATION_JSON)
-    public CategoryBO getCategory(@PathParam("categoryUuid")
-    final String uuid) {
-        return calMngr.getCategoryBO(uuid);
+    public CategoryBO getCategory(@PathParam("categoryUuid") final String uuid) {
+        return this.calMngr.getCategoryBO(uuid);
     }
 
     @GET
-    @Path(LECTURES + "/{categoryUuid}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @SuppressWarnings("unchecked")
-    public Set<LectureBO> getLecturesFromCategory(@PathParam("categoryUuid")
-    final String uuid) {
-
-        return (Set<LectureBO>)calMngr.getLecturesFromCategory(uuid);
-    }
-
-    @GET
-    @Path(LECTURE + "/{lectureUuid}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public LectureBO getLecture(@PathParam("lectureUuid")
-    final String uuid) {
-        return calMngr.getLectureBO(uuid);
-    }
-
-    @GET
-    @Path(APPOINTMENTS + "/{lectureUuid}")
+    @Path(CalendarService.LECTURES + "/{categoryUuid}")
     @Produces(MediaType.APPLICATION_JSON)
     @SuppressWarnings("unchecked")
-    public Set<AppointmentBO> getAppointmentFromLecture(@PathParam("lectureUuid")
-    final String uuid) {
-        return (Set<AppointmentBO>)calMngr.getAppointmentsFromLecture(uuid);
+    public Set<LectureBO> getLecturesFromCategory(@PathParam("categoryUuid") final String uuid) {
+
+        return (Set<LectureBO>)this.calMngr.getLecturesFromCategory(uuid);
     }
 
     @GET
-    @Path(APPOINTMENT + "/{appointmentUuid}")
+    @Path(CalendarService.LECTURE + "/{lectureUuid}")
     @Produces(MediaType.APPLICATION_JSON)
-    public AppointmentBO getAppointment(@PathParam("appointmentUuid")
-    final String uuid) {
-        return calMngr.getAppointment(uuid);
+    public LectureBO getLecture(@PathParam("lectureUuid") final String uuid) {
+        return this.calMngr.getLectureBO(uuid);
+    }
+
+    @GET
+    @Path(CalendarService.APPOINTMENTS + "/{lectureUuid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @SuppressWarnings("unchecked")
+    public Set<AppointmentBO> getAppointmentFromLecture(@PathParam("lectureUuid") final String uuid) {
+        return (Set<AppointmentBO>)this.calMngr.getAppointmentsFromLecture(uuid);
+    }
+
+    @GET
+    @Path(CalendarService.APPOINTMENT + "/{appointmentUuid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public AppointmentBO getAppointment(@PathParam("appointmentUuid") final String uuid) {
+        return this.calMngr.getAppointment(uuid);
     }
 
     // @PUT
@@ -150,20 +149,18 @@ public class CalendarService {
     // }
 
     @GET
-    @Path(CHANGEMESSAGES + "/{lectureUuid}")
+    @Path(CalendarService.CHANGEMESSAGES + "/{lectureUuid}")
     @Produces(MediaType.APPLICATION_JSON)
     @SuppressWarnings("unchecked")
-    public Set<ChangeMessageBO> getChangeMessagesFromLecture(@PathParam("lectureUuid")
-    final String uuid) {
-        return (Set<ChangeMessageBO>)calMngr.getChangeMessageFromLecture(uuid);
+    public Set<ChangeMessageBO> getChangeMessagesFromLecture(@PathParam("lectureUuid") final String uuid) {
+        return (Set<ChangeMessageBO>)this.calMngr.getChangeMessageFromLecture(uuid);
     }
 
     @GET
-    @Path(CHANGEMESSAGE + "/{changeMessageUuid}")
+    @Path(CalendarService.CHANGEMESSAGE + "/{changeMessageUuid}")
     @Produces(MediaType.APPLICATION_JSON)
-    public ChangeMessageBO getChangeMessage(@PathParam("changeMessageUuid")
-    final String uuid) {
-        return calMngr.getChangeMessage(uuid);
+    public ChangeMessageBO getChangeMessage(@PathParam("changeMessageUuid") final String uuid) {
+        return this.calMngr.getChangeMessage(uuid);
     }
 
 }

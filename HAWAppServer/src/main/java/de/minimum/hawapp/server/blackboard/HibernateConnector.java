@@ -1,7 +1,11 @@
 package de.minimum.hawapp.server.blackboard;
 
 import java.io.Serializable;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
 import org.slf4j.Logger;
@@ -22,13 +26,12 @@ import de.minimum.hawapp.server.persistence.blackboard.ImageEntity;
 import de.minimum.hawapp.server.persistence.blackboard.OfferEntity;
 import de.minimum.hawapp.server.persistence.blackboard.ReportEntity;
 
-//TODO alle Hibernate Gesch. mit try Catch umrunden um die sachen als PersistenceExceptions rauszuhauen
 //TODO: delete return anpassen
 public class HibernateConnector implements PersistenceConnector {
 
     private Logger logger = LoggerFactory.getLogger(HibernateConnector.class);
 
-    private static HibernateSessionMgr hibernateSessionMgr = ManagerFactory.getManager(HibernateSessionMgr.class);
+    private HibernateSessionMgr hibernateSessionMgr = ManagerFactory.getManager(HibernateSessionMgr.class);
 
     @Override
     public Image persistImage(byte[] image) throws PersistenceException {
@@ -159,47 +162,119 @@ public class HibernateConnector implements PersistenceConnector {
         return loadPersistent(CategoryEntity.class, name);
     }
 
-    @SuppressWarnings("unchecked")
-    private <T extends Persistent<T>> T loadPersistent(final Class<?> clazz, final Serializable id) {
-        Session session = HibernateConnector.hibernateSessionMgr.getCurrentSession();
-        Transaction trans = session.getTransaction();
-        trans.begin();
-        T obj = (T)session.get(clazz, id);
-        trans.commit();
-        return obj;
+    @Override
+    public List<Category> loadAllCategories() throws PersistenceException {
+        return loadTable(CategoryEntity.class);
     }
 
-    private void persist(Persistent<?> pers) {
-        Session session = HibernateConnector.hibernateSessionMgr.getCurrentSession();
-        Transaction trans = session.getTransaction();
-        trans.begin();
-        session.persist(pers);
-        trans.commit();
+    @Override
+    public boolean removeOldOffers(int ageInDays) throws PersistenceException {
+        try {
+            Session session = this.hibernateSessionMgr.getCurrentSession();
+            Transaction trans = session.getTransaction();
+            trans.begin();
+            Calendar cal = new GregorianCalendar();
+            cal.add(Calendar.DAY_OF_MONTH, -ageInDays);
+            session.createQuery("delete from OfferEntity where dateOfCreation < :date").setDate("date", cal.getTime())
+                            .executeUpdate();
+            trans.commit();
+            return true;
+        }
+        catch(HibernateException ex) {
+            this.logger.error("Deletion of offers older than " + ageInDays + " was not possible: ", ex);
+            throw new PersistenceException(ex);
+        }
     }
 
-    private void delete(Persistent<?> pers) {
-        Session session = HibernateConnector.hibernateSessionMgr.getCurrentSession();
-        Transaction trans = session.getTransaction();
-        trans.begin();
-        session.delete(pers);
-        trans.commit();
+    private <T extends Persistent<T>> List<T> loadTable(final Class<?> clazz) throws PersistenceException {
+        try {
+            Session session = this.hibernateSessionMgr.getCurrentSession();
+            Transaction trans = session.getTransaction();
+            trans.begin();
+            @SuppressWarnings("unchecked")
+            List<T> obj = session.createCriteria(clazz).list();
+            trans.commit();
+            return obj;
+        }
+        catch(HibernateException ex) {
+            this.logger.error("Loading of Table of " + clazz + " was not possible: ", ex);
+            throw new PersistenceException(ex);
+        }
     }
 
-    private void update(Persistent<?> pers) {
-        Session session = HibernateConnector.hibernateSessionMgr.getCurrentSession();
-        Transaction trans = session.getTransaction();
-        trans.begin();
-        session.update(pers);
-        trans.commit();
+    private <T extends Persistent<T>> T loadPersistent(final Class<?> clazz, final Serializable id)
+                    throws PersistenceException {
+        try {
+            Session session = this.hibernateSessionMgr.getCurrentSession();
+            Transaction trans = session.getTransaction();
+            trans.begin();
+            @SuppressWarnings("unchecked")
+            T obj = (T)session.get(clazz, id);
+            trans.commit();
+            return obj;
+        }
+        catch(HibernateException ex) {
+            this.logger.error("Loading of " + clazz + " with id: " + id + " was not possible: ", ex);
+            throw new PersistenceException(ex);
+        }
     }
 
-    private void deleteById(String table, String idName, Serializable id) {
-        Session session = HibernateConnector.hibernateSessionMgr.getCurrentSession();
-        Transaction trans = session.getTransaction();
-        trans.begin();
-        session.createQuery("delete from " + table + " where " + idName + "= :id").setString("id", id.toString())
-                        .executeUpdate();
-        trans.commit();
+    private void persist(Persistent<?> pers) throws PersistenceException {
+        try {
+            Session session = this.hibernateSessionMgr.getCurrentSession();
+            Transaction trans = session.getTransaction();
+            trans.begin();
+            session.persist(pers);
+            trans.commit();
+        }
+        catch(HibernateException ex) {
+            this.logger.error("Persistence of " + pers + " with was not possible: ", ex);
+            throw new PersistenceException(ex);
+        }
+    }
+
+    private void delete(Persistent<?> pers) throws PersistenceException {
+        try {
+            Session session = this.hibernateSessionMgr.getCurrentSession();
+            Transaction trans = session.getTransaction();
+            trans.begin();
+            session.delete(pers);
+            trans.commit();
+        }
+        catch(HibernateException ex) {
+            this.logger.error("Deletion of " + pers + " was not possible: ", ex);
+            throw new PersistenceException(ex);
+        }
+    }
+
+    private void update(Persistent<?> pers) throws PersistenceException {
+        try {
+            Session session = this.hibernateSessionMgr.getCurrentSession();
+            Transaction trans = session.getTransaction();
+            trans.begin();
+            session.update(pers);
+            trans.commit();
+        }
+        catch(HibernateException ex) {
+            this.logger.error("Update of " + pers + " was not possible: ", ex);
+            throw new PersistenceException(ex);
+        }
+    }
+
+    private void deleteById(String table, String idName, Serializable id) throws PersistenceException {
+        try {
+            Session session = this.hibernateSessionMgr.getCurrentSession();
+            Transaction trans = session.getTransaction();
+            trans.begin();
+            session.createQuery("delete from " + table + " where " + idName + "= :id").setString("id", id.toString())
+                            .executeUpdate();
+            trans.commit();
+        }
+        catch(HibernateException ex) {
+            this.logger.error("Deletion of " + idName + " from " + table + " with id: " + id + " was not possible: ",
+                            ex);
+            throw new PersistenceException(ex);
+        }
     }
 
     private PersistenceException generatePersistenceException(Object isObj, Class<?> should) {

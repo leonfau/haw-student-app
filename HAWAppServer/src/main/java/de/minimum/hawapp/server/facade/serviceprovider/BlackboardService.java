@@ -2,8 +2,11 @@ package de.minimum.hawapp.server.facade.serviceprovider;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -12,10 +15,13 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.jersey.multipart.FormDataParam;
 import com.sun.jersey.spi.resource.Singleton;
@@ -26,11 +32,13 @@ import de.minimum.hawapp.server.blackboard.api.Image;
 import de.minimum.hawapp.server.blackboard.api.Offer;
 import de.minimum.hawapp.server.blackboard.util.OfferCreationStatus;
 import de.minimum.hawapp.server.context.ManagerFactory;
+import de.minimum.hawapp.server.facade.util.ServiceProviderLogger;
 
 @Singleton
 @Path("/blackboardservice")
 public class BlackboardService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BlackboardService.class);
     private final BlackboardManager bbMngr = ManagerFactory.getManager(BlackboardManager.class);
 
     /**
@@ -57,9 +65,12 @@ public class BlackboardService {
     @Produces(MediaType.APPLICATION_JSON)
     public OfferCreationStatus newOffer(@FormDataParam("category") String category,
                     @FormDataParam("header") String header, @FormDataParam("description") String descr,
-                    @FormDataParam("contact") String contact, @FormDataParam("image") InputStream uploadedImgStream) {
+                    @FormDataParam("contact") String contact, @FormDataParam("image") InputStream uploadedImgStream,
+                    @Context HttpServletRequest req) {
         // @FormDataParam("image") FormDataContentDisposition fileDetail -> zu
         // den Parametern hinzu fallse Deatils zu der Datei benötigt werden
+        ServiceProviderLogger.logRequest("Creation of offer \"" + header + "\" creation in Category " + category,
+                        BlackboardService.LOGGER, req);
         byte[] img = null;
         if (uploadedImgStream != null) {// TODO
             try {
@@ -86,7 +97,10 @@ public class BlackboardService {
     @DELETE
     @Path("remove/offerid/{offerId}/deletionkey/{delKey}")
     @Produces(MediaType.APPLICATION_JSON)
-    public boolean removeOffer(@PathParam("offerId") long offerId, @PathParam("delKey") String delKey) {
+    public boolean removeOffer(@PathParam("offerId") long offerId, @PathParam("delKey") String delKey,
+                    @Context HttpServletRequest req) {
+        ServiceProviderLogger.logRequest("Trial to remove offer with id: " + offerId + " with key: " + delKey,
+                        BlackboardService.LOGGER, req);
         return this.bbMngr.removeOffer(offerId, delKey);
     }
 
@@ -101,7 +115,9 @@ public class BlackboardService {
      */
     @POST
     @Path("report")
-    public Response report(@FormParam("offerId") long offerId, @FormParam("reason") String reason) {
+    public Response report(@FormParam("offerId") long offerId, @FormParam("reason") String reason,
+                    @Context HttpServletRequest req) {
+        ServiceProviderLogger.logRequest("Report of offer with id: " + offerId, BlackboardService.LOGGER, req);
         this.bbMngr.reportOffer(offerId, reason);
         return Response.ok().build();
     }
@@ -114,7 +130,8 @@ public class BlackboardService {
     @GET
     @Path("alloffers")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Offer> getAllOffers() {
+    public List<Offer> getAllOffers(@Context HttpServletRequest req) {
+        ServiceProviderLogger.logRequest("Request for all offers", BlackboardService.LOGGER, req);
         return this.bbMngr.getAllOffers();
     }
 
@@ -128,7 +145,8 @@ public class BlackboardService {
     @GET
     @Path("offer/{offerId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Offer getOffer(@PathParam("offerId") long offerId) {
+    public Offer getOffer(@PathParam("offerId") long offerId, @Context HttpServletRequest req) {
+        ServiceProviderLogger.logRequest("Request for offer with id: " + offerId, BlackboardService.LOGGER, req);
         return this.bbMngr.getOffer(offerId);
     }
 
@@ -142,7 +160,8 @@ public class BlackboardService {
     @GET
     @Path("category/{category}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Category getCategory(@PathParam("category") String cat) {
+    public Category getCategory(@PathParam("category") String cat, @Context HttpServletRequest req) {
+        ServiceProviderLogger.logRequest("Request for category: " + cat, BlackboardService.LOGGER, req);
         return this.bbMngr.getCategory(cat);
     }
 
@@ -156,10 +175,19 @@ public class BlackboardService {
     @GET
     @Path("search/{searchStr}")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Offer> getOffersBySearchStr(@PathParam("searchStr") String searchStr) {
-        // TODO URLDecoder verwenden um den SearchString wieder zu einem
-        // regulären String zu machen
-        return this.bbMngr.getOffersBySearchStr(searchStr);
+    public List<Offer> getOffersBySearchStr(@PathParam("searchStr") String searchStr, @Context HttpServletRequest req) {
+        String searchString = null;
+        try {
+            searchString = URLDecoder.decode(searchStr, req.getCharacterEncoding());
+        }
+        catch(UnsupportedEncodingException e) {
+            BlackboardService.LOGGER.error(
+                            "Unable to encode: " + searchStr + " with encoding: " + req.getCharacterEncoding(), e);
+            // TODO was tun?
+            e.printStackTrace();
+        }
+        ServiceProviderLogger.logRequest("Searchrequest for: " + searchString, BlackboardService.LOGGER, req);
+        return this.bbMngr.getOffersBySearchStr(searchString);
     }
 
     /**
@@ -175,10 +203,23 @@ public class BlackboardService {
     @Path("search/{searchStr}/category/{category}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Offer> getOffersBySearchStrAndCategory(@PathParam("searchStr") String searchStr,
-                    @PathParam("category") String cat) {
-        // TODO URLDecoder verwenden um den SearchString wieder zu einem
-        // regulären String zu machen
-        return this.bbMngr.getOffersBySearchStrAndCategory(searchStr, cat);
+                    @PathParam("category") String cat, @Context HttpServletRequest req) {
+        String searchString = null;
+        try {
+            searchString = URLDecoder.decode(searchStr, req.getCharacterEncoding());// TODO
+                                                                                    // auch
+                                                                                    // category
+                                                                                    // encoden?
+        }
+        catch(UnsupportedEncodingException e) {
+            BlackboardService.LOGGER.error(
+                            "Unable to encode: " + searchStr + " with encoding: " + req.getCharacterEncoding(), e);
+            // TODO was tun?
+            e.printStackTrace();
+        }
+        ServiceProviderLogger.logRequest("Searchrequest for: " + searchString + " in category: " + cat,
+                        BlackboardService.LOGGER, req);
+        return this.bbMngr.getOffersBySearchStrAndCategory(searchString, cat);
     }
 
     /**
@@ -189,7 +230,8 @@ public class BlackboardService {
     @GET
     @Path("allcategories")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Category> getAllCategories() {
+    public List<Category> getAllCategories(@Context HttpServletRequest req) {
+        ServiceProviderLogger.logRequest("Request for all Categories", BlackboardService.LOGGER, req);
         return this.bbMngr.getAllCategories();
     }
 
@@ -201,7 +243,8 @@ public class BlackboardService {
     @GET
     @Path("allcategorynames")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<String> getAllCategoryNames() {
+    public List<String> getAllCategoryNames(@Context HttpServletRequest req) {
+        ServiceProviderLogger.logRequest("Request for categorynames", BlackboardService.LOGGER, req);
         return this.bbMngr.getAllCategoryNames();
     }
 
@@ -215,7 +258,8 @@ public class BlackboardService {
     @GET
     @Path("image/{imageId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Image getImage(@PathParam("imageId") long imageId) {
+    public Image getImage(@PathParam("imageId") long imageId, @Context HttpServletRequest req) {
+        ServiceProviderLogger.logRequest("Request for image with id: " + imageId, BlackboardService.LOGGER, req);
         return this.bbMngr.getImage(imageId);
     }
 }
