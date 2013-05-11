@@ -8,28 +8,32 @@ import de.minimum.hawapp.app.context.ManagerFactory;
 import de.minimum.hawapp.app.mensa.beans.DayPlan;
 import de.minimum.hawapp.app.mensa.beans.Meal;
 import de.minimum.hawapp.app.mensa.management.MensaManager;
+import de.minimum.hawapp.app.util.InternetConnectionUtil;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RatingBar;
-import android.widget.SimpleAdapter;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MensaActivity extends NetworkingActivity {
-    private static final String BESCHREIBUNG = "BESCHREIBUNG";
-    private static final String PREIS = "PREIS";
-    private static final String RATING = "RATING";
+
 	private static final int DIALOG_DOWNLOAD_JSON_PROGRESS = 0;
+	
+	private final String NO_INTERNET_CONNECTION_MSG = "Keine Internetverbindung vorhanden";
+	private final String NO_DATA_FROM_SERVICE = "Heute kein Essen vorhanden oder Service nicht verfügbar";
+	
     ArrayList<HashMap<String, Object>> myArrList;
-	private ArrayList<HashMap<String, String>>  mylist;
     
-	DayPlan mealsToday; //Wird vom Restservice befüllt beim get()
-	MensaManager manager;
+	private DayPlan mealsToday; //Wird vom Restservice befüllt beim get()
+	private MensaManager manager;
 	private ListView listView;
+	
+	private String notificationOnError;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -80,7 +84,13 @@ public class MensaActivity extends NetworkingActivity {
 
 			@Override
 			protected Void doInBackground(Void... arg0) {
-				mealsToday = manager.getPlanForToday();
+				if (InternetConnectionUtil.hasInternetConnection(getApplicationContext())) {
+					mealsToday = manager.getPlanForToday();
+					notificationOnError = NO_DATA_FROM_SERVICE;
+				} else {
+					mealsToday = null;
+					notificationOnError = NO_INTERNET_CONNECTION_MSG;
+				}
 				return null;
 			}
         }.execute();
@@ -90,21 +100,23 @@ public class MensaActivity extends NetworkingActivity {
 	void display() {
 		listView = (ListView)findViewById(R.id.mensaList);
 		myArrList = new ArrayList<HashMap<String,Object>>();
-		
-
-		
-		for (Meal meal : mealsToday.getMeals()) {
-			HashMap<String, Object> e = new HashMap<String, Object>();
-			e.put(BESCHREIBUNG, meal.getDescription());
-			e.put(RATING, meal.getRating().getPosRatingInPercent());	
-			String price = String.valueOf(meal.getStudentPrice() + "€ / " + String.valueOf(meal.getOthersPrice() +"€")).replace('.', ',');
-			e.put(PREIS, price);
-			myArrList.add(e);
+		TextView date = (TextView)findViewById(R.id.date);
+		date.setText(manager.getTodayAsStringRepresantation());
+		if (mealsToday != null) {
+			for (Meal meal : mealsToday.getMeals()) {
+				HashMap<String, Object> e = new HashMap<String, Object>();
+				e.put("BESCHREIBUNG", meal.getDescription());
+				e.put("RATING", meal.getRating().getPosRatingInPercent());	
+				String price = String.valueOf(meal.getStudentPrice() + "€ / " + String.valueOf(meal.getOthersPrice() +"€")).replace('.', ',');
+				e.put("PREIS", price);
+				myArrList.add(e);
+			}
+		} else {
+			Toast.makeText(getApplicationContext(), notificationOnError, Toast.LENGTH_SHORT).show();
 		}
 
 		listView.setAdapter(new MealAdapter(MensaActivity.this,myArrList));
 	}
-
 	
 //	private void updateNewRatingPoint(int position,String newRatingPoint){		
 //	    View v = listView.getChildAt(position - listView.getFirstVisiblePosition()); 
