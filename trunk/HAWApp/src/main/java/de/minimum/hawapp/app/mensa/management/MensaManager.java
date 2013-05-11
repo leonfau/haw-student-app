@@ -32,4 +32,11 @@ public interface MensaManager {
      * @return Map mit Enums f�r den Tag und Listen der Gerichte
      */
     public List<DayPlan> getWeekPlan();
+    
+    /**
+     * Gibt das Aktuelle Datum mit Wochentag zurück
+     * 
+     * @return String im Format "Wochentag, dd.mm.yyyy "
+     */
+    public String getTodayAsStringRepresantation();
 }
