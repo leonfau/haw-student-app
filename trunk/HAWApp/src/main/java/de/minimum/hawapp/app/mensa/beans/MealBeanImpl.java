@@ -67,5 +67,15 @@ public class MealBeanImpl implements Meal {
 	public void setRating(Rating rating) {
 		this.rating = rating;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (!(o instanceof Meal)) return false;
+		Meal compareMeal = (Meal) o;
+		if (!this.description.equals(compareMeal.getDescription())) return false;
+		if (!this.rating.equals(compareMeal.getRating())) return false;
+		return true;
+	}
 
 }
