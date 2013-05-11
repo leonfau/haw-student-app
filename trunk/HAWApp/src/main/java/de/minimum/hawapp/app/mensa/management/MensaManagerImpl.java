@@ -22,7 +22,7 @@ public class MensaManagerImpl implements MensaManager {
     @Override
     public DayPlan getPlanForToday() {
     	Calendar calendar = Calendar.getInstance();
-    	int day = calendar.get(Calendar.DAY_OF_WEEK);
+    	int day = calendar.get(Calendar.MONDAY);
     	
     	switch (day) {
     	case Calendar.MONDAY: return getDayPlan("Montag");

@@ -84,9 +84,9 @@ public class StisysActivity extends ExpandableListActivity {
         }
 
         // Set up our adapter
-        mAdapter = new SimpleExpandableListAdapter(this, groupData, R.layout.simple_expandable_list_item_1,
+        mAdapter = new SimpleExpandableListAdapter(this, groupData, R.layout.activity_mensa_list_item_1,
                         new String[] { NAME, DESCRIPTION }, new int[] { android.R.id.text1, android.R.id.text2 },
-                        childData, R.layout.simple_expandable_list_item_2, new String[] { NAME, DESCRIPTION },
+                        childData, R.layout.activity_mensa_list_item_2, new String[] { NAME, DESCRIPTION },
                         new int[] { android.R.id.text1, android.R.id.text2 });
         setListAdapter(mAdapter);
     }

@@ -29,7 +29,7 @@
         android:layout_marginTop="6dip"
         android:textAppearance="?android:attr/textAppearanceLarge"
        	android:textSize="@dimen/stisys2"
-        
+		android:textColor="@color/Color2" 
     />
 
     <TextView android:id="@android:id/text2"
@@ -40,6 +40,8 @@
         android:layout_alignLeft="@android:id/text1"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textSize="@dimen/stisys2"
+        android:textColor="@color/Color3" 
     />
+    
 
 </TwoLineListItem>

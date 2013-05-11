@@ -20,4 +20,6 @@
     android:gravity="center_vertical"
     android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
     android:textAppearance="?android:attr/textAppearanceLarge"
-    android:textSize="@dimen/stisys" />
+    android:textSize="@dimen/stisys"
+    android:textColor="@color/Color3" 
+ />
