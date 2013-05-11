@@ -1,11 +1,13 @@
 <resources>
 
-			<style name="AppTheme" parent="android:Theme.Light" />
-			<color name="TextColor1">#002c69</color>
-			<color name="TextColor2">#6c6c6c</color>
-			<color name="TextColorPreis">#00FF00</color>
-			<color name="BackgroundColor">#ebebeb</color>
+			<style name="AppTheme" parent="android:Theme.Light"  />
 			
 			
+			<color name="ColorText">#002c69</color>
+			<color name="Color2">#06091C</color>
+			<color name="Color3">#4171FC</color>
+			<color name="ColorHintText">#8EBAE5</color>
+			<color name="ColorEditText">#000000</color>
+			<color name="ColorBackground">#EBEBEB</color>
 			
 </resources>

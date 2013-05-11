@@ -3,6 +3,7 @@ package de.minimum.hawapp.app.activity;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TabHost;
@@ -43,7 +44,7 @@ public class MainActivity extends TabActivity {
 		intent = new Intent().setClass(this, StisysActivity.class);
 		spec = tabHost
 				.newTabSpec("Stisys")
-				.setIndicator("StiSys",
+				.setIndicator("",
 						res.getDrawable(R.drawable.ic_tab_stisys))
 				.setContent(intent);
 		tabHost.addTab(spec);
@@ -56,13 +57,19 @@ public class MainActivity extends TabActivity {
 
 		intent = new Intent().setClass(this, SchwarzesBrettActivity.class);
 		spec = tabHost.newTabSpec("Blackboard")
-				.setIndicator("", res.getDrawable(R.drawable.ic_tab_kalender))
+				.setIndicator("", res.getDrawable(R.drawable.ic_tab_brett))
 				.setContent(intent);
 		tabHost.addTab(spec);
 
 		stisys = tabHost.getTabWidget().getChildTabViewAt(2);
 		stisys.setEnabled(boolStisys);
-
+		
+		tabHost.getTabWidget().getChildAt(0).setBackgroundColor(Color.parseColor("#06091C"));
+		tabHost.getTabWidget().getChildAt(1).setBackgroundColor(Color.parseColor("#06091C"));
+		tabHost.getTabWidget().getChildAt(2).setBackgroundColor(Color.parseColor("#06091C"));
+		tabHost.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#06091C"));
+		tabHost.getTabWidget().getChildAt(4).setBackgroundColor(Color.parseColor("#06091C"));
+				
 		tabHost.setCurrentTab(0);
 	}
 

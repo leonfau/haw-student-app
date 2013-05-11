@@ -61,7 +61,7 @@ public class MealAdapter implements ListAdapter {
 			convertView = inflater.inflate(R.layout.activity_mensa_row, null);
 		}
 		
-		TextView txtView = (TextView) convertView.findViewById(R.id.beschreibung);
+		TextView txtView = (TextView) convertView.findViewById(R.id.mealDescription);
 		txtView.setPadding(5, 0, 0, 0);
 		txtView.setText(myArr.get(position).get("BESCHREIBUNG").toString());
 		txtView.setOnClickListener(new View.OnClickListener() {
@@ -73,7 +73,7 @@ public class MealAdapter implements ListAdapter {
 			}
 		});
 		
-		RatingBar rating = (RatingBar) convertView.findViewById(R.id.ColratingBar);
+		RatingBar rating = (RatingBar) convertView.findViewById(R.id.rating);
 		rating.setEnabled(false);
 		int numStars = 5; 
 		rating.setMax(numStars);
@@ -84,7 +84,7 @@ public class MealAdapter implements ListAdapter {
 		
 		
 		
-		TextView txtViewPreis = (TextView) convertView.findViewById(R.id.preis);
+		TextView txtViewPreis = (TextView) convertView.findViewById(R.id.price);
 		txtViewPreis.setPadding(5, 0, 0, 0);
 		txtViewPreis.setText(myArr.get(position).get("PREIS").toString());
 

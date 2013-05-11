@@ -13,19 +13,19 @@
          android:layout_marginTop="20dp" 
          >
  
-     <TextView android:id="@+id/beschreibung"
+     <TextView android:id="@+id/mealDescription"
          android:layout_width="wrap_content"
          android:textStyle="italic"
    		 android:textSize="11sp"
          android:layout_height="wrap_content" 
          android:layout_weight="1"         
-         android:textColor="@color/TextColor2"
+         android:textColor="@color/ColorText"
          android:layout_marginLeft="5dp"
      	 android:layout_marginRight="5dp"   
          />
 
      <RatingBar
-         android:id="@+id/ColratingBar"
+         android:id="@+id/rating"
          style="?android:attr/ratingBarStyleSmall"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
@@ -41,13 +41,13 @@
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/preis"
+            android:id="@+id/price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_weight="1"
-            android:textColor="@color/TextColor1" />
+            android:textColor="@color/Color3" />
     </TableRow>
  
 </TableLayout>
