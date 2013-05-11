@@ -17,4 +17,13 @@ public class RatingBeanImpl implements Rating {
 	public void setposRatingInPercent(int posRatingInPercent) {
 		this.posRatingInPercent = posRatingInPercent;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		if (!(o instanceof Meal)) return false;
+		Rating compareRating = (Rating) o;
+		if (this.posRatingInPercent != compareRating.getPosRatingInPercent()) return false;
+		return true;
+	}
 }

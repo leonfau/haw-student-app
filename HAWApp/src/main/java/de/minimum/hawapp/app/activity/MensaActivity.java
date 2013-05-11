@@ -1,5 +1,6 @@
 package de.minimum.hawapp.app.activity;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,10 +11,8 @@ import de.minimum.hawapp.app.mensa.beans.Meal;
 import de.minimum.hawapp.app.mensa.management.MensaManager;
 import de.minimum.hawapp.app.util.InternetConnectionUtil;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.ListView;
@@ -30,16 +29,20 @@ public class MensaActivity extends NetworkingActivity {
     ArrayList<HashMap<String, Object>> myArrList;
     
 	private DayPlan mealsToday; //Wird vom Restservice befüllt beim get()
+	private DayPlan mealsCached;
+	
 	private MensaManager manager;
 	private ListView listView;
 	
 	private String notificationOnError;
+	private boolean dialogShown;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mensa);
 		manager = ManagerFactory.getManager(MensaManager.class);
+		myArrList = new ArrayList<HashMap<String,Object>>();
 	}
 	
 	@Override
@@ -61,7 +64,10 @@ public class MensaActivity extends NetworkingActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		showDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+		if (mealsCached == null) {
+			dialogShown = true;
+			showDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+		}
 		get();
 	}
 	
@@ -78,14 +84,20 @@ public class MensaActivity extends NetworkingActivity {
             protected void onPostExecute(Void arg0) {
                super.onPostExecute(arg0);
                display();
-               dismissDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
-   			   removeDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+               if (dialogShown) {
+                   dismissDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+       			   removeDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+       			   dialogShown = false;
+               }
+
             }
 
 			@Override
 			protected Void doInBackground(Void... arg0) {
 				if (InternetConnectionUtil.hasInternetConnection(getApplicationContext())) {
+					mealsCached = mealsToday;
 					mealsToday = manager.getPlanForToday();
+					if (mealsCached == null) mealsCached = mealsToday;
 					notificationOnError = NO_DATA_FROM_SERVICE;
 				} else {
 					mealsToday = null;
@@ -98,24 +110,38 @@ public class MensaActivity extends NetworkingActivity {
 	
 	@Override
 	void display() {
-		listView = (ListView)findViewById(R.id.mensaList);
-		myArrList = new ArrayList<HashMap<String,Object>>();
 		TextView date = (TextView)findViewById(R.id.date);
 		date.setText(manager.getTodayAsStringRepresantation());
-		if (mealsToday != null) {
+		listView = (ListView)findViewById(R.id.mensaList);
+		
+		if (mealsToday == null) {
+			Toast.makeText(getApplicationContext(), notificationOnError, Toast.LENGTH_SHORT).show();
+			mealsToday = mealsCached;
+		}
+		if (mealsToday != null && !mealsToday.equals(mealsCached)) {
+			myArrList = new ArrayList<HashMap<String,Object>>();
 			for (Meal meal : mealsToday.getMeals()) {
 				HashMap<String, Object> e = new HashMap<String, Object>();
 				e.put("BESCHREIBUNG", meal.getDescription());
 				e.put("RATING", meal.getRating().getPosRatingInPercent());	
-				String price = String.valueOf(meal.getStudentPrice() + "€ / " + String.valueOf(meal.getOthersPrice() +"€")).replace('.', ',');
+				String price = formatPrices(meal.getStudentPrice(),meal.getOthersPrice());
 				e.put("PREIS", price);
 				myArrList.add(e);
 			}
-		} else {
-			Toast.makeText(getApplicationContext(), notificationOnError, Toast.LENGTH_SHORT).show();
 		}
-
 		listView.setAdapter(new MealAdapter(MensaActivity.this,myArrList));
+	}
+	
+	private String formatPrices(double studentPrice, double otherPrice) {
+			DecimalFormat df = new DecimalFormat("#0.00");
+			
+			StringBuilder prices = new StringBuilder();
+			prices.append(df.format(studentPrice));
+			prices.append("€ /");
+			prices.append(df.format(otherPrice));
+			prices.append("€");
+			
+			return prices.toString().replace('.', ',');
 	}
 	
 //	private void updateNewRatingPoint(int position,String newRatingPoint){		
