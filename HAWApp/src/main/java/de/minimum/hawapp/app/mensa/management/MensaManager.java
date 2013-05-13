@@ -1,7 +1,6 @@
 package de.minimum.hawapp.app.mensa.management;
 
 import java.util.List;
-import java.util.Map;
 
 import de.minimum.hawapp.app.mensa.beans.DayPlan;
 import de.minimum.hawapp.app.mensa.beans.Meal;
@@ -39,4 +38,16 @@ public interface MensaManager {
      * @return String im Format "Wochentag, dd.mm.yyyy "
      */
     public String getTodayAsStringRepresantation();
+    
+    /**
+     * Bewertet Essen positiv im Backend
+     * @param meal
+     */
+    public void ratePositive(Meal meal);
+    
+    /**
+     * Bewertet Essen negativ im Backend
+     * @param meal
+     */
+    public void rateNegative(Meal meal);
 }

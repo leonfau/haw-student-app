@@ -1,5 +1,7 @@
 package de.minimum.hawapp.app.mensa.beans;
 
+import java.util.UUID;
+
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
 @JsonDeserialize(as=MealBeanImpl.class)
@@ -24,5 +26,11 @@ public interface Meal {
      * Gibt das Rating Objekt des Gerichts zur�ck
      */
     public Rating getRating();
+    
+    /**
+     * Gibt die UUID des Gerichtes zurück
+     * @return
+     */
+    public UUID getId();
 
 }
