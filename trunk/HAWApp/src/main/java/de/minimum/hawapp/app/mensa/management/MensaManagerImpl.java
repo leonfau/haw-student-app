@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import de.minimum.hawapp.app.mensa.beans.DayPlan;
+import de.minimum.hawapp.app.mensa.beans.Meal;
 import de.minimum.hawapp.app.rest.MensaService;
 
 public class MensaManagerImpl implements MensaManager {
@@ -61,4 +62,14 @@ public class MensaManagerImpl implements MensaManager {
     	today.append(format.format(calendar.getTime()));
     	return today.toString();
     }
+
+	@Override
+	public void ratePositive(Meal meal) {
+		mensaService.ratePositive(meal.getId());
+	}
+
+	@Override
+	public void rateNegative(Meal meal) {
+		mensaService.rateNegative(meal.getId());
+	}
 }

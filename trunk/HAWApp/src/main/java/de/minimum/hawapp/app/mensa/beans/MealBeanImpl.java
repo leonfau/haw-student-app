@@ -23,7 +23,7 @@ public class MealBeanImpl implements Meal {
 
 	public MealBeanImpl(){};
 	
-	
+	@Override
 	public UUID getId() {
 		return id;
 	}

@@ -3,6 +3,7 @@ package de.minimum.hawapp.app.activity;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
 import de.minimum.hawapp.app.R;
 import de.minimum.hawapp.app.context.ManagerFactory;
@@ -11,6 +12,7 @@ import de.minimum.hawapp.app.mensa.beans.Meal;
 import de.minimum.hawapp.app.mensa.management.MensaManager;
 import de.minimum.hawapp.app.util.InternetConnectionUtil;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -28,7 +30,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MensaActivity extends NetworkingActivity {
+public class MensaActivity extends Activity {
 
 	private static final int DIALOG_DOWNLOAD_JSON_PROGRESS = 0;
 
@@ -77,16 +79,43 @@ public class MensaActivity extends NetworkingActivity {
 			dialogShown = true;
 			showDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
 		}
-		get();
+		getMeals();
 	}
 
-	@Override
-	void put() {
-		// TODO send rating
+
+	void rate(UUID mealId, final boolean positive) {
+		Meal mealToRate = null;
+		for (Meal meal : mealsToday.getMeals()) {
+			if (meal.getId().equals(mealId)) {
+				mealToRate = meal;
+			}
+		}
+		final Meal rated = mealToRate;
+		new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected void onPostExecute(Void arg0) {
+               super.onPostExecute(arg0);
+               getMeals();
+            }
+
+			@Override
+			protected Void doInBackground(Void... arg0) {
+				if (InternetConnectionUtil.hasInternetConnection(getApplicationContext())) {
+					if (positive) {
+						manager.ratePositive(rated);
+					} else {
+						manager.rateNegative(rated);
+					}
+				}
+				System.out.println("put abgearbeitet");
+				return null;
+			}
+        }.execute();
 	}
 
-	@Override
-	void get() {
+
+	void getMeals() {
 		new AsyncTask<Void, Void, Void>() {
 
 			@Override
@@ -119,7 +148,6 @@ public class MensaActivity extends NetworkingActivity {
 		}.execute();
 	}
 
-	@Override
 	void display() {
 		TextView date = (TextView) findViewById(R.id.date);
 		date.setText(manager.getTodayAsStringRepresantation());
@@ -134,6 +162,7 @@ public class MensaActivity extends NetworkingActivity {
 			myArrList = new ArrayList<HashMap<String, Object>>();
 			for (Meal meal : mealsToday.getMeals()) {
 				HashMap<String, Object> e = new HashMap<String, Object>();
+				e.put("UUID", meal.getId());
 				e.put("BESCHREIBUNG", meal.getDescription());
 				e.put("RATING", meal.getRating().getPosRatingInPercent());
 				String price = formatPrices(meal.getStudentPrice(),
@@ -167,7 +196,7 @@ public class MensaActivity extends NetworkingActivity {
 	// rating.setEnabled(false); // False
 	// }
 
-	public void showDialogVote(int position, String strMealBeschreibung) {
+	public void showDialogVote(int position, String strMealBeschreibung, final UUID mealId) {
 		final AlertDialog.Builder popDialog = new AlertDialog.Builder(this);
 		final AlertDialog.Builder adb = new AlertDialog.Builder(this);
 		final LayoutInflater inflater = (LayoutInflater) this
@@ -194,9 +223,7 @@ public class MensaActivity extends NetworkingActivity {
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						//TODO: UPDATE NEW RATING
-						//
-						//
-						//
+						rate(mealId, true);
 						dialog.dismiss();
 					}
 				}).setNegativeButton("Cancel",
@@ -262,6 +289,7 @@ public class MensaActivity extends NetworkingActivity {
 					.findViewById(R.id.mealDescription);
 			txtView.setPadding(5, 0, 0, 0);
 			txtView.setText(myArr.get(position).get("BESCHREIBUNG").toString());
+			final UUID id = UUID.fromString(myArr.get(position).get("UUID").toString());
 			txtView.setOnClickListener(new View.OnClickListener() {
 
 				@Override
@@ -271,8 +299,7 @@ public class MensaActivity extends NetworkingActivity {
 					// Toast.LENGTH_LONG).show();
 					String strMealBeschreibung = myArr.get(position)
 							.get("BESCHREIBUNG").toString();
-
-					showDialogVote(position, strMealBeschreibung); // Click Show
+					showDialogVote(position, strMealBeschreibung, id); // Click Show
 																	// Dialog
 																	// Vote
 
