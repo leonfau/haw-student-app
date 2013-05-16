@@ -56,22 +56,25 @@ public class MensaServiceTest extends RestTest {
         checkResponse(response);
         DayplanEntity dayplan = response.getEntity(DayplanEntity.class);
         MealEntity meal = dayplan.getMeals().get(0);
-        WebResource rateResource = this.client.resource(MensaServiceTest.MENSA_SERVICE_URL + "/positiverate/"
-                        + meal.getId());
-        ClientResponse rateResponse = rateResource.accept(MediaType.APPLICATION_JSON).put(ClientResponse.class);
+        WebResource rateResource = this.client.resource(MensaServiceTest.MENSA_SERVICE_URL + "/rate/" + meal.getId()
+                        + "/stars/" + 5);
+        ClientResponse rateResponse = rateResource.post(ClientResponse.class);
         checkResponse(rateResponse);
-        RatingEntity newRate = rateResponse.getEntity(RatingEntity.class);
+        ClientResponse newRateResponse = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+        checkResponse(newRateResponse);
+        RatingEntity newRate = newRateResponse.getEntity(DayplanEntity.class).getMeals().get(0).getRating();
         Assert.assertTrue("Bewertung gestiegen.", newRate.getPosRatingInPercent() > meal.getRating()
                         .getPosRatingInPercent());
 
-        WebResource rateNegResource = this.client.resource(MensaServiceTest.MENSA_SERVICE_URL + "/negativerate/"
-                        + meal.getId());
-        ClientResponse rateNegResponse = rateNegResource.accept(MediaType.APPLICATION_JSON).put(ClientResponse.class);
+        WebResource rateNegResource = this.client.resource(MensaServiceTest.MENSA_SERVICE_URL + "/rate/" + meal.getId()
+                        + "/stars/" + 1);
+        ClientResponse rateNegResponse = rateNegResource.post(ClientResponse.class);
         checkResponse(rateNegResponse);
-        RatingEntity newRate2 = rateNegResponse.getEntity(RatingEntity.class);
+        ClientResponse newRateResponse2 = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+        checkResponse(newRateResponse2);
+        RatingEntity newRate2 = newRateResponse2.getEntity(DayplanEntity.class).getMeals().get(0).getRating();
         Assert.assertTrue("Bewertung gesunken.", newRate2.getPosRatingInPercent() < newRate.getPosRatingInPercent());
-        Assert.assertTrue("Bewertung wieder die Alte.", newRate2.getPosRatingInPercent() == meal.getRating()
-                        .getPosRatingInPercent());
+        Assert.assertEquals("Bewertung gleich 60.", 60, newRate2.getPosRatingInPercent());
     }
 
     private boolean isEveryWeekdayExisting(List<DayplanEntity> planList) {
