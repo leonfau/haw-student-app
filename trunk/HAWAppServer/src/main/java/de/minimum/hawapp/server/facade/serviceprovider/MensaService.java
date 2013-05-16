@@ -5,12 +5,13 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,11 +20,9 @@ import com.sun.jersey.spi.resource.Singleton;
 
 import de.minimum.hawapp.server.context.ManagerFactory;
 import de.minimum.hawapp.server.facade.util.ServiceProviderLogger;
-import de.minimum.hawapp.server.facade.wrapper.mensa.RatingWrapper;
 import de.minimum.hawapp.server.mensa.Day;
 import de.minimum.hawapp.server.mensa.DayPlan;
 import de.minimum.hawapp.server.mensa.MensaManager;
-import de.minimum.hawapp.server.mensa.Rating;
 
 @Singleton
 @Path("/mensaservice")
@@ -61,18 +60,12 @@ public class MensaService {
         return this.mensaMngr.getWeekPlan();
     }
 
-    @PUT
-    @Path("/positiverate/{mealId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Rating ratePositive(@PathParam("mealId") UUID id, @Context HttpServletRequest req) {
-        ServiceProviderLogger.logRequest("Positive rating of meal: " + id, MensaService.LOGGER, req);
-        return new RatingWrapper(this.mensaMngr.rateMealPositive(id));
-    }
-
-    @PUT
-    @Path("/negativerate/{mealId}")
-    public Rating rateNegative(@PathParam("mealId") UUID id, @Context HttpServletRequest req) {
-        ServiceProviderLogger.logRequest("Negative rating of meal: " + id, MensaService.LOGGER, req);
-        return new RatingWrapper(this.mensaMngr.rateMealNegative(id));
+    @POST
+    @Path("/rate/{mealId}/stars/{stars}")
+    public Response rate(@PathParam("mealId") UUID id, @PathParam("stars") int stars, @Context HttpServletRequest req) {
+        ServiceProviderLogger.logRequest("Rating of meal: " + id + " Rating: " + stars + " Stars", MensaService.LOGGER,
+                        req);
+        this.mensaMngr.rate(id, stars);
+        return Response.ok().build();
     }
 }
