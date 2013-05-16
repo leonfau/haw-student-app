@@ -10,4 +10,11 @@
 			<color name="ColorEditText">#000000</color>
 			<color name="ColorBackground">#EBEBEB</color>
 			
+			<style name="foodRatingBar" parent="@android:style/Widget.RatingBar">
+		        <item name="android:progressDrawable">@drawable/ratingstars</item>
+		        <item name="android:minHeight">22dip</item>
+		        <item name="android:maxHeight">22dip</item>
+		    </style>
+			
+			
 </resources>
