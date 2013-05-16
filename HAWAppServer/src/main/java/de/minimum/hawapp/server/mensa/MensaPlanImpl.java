@@ -96,7 +96,9 @@ public class MensaPlanImpl implements MensaPlan {
 							0, 3));
 					double othersPrice = Double.parseDouble(mPrice.substring(8,
 							11));
-					String description = m.replaceAll("..\\d,.*", "");
+					String description = m.replaceAll(".\\d,.*", "")
+							.replaceAll(" +", " ")
+							.replaceAll(" , ", ", ");
 					this.weekPlanUpdated.get(this.dayList.get(dayIndex)).add(
 							MealImpl.Meal(description, studentPrice,
 									othersPrice));
