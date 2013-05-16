@@ -41,13 +41,7 @@ public interface MensaManager {
     
     /**
      * Bewertet Essen positiv im Backend
-     * @param meal
+     * @param meal stars
      */
-    public void ratePositive(Meal meal);
-    
-    /**
-     * Bewertet Essen negativ im Backend
-     * @param meal
-     */
-    public void rateNegative(Meal meal);
+    public void rate(Meal meal, int stars);
 }
