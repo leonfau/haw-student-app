@@ -1,12 +1,12 @@
 package de.minimum.hawapp.server.mensa;
 
 public class RatingImpl implements Rating {
-    int positiv;
-    int negativ;
-
+	int ratingCount;
+	int ratingValue;
+	
     private RatingImpl() {
-        this.positiv = 0;
-        this.negativ = 0;
+        this.ratingCount = 0;
+        this.ratingValue = 0;
     }
 
     public static RatingImpl Rating() {
@@ -15,19 +15,14 @@ public class RatingImpl implements Rating {
 
     @Override
     public int getPosRatingInPercent() {
-        if (this.positiv + this.negativ == 0)
-            return 50;
-        return (int) ((100.0 / (this.positiv + this.negativ)) * this.positiv);
+    	if (ratingCount <= 0) return 0;
+        return (ratingValue/ratingCount)*20;
     }
 
     @Override
-    public void ratePoitiv() {
-        this.positiv++;
-    }
-
-    @Override
-    public void rateNegativ() {
-        this.negativ++;
+    public void rate(int stars) {
+        ratingValue += stars;
+        ratingCount++;
     }
 
 }
