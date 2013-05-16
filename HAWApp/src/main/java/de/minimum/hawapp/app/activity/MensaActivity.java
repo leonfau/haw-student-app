@@ -27,6 +27,8 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RatingBar;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -290,7 +292,9 @@ public class MensaActivity extends Activity {
 			txtView.setPadding(5, 0, 0, 0);
 			txtView.setText(myArr.get(position).get("BESCHREIBUNG").toString());
 			final UUID id = UUID.fromString(myArr.get(position).get("UUID").toString());
-			txtView.setOnClickListener(new View.OnClickListener() {
+			
+			TableLayout tableLayout = (TableLayout) convertView.findViewById(R.id.tableLayout1); 
+			tableLayout.setOnClickListener(new View.OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
@@ -305,6 +309,23 @@ public class MensaActivity extends Activity {
 
 				}
 			});
+//			txtView.setOnClickListener(new View.OnClickListener() {
+//
+//				@Override
+//				public void onClick(View v) {
+//					// display in short period of time
+//					// Toast.makeText(context,"coming soon",
+//					// Toast.LENGTH_LONG).show();
+//					String strMealBeschreibung = myArr.get(position)
+//							.get("BESCHREIBUNG").toString();
+//					showDialogVote(position, strMealBeschreibung, id); // Click Show
+//																	// Dialog
+//																	// Vote
+//
+//				}
+//			});
+			
+			
 
 			RatingBar rating = (RatingBar) convertView
 					.findViewById(R.id.rating);
