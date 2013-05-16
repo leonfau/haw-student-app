@@ -14,8 +14,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import com.sun.istack.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MensaPlanImpl implements MensaPlan {
 
@@ -23,7 +23,7 @@ public class MensaPlanImpl implements MensaPlan {
 	private Map<String, List<Meal>> weekPlanUpdated;
 	private Map<UUID, Meal> mealList;
 	private List<String> dayList;
-	private static Logger LOGGER = Logger.getLogger(MensaPlanImpl.class);
+	private static Logger LOGGER = LoggerFactory.getLogger(MensaPlanImpl.class);
 
 	private Date updateTime;
 
@@ -68,7 +68,6 @@ public class MensaPlanImpl implements MensaPlan {
 		Element table = doc.getElementById("week-menu");
 		// Tage raussuchen
 		Elements days = table.getElementsByClass("day");
-
 		int dayIndex = 0;
 		for (Element meal : days) {
 			if (dayIndex >= 5) {
@@ -116,6 +115,7 @@ public class MensaPlanImpl implements MensaPlan {
 			// Alte nicht mehr vorhandene Gerichte entfernen
 			for (Meal oldMeal : oldDayPlan) {
 				if (!updatedDayPlan.contains(oldMeal)) {
+					LOGGER.debug(dayPlanEntry.getKey() + " Meal " + oldMeal + " removed");
 					// oldDayPlan.remove(oldMeal);
 					mealList.remove(oldMeal.getID());
 				}
@@ -123,6 +123,7 @@ public class MensaPlanImpl implements MensaPlan {
 			// Neue Gerichte einfügen
 			for (Meal updatedMeal : updatedDayPlan) {
 				if (!oldDayPlan.contains(updatedMeal)) {
+					LOGGER.debug(dayPlanEntry.getKey() + " Meal "+ updatedMeal + " added");
 					oldDayPlan.add(updatedMeal);
 					mealList.put(updatedMeal.getID(), updatedMeal);
 				}

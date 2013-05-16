@@ -64,15 +64,10 @@ public class MensaManagerImpl implements MensaManager {
 
     }
 
-    @Override
-    public int rateMealPositive(UUID id) {
-        this.plan.getMealByID(id).getRating().ratePoitiv();
-        return getMealRaiting(id);
-    }
 
     @Override
-    public int rateMealNegative(UUID id) {
-        this.plan.getMealByID(id).getRating().rateNegativ();
+    public int rate(UUID id, int stars) {
+        this.plan.getMealByID(id).getRating().rate(stars);
         return getMealRaiting(id);
     }
 

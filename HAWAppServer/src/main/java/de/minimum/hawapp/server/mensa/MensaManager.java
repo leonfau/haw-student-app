@@ -46,20 +46,12 @@ public interface MensaManager {
      * @return  Datum und die Zeit des letzten Updates 
      */
     public Date getUpdateTime();
-    
+
     /**
-     * Bewertet das Gericht mit einer Stimme positiv
-     * @param id: id des Gerichts, das Bewertet wird
-     * @return Prozent der positiven Bewertungen (zwischen 0 und 100)
+     * Bewertet das mit der mitgegebenen Anzahl an Sternen
+     * @return neue Bewertung in Prozent
      */
-    public int rateMealPositive(UUID id);
-    
-    /**
-     * Bewertet das Gericht mit einer Stimme negativ
-     * @param id: id des Gerichts, das Bewertet wird
-     * @return Prozent der positiven Bewertungen (zwischen 0 und 100)
-     */
-    public int rateMealNegative(UUID id);
+    public int rate(UUID id, int stars);
     
     /**
      * 

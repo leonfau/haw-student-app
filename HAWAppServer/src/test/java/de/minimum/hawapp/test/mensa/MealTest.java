@@ -36,19 +36,14 @@ public class MealTest {
 		double studentPriceA = 2.99;
 		double otherPriceA = 5.99;
 		Meal mealA = MealImpl.Meal(descriptionA, studentPriceA, otherPriceA);
-		assertEquals(50, mealA.getRating().getPosRatingInPercent());
-		mealA.getRating().ratePoitiv();
-		assertEquals(100, mealA.getRating().getPosRatingInPercent());
-		mealA.getRating().ratePoitiv();
-		assertEquals(100, mealA.getRating().getPosRatingInPercent());
-		mealA.getRating().rateNegativ();
-		assertEquals(66, mealA.getRating().getPosRatingInPercent());
-		mealA.getRating().rateNegativ();
-		assertEquals(50, mealA.getRating().getPosRatingInPercent());
-		mealA.getRating().rateNegativ();
+		assertEquals(0, mealA.getRating().getPosRatingInPercent());
+		mealA.getRating().rate(1);
+		assertEquals(20, mealA.getRating().getPosRatingInPercent());
+		mealA.getRating().rate(1);
+		assertEquals(20, mealA.getRating().getPosRatingInPercent());
+		mealA.getRating().rate(4);
 		assertEquals(40, mealA.getRating().getPosRatingInPercent());
-		mealA.getRating().rateNegativ();
-		assertEquals(33, mealA.getRating().getPosRatingInPercent());
+	
 	}
 
 }
