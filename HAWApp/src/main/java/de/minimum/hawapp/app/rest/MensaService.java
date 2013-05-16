@@ -66,20 +66,10 @@ public class MensaService {
         }
     }
 
-    public void ratePositive(UUID mealId) {
-        final String url = RestConst.HOST + MensaService.BASE_URL + "rate/" + mealId + "/stars/" + 5;
+    public void rate(UUID mealId, int stars) {
+        final String url = RestConst.HOST + MensaService.BASE_URL + "rate/" + mealId + "/stars/" + stars;
         try {
             this.restTemplate.postForObject(url, null, ResponseEntity.class);
-        }
-        catch(RestClientException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void rateNegative(UUID mealId) {
-        final String url = RestConst.HOST + MensaService.BASE_URL + "negativerate/" + mealId;
-        try {
-            this.restTemplate.put(url, null);
         }
         catch(RestClientException e) {
             e.printStackTrace();

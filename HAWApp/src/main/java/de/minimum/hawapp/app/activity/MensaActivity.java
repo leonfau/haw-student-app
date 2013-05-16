@@ -85,7 +85,7 @@ public class MensaActivity extends Activity {
 	}
 
 
-	void rate(UUID mealId, final boolean positive) {
+	void rate(UUID mealId, final int stars) {
 		Meal mealToRate = null;
 		for (Meal meal : mealsToday.getMeals()) {
 			if (meal.getId().equals(mealId)) {
@@ -104,13 +104,8 @@ public class MensaActivity extends Activity {
 			@Override
 			protected Void doInBackground(Void... arg0) {
 				if (InternetConnectionUtil.hasInternetConnection(getApplicationContext())) {
-					if (positive) {
-						manager.ratePositive(rated);
-					} else {
-						manager.rateNegative(rated);
-					}
+					manager.rate(rated, stars);
 				}
-				System.out.println("put abgearbeitet");
 				return null;
 			}
         }.execute();
@@ -224,8 +219,8 @@ public class MensaActivity extends Activity {
 		popDialog.setPositiveButton("OK",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						//TODO: UPDATE NEW RATING
-						rate(mealId, true);
+						int stars =(int) rating.getRating();
+						if (stars != 0) rate(mealId, stars);
 						dialog.dismiss();
 					}
 				}).setNegativeButton("Cancel",

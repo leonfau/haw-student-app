@@ -64,12 +64,8 @@ public class MensaManagerImpl implements MensaManager {
     }
 
 	@Override
-	public void ratePositive(Meal meal) {
-		mensaService.ratePositive(meal.getId());
+	public void rate(Meal meal, int stars) {
+		mensaService.rate(meal.getId(), stars);
 	}
 
-	@Override
-	public void rateNegative(Meal meal) {
-		mensaService.rateNegative(meal.getId());
-	}
 }
