@@ -43,10 +43,11 @@ public class CalendarParseMgrImpl implements CalendarParseManager {
         final List<AppointmentPO> appointments = removeDuplicateAppointments(parseFromFile(path, encoding));
         final Map<String, CategoryPO> categories = createCategories();
         final Map<String, LecturePO> lectures = createLectures(categories, appointments);
+        final Date lastModified = new Date(System.currentTimeMillis());
+
         for(final AppointmentPO appointment : appointments) {
             final String name = appointment.getName();
             appointment.setLecture(lectures.get(name));
-            appointment.setLastModified(new Date(System.currentTimeMillis()));
         }
         final List<ChangeMessagePO> changeMessages = new ArrayList<ChangeMessagePO>();
         for(final LecturePO lecture : lectures.values()) {
@@ -56,23 +57,26 @@ public class CalendarParseMgrImpl implements CalendarParseManager {
             newChangeMessage.setWhat("Alle Termine neu erstellt!");
             newChangeMessage.setLecture(lecture);
             newChangeMessage.setUuid(UUID.randomUUID().toString());
-            newChangeMessage.setChangeat(new Date(System.currentTimeMillis()));
-            newChangeMessage.setLastModified(new Date(System.currentTimeMillis()));
+            newChangeMessage.setChangeat(lastModified);
             changeMessages.add(newChangeMessage);
         }
         final Session session = hibernateMgr.getCurrentSession();
         final Transaction transaction = session.getTransaction();
         transaction.begin();
         for(final CategoryPO category : categories.values()) {
+            category.setLastModified(lastModified);
             session.persist(category);
         }
         for(final LecturePO lecture : lectures.values()) {
+            lecture.setLastModified(lastModified);
             session.persist(lecture);
         }
         for(final AppointmentPO appointment : appointments) {
+            appointment.setLastModified(lastModified);
             session.persist(appointment);
         }
         for(final ChangeMessagePO changemessage : changeMessages) {
+            changemessage.setLastModified(lastModified);
             session.persist(changemessage);
         }
         transaction.commit();
@@ -90,7 +94,6 @@ public class CalendarParseMgrImpl implements CalendarParseManager {
                 newLecture.setName(name);
                 newLecture.setLecturerName(appointment.getDetails());
                 newLecture.setUuid(UUID.randomUUID().toString());
-                newLecture.setLastModified(new Date(System.currentTimeMillis()));
                 map.put(name, newLecture);
             }
         }
@@ -118,7 +121,6 @@ public class CalendarParseMgrImpl implements CalendarParseManager {
             final CategoryPO newCategory = new CategoryPO();
             newCategory.setName(name);
             newCategory.setUuid(UUID.randomUUID().toString());
-            newCategory.setLastModified(new Date(System.currentTimeMillis()));
             map.put(name, newCategory);
         }
         return map;

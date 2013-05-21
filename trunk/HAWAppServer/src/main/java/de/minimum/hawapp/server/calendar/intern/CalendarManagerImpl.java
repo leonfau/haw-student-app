@@ -63,6 +63,8 @@ public class CalendarManagerImpl implements CalendarManager {
         transaction.begin();
         session.persist(lecture);
         transaction.commit();
+        final CategoryBO parent = lecture.getCategory();
+        updateLastModified(parent, new Date(System.currentTimeMillis()));
         return getLectureBO(uuid);
     }
 
@@ -88,6 +90,8 @@ public class CalendarManagerImpl implements CalendarManager {
         transaction.begin();
         session.persist(appointment);
         transaction.commit();
+        final LectureBO parent = appointment.getLecture();
+        updateLastModified(parent, new Date(System.currentTimeMillis()));
         return getAppointment(uuid);
     }
 
@@ -114,6 +118,8 @@ public class CalendarManagerImpl implements CalendarManager {
         transaction.begin();
         session.persist(changemessage);
         transaction.commit();
+        final LectureBO parent = changemessage.getLecture();
+        updateLastModified(parent, new Date(System.currentTimeMillis()));
         return getChangeMessage(uuid);
     }
 
@@ -185,23 +191,28 @@ public class CalendarManagerImpl implements CalendarManager {
     @Override
     public void modify(final LectureBO lecture) {
         final LecturePO lecturePO = (LecturePO)lecture;
-        lecturePO.setLastModified(new Date(System.currentTimeMillis()));
+        final Date lastModified = new Date(System.currentTimeMillis());
+        lecturePO.setLastModified(lastModified);
         modifyObject(lecturePO);
-
+        updateLastModified(lecture.getCategory(), lastModified);
     }
 
     @Override
     public void modify(final AppointmentBO appointment) {
         final AppointmentPO appointmentPO = (AppointmentPO)appointment;
-        appointmentPO.setLastModified(new Date(System.currentTimeMillis()));
+        final Date lastModified = new Date(System.currentTimeMillis());
+        appointmentPO.setLastModified(lastModified);
         modifyObject(appointmentPO);
+        updateLastModified(appointment.getLecture(), lastModified);
     }
 
     @Override
     public void modify(final ChangeMessageBO changemessage) {
         final ChangeMessagePO changeMessagePO = (ChangeMessagePO)changemessage;
-        changeMessagePO.setLastModified(new Date(System.currentTimeMillis()));
+        final Date lastModified = new Date(System.currentTimeMillis());
+        changeMessagePO.setLastModified(lastModified);
         modifyObject(changeMessagePO);
+        updateLastModified(changemessage.getLecture(), lastModified);
 
     }
 
@@ -212,16 +223,22 @@ public class CalendarManagerImpl implements CalendarManager {
 
     @Override
     public void delete(final LectureBO lecture) {
+        final CategoryBO category = lecture.getCategory();
+        updateLastModified(category, new Date(System.currentTimeMillis()));
         deleteObject(lecture);
     }
 
     @Override
     public void delete(final ChangeMessageBO changemessage) {
+        final LectureBO lecture = changemessage.getLecture();
+        updateLastModified(lecture, new Date(System.currentTimeMillis()));
         deleteObject(changemessage);
     }
 
     @Override
     public void delete(final AppointmentBO appointment) {
+        final LectureBO lecture = appointment.getLecture();
+        updateLastModified(lecture, new Date(System.currentTimeMillis()));
         deleteObject(appointment);
     }
 
@@ -231,6 +248,18 @@ public class CalendarManagerImpl implements CalendarManager {
         transaction.begin();
         session.merge(object);
         transaction.commit();
+    }
+
+    private void updateLastModified(final CategoryBO category, final Date lastModified) {
+        final CategoryPO categoryPO = (CategoryPO)category;
+        categoryPO.setLastModified(lastModified);
+        modifyObject(categoryPO);
+    }
+
+    private void updateLastModified(final LectureBO lecture, final Date lastModified) {
+        final LecturePO lecturePO = (LecturePO)lecture;
+        lecturePO.setLastModified(lastModified);
+        modifyObject(lecturePO);
     }
 
     private void deleteObject(final Object object) {
