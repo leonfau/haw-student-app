@@ -35,7 +35,7 @@ public class CalendarParserTest {
     @BeforeClass
     public static void test() throws IOException {
         calendarManager.deleteAllCalendarDataFromDB();
-        cl.parseFromFileToDB("./src/test/java/de/minimum/hawapp/server/calendar/Sem_2012.txt", "Cp1250");
+        cl.parseFromFileToDB("./src/test/java/de/minimum/hawapp/server/calendar/Sem_2012_utf8.txt", "UTF8");
 
         allCategories = calendarManager.getAllCategories();
 

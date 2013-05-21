@@ -27,6 +27,10 @@ import de.minimum.hawapp.server.calendar.api.CategoryBO;
 @Table(name = "Calendar_Category", catalog = "haw_app")
 public class CategoryPO implements CategoryBO, Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     private String uuid;
     private String name;
     private Date lastModified;
@@ -35,37 +39,38 @@ public class CategoryPO implements CategoryBO, Serializable {
     public CategoryPO() {
     }
 
-    public CategoryPO(String uuid, Date lastModified) {
+    public CategoryPO(final String uuid, final Date lastModified) {
         this.uuid = uuid;
         this.lastModified = lastModified;
     }
 
-    public CategoryPO(String uuid, String name, Date lastModified, Set<LecturePO> calendarLectures) {
+    public CategoryPO(final String uuid, final String name, final Date lastModified,
+                    final Set<LecturePO> calendarLectures) {
         this.uuid = uuid;
         this.name = name;
         this.lastModified = lastModified;
-        this.lectures = calendarLectures;
+        lectures = calendarLectures;
     }
 
     @Override
     @Id
     @Column(name = "uuid", unique = true, nullable = false)
     public String getUuid() {
-        return this.uuid;
+        return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(final String uuid) {
         this.uuid = uuid;
     }
 
     @Override
     @Column(name = "name")
     public String getName() {
-        return this.name;
+        return name;
     }
 
     @Override
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -73,10 +78,10 @@ public class CategoryPO implements CategoryBO, Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "lastModified", nullable = false, length = 19)
     public Date getLastModified() {
-        return this.lastModified;
+        return lastModified;
     }
 
-    public void setLastModified(Date lastModified) {
+    public void setLastModified(final Date lastModified) {
         this.lastModified = lastModified;
     }
 
@@ -84,7 +89,7 @@ public class CategoryPO implements CategoryBO, Serializable {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "category")
     @JsonIgnore
     public Set<LecturePO> getLectures() {
-        return this.lectures;
+        return lectures;
     }
 
     // public Set<String> getLectureUuids(){
@@ -95,33 +100,38 @@ public class CategoryPO implements CategoryBO, Serializable {
     // return set;
     // }
 
-    public void setLectures(Set<LecturePO> calendarLectures) {
-        this.lectures = calendarLectures;
+    public void setLectures(final Set<LecturePO> calendarLectures) {
+        lectures = calendarLectures;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
+        result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
         return result;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        CategoryPO other = (CategoryPO)obj;
-        if (this.uuid == null) {
-            if (other.uuid != null)
-                return false;
         }
-        else if (!this.uuid.equals(other.uuid))
+        if (obj == null) {
             return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CategoryPO other = (CategoryPO)obj;
+        if (uuid == null) {
+            if (other.uuid != null) {
+                return false;
+            }
+        }
+        else if (!uuid.equals(other.uuid)) {
+            return false;
+        }
         return true;
     }
 }

@@ -1,5 +1,6 @@
 package de.minimum.hawapp.server.facade.serviceprovider;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.ws.rs.GET;
@@ -38,6 +39,7 @@ public class CalendarService {
     public static final String APPOINTMENTS = "appointments";
     public static final String CHANGEMESSAGE = "changeMessage";
     public static final String CHANGEMESSAGES = "changeMessages";
+    public static final String LASTMODIFIED = "lastModified";
 
     @GET
     @Path(CalendarService.TEST_CONTEXT + "/start")
@@ -88,11 +90,40 @@ public class CalendarService {
     }
 
     @GET
+    @Path(CalendarService.CATEGORIES + "/" + LASTMODIFIED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Date getallCategoryLastModified() {
+        final Set<? extends CategoryBO> categories = calMngr.getAllCategories();
+        Date nearestlastModified = null;
+        for(final CategoryBO cat : categories) {
+            final Date catLastModified = cat.getLastModified();
+            if (nearestlastModified == null || nearestlastModified.before(catLastModified)) {
+                nearestlastModified = catLastModified;
+            }
+        }
+        return nearestlastModified;
+    }
+
+    @GET
     @Path(CalendarService.CATEGORY + "/{categoryUuid}")
     @Produces(MediaType.APPLICATION_JSON)
     public CategoryBO getCategory(@PathParam("categoryUuid")
     final String uuid) {
         return calMngr.getCategoryBO(uuid);
+    }
+
+    @GET
+    @Path(CalendarService.CATEGORY + "/" + CalendarService.LASTMODIFIED + "/{categoryUuid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Date getCategoryLastModified(@PathParam("categoryUuid")
+    final String uuid) {
+        final CategoryBO category = calMngr.getCategoryBO(uuid);
+        if (category == null) {
+            return new Date(System.currentTimeMillis());
+        }
+        else {
+            return category.getLastModified();
+        }
     }
 
     @GET
@@ -114,6 +145,20 @@ public class CalendarService {
     }
 
     @GET
+    @Path(CalendarService.LECTURE + "/" + CalendarService.LASTMODIFIED + "/{lectureUuid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Date getLectureLastModified(@PathParam("lectureUuid")
+    final String uuid) {
+        final LectureBO lecture = calMngr.getLectureBO(uuid);
+        if (lecture == null) {
+            return new Date(System.currentTimeMillis());
+        }
+        else {
+            return lecture.getLastModified();
+        }
+    }
+
+    @GET
     @Path(CalendarService.APPOINTMENTS + "/{lectureUuid}")
     @Produces(MediaType.APPLICATION_JSON)
     @SuppressWarnings("unchecked")
@@ -128,6 +173,20 @@ public class CalendarService {
     public AppointmentBO getAppointment(@PathParam("appointmentUuid")
     final String uuid) {
         return calMngr.getAppointment(uuid);
+    }
+
+    @GET
+    @Path(CalendarService.APPOINTMENT + "/" + CalendarService.LASTMODIFIED + "/{appointmentUuid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Date getAppointmentLastModified(@PathParam("appointmentUuid")
+    final String uuid) {
+        final AppointmentBO appointment = calMngr.getAppointment(uuid);
+        if (appointment == null) {
+            return new Date(System.currentTimeMillis());
+        }
+        else {
+            return appointment.getLastModified();
+        }
     }
 
     // @PUT
@@ -168,6 +227,20 @@ public class CalendarService {
     public ChangeMessageBO getChangeMessage(@PathParam("changeMessageUuid")
     final String uuid) {
         return calMngr.getChangeMessage(uuid);
+    }
+
+    @GET
+    @Path(CalendarService.CHANGEMESSAGE + "/" + CalendarService.LASTMODIFIED + "/{appointmentUuid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Date getChangeMessageLastModified(@PathParam("appointmentUuid")
+    final String uuid) {
+        final ChangeMessageBO changeMessage = calMngr.getChangeMessage(uuid);
+        if (changeMessage == null) {
+            return new Date(System.currentTimeMillis());
+        }
+        else {
+            return changeMessage.getLastModified();
+        }
     }
 
 }

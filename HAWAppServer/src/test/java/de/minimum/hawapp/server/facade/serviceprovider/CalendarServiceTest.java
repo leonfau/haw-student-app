@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,7 +47,7 @@ public class CalendarServiceTest extends RestTest {
     @BeforeClass
     public static void before() throws IOException {
         calMgr.deleteAllCalendarDataFromDB();
-        calParseMgr.parseFromFileToDB("./src/test/java/de/minimum/hawapp/server/calendar/Sem_2012.txt", "Cp1250");
+        calParseMgr.parseFromFileToDB("./src/test/java/de/minimum/hawapp/server/calendar/Sem_2012_utf8.txt", "UTF8");
 
         allCategories = calMgr.getAllCategories();
 
@@ -92,7 +93,10 @@ public class CalendarServiceTest extends RestTest {
             final CategoryBO responseCat = response.getEntity(CategoryPO.class);
             assertEquals(category, responseCat);
         }
+        final WebResource webResource = client.resource(CALENDAR_SERVICE + "/category/" + "noValidUUId");
+        final ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
 
+        assertEquals(response.getClientResponseStatus().getStatusCode(), 204);
     }
 
     @Test
@@ -172,6 +176,58 @@ public class CalendarServiceTest extends RestTest {
             final ChangeMessagePO responseMesg = response.getEntity(ChangeMessagePO.class);
             assertEquals(changeMessage, responseMesg);
         }
+    }
+
+    @Test
+    public void getCategoryLastModifiedTest() {
+        final CategoryBO changeMessage = allCategories.iterator().next();
+        final WebResource webResource = client.resource(CALENDAR_SERVICE + "/category/lastModified/"
+                        + changeMessage.getUuid());
+        final ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+
+        checkResponse(response);
+
+        final Date responseMesg = response.getEntity(Date.class);
+        assertEquals(changeMessage.getLastModified().getTime(), responseMesg.getTime());
+    }
+
+    @Test
+    public void getLectureLastModifiedTest() {
+        final LectureBO changeMessage = allLectures.iterator().next();
+        final WebResource webResource = client.resource(CALENDAR_SERVICE + "/lecture/lastModified/"
+                        + changeMessage.getUuid());
+        final ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+
+        checkResponse(response);
+
+        final Date responseMesg = response.getEntity(Date.class);
+        assertEquals(changeMessage.getLastModified().getTime(), responseMesg.getTime());
+    }
+
+    @Test
+    public void getAppointmentLastModifiedTest() {
+        final AppointmentBO changeMessage = allAppointments.iterator().next();
+        final WebResource webResource = client.resource(CALENDAR_SERVICE + "/appointment/lastModified/"
+                        + changeMessage.getUuid());
+        final ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+
+        checkResponse(response);
+
+        final Date responseMesg = response.getEntity(Date.class);
+        assertEquals(changeMessage.getLastModified().getTime(), responseMesg.getTime());
+    }
+
+    @Test
+    public void getChangeMessageLastModifiedTest() {
+        final ChangeMessageBO changeMessage = allChangeMessages.iterator().next();
+        final WebResource webResource = client.resource(CALENDAR_SERVICE + "/changeMessage/lastModified/"
+                        + changeMessage.getUuid());
+        final ClientResponse response = webResource.accept(MediaType.APPLICATION_JSON).get(ClientResponse.class);
+
+        checkResponse(response);
+
+        final Date responseMesg = response.getEntity(Date.class);
+        assertEquals(changeMessage.getLastModified().getTime(), responseMesg.getTime());
     }
 
 }
