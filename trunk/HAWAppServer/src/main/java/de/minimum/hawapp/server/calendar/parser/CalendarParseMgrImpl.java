@@ -23,33 +23,34 @@ import de.minimum.hawapp.server.persistence.calendar.ChangeMessagePO;
 import de.minimum.hawapp.server.persistence.calendar.LecturePO;
 
 public class CalendarParseMgrImpl implements CalendarParseManager {
-    HibernateSessionMgr hibernateMgr = ManagerFactory.getManager(HibernateSessionMgr.class);
 
     @Override
-    public List<AppointmentPO> parseFromFile(String path, String encoding) throws IOException {
-        ANTLRFileStream fileStream = new ANTLRFileStream(path, encoding);
-        CalendarLexer calendarLexer = new CalendarLexer(fileStream);
-        TokenStream tokenStream = new BufferedTokenStream(calendarLexer);
-        CalendarParser calendarParser = new CalendarParser(tokenStream);
-        CalendarParser.ProgContext prog = calendarParser.prog();
-        CalendarAppointmentVisitor visitor = new CalendarAppointmentVisitor();
+    public List<AppointmentPO> parseFromFile(final String path, final String encoding) throws IOException {
+
+        final ANTLRFileStream fileStream = new ANTLRFileStream(path, encoding);
+        final CalendarLexer calendarLexer = new CalendarLexer(fileStream);
+        final TokenStream tokenStream = new BufferedTokenStream(calendarLexer);
+        final CalendarParser calendarParser = new CalendarParser(tokenStream);
+        final CalendarParser.ProgContext prog = calendarParser.prog();
+        final CalendarAppointmentVisitor visitor = new CalendarAppointmentVisitor();
         prog.accept(visitor);
         return visitor.getAppointments();
     }
 
     @Override
-    public void parseFromFileToDB(String path, String encoding) throws IOException {
-        List<AppointmentPO> appointments = removeDuplicateAppointments(parseFromFile(path, encoding));
-        Map<String, CategoryPO> categories = createCategories();
-        Map<String, LecturePO> lectures = createLectures(categories, appointments);
-        for(AppointmentPO appointment : appointments) {
-            String name = appointment.getName();
+    public void parseFromFileToDB(final String path, final String encoding) throws IOException {
+        final HibernateSessionMgr hibernateMgr = ManagerFactory.getManager(HibernateSessionMgr.class);
+        final List<AppointmentPO> appointments = removeDuplicateAppointments(parseFromFile(path, encoding));
+        final Map<String, CategoryPO> categories = createCategories();
+        final Map<String, LecturePO> lectures = createLectures(categories, appointments);
+        for(final AppointmentPO appointment : appointments) {
+            final String name = appointment.getName();
             appointment.setLecture(lectures.get(name));
             appointment.setLastModified(new Date(System.currentTimeMillis()));
         }
-        List<ChangeMessagePO> changeMessages = new ArrayList<ChangeMessagePO>();
-        for(LecturePO lecture : lectures.values()) {
-            ChangeMessagePO newChangeMessage = new ChangeMessagePO();
+        final List<ChangeMessagePO> changeMessages = new ArrayList<ChangeMessagePO>();
+        for(final LecturePO lecture : lectures.values()) {
+            final ChangeMessagePO newChangeMessage = new ChangeMessagePO();
             newChangeMessage.setReason("Neue Termine");
             newChangeMessage.setPerson("Automatisch generiert");
             newChangeMessage.setWhat("Alle Termine neu erstellt!");
@@ -59,31 +60,32 @@ public class CalendarParseMgrImpl implements CalendarParseManager {
             newChangeMessage.setLastModified(new Date(System.currentTimeMillis()));
             changeMessages.add(newChangeMessage);
         }
-        Session session = this.hibernateMgr.getCurrentSession();
-        Transaction transaction = session.getTransaction();
+        final Session session = hibernateMgr.getCurrentSession();
+        final Transaction transaction = session.getTransaction();
         transaction.begin();
-        for(CategoryPO category : categories.values()) {
+        for(final CategoryPO category : categories.values()) {
             session.persist(category);
         }
-        for(LecturePO lecture : lectures.values()) {
+        for(final LecturePO lecture : lectures.values()) {
             session.persist(lecture);
         }
-        for(AppointmentPO appointment : appointments) {
+        for(final AppointmentPO appointment : appointments) {
             session.persist(appointment);
         }
-        for(ChangeMessagePO changemessage : changeMessages) {
+        for(final ChangeMessagePO changemessage : changeMessages) {
             session.persist(changemessage);
         }
         transaction.commit();
 
     }
 
-    private Map<String, LecturePO> createLectures(Map<String, CategoryPO> categories, List<AppointmentPO> appointments) {
-        Map<String, LecturePO> map = new HashMap<String, LecturePO>();
-        for(AppointmentPO appointment : appointments) {
-            String name = appointment.getName();
+    private Map<String, LecturePO> createLectures(final Map<String, CategoryPO> categories,
+                    final List<AppointmentPO> appointments) {
+        final Map<String, LecturePO> map = new HashMap<String, LecturePO>();
+        for(final AppointmentPO appointment : appointments) {
+            final String name = appointment.getName();
             if (!map.containsKey(name)) {
-                LecturePO newLecture = new LecturePO();
+                final LecturePO newLecture = new LecturePO();
                 newLecture.setCategory(categories.get(getCategoryNameforAppointment(appointment)));
                 newLecture.setName(name);
                 newLecture.setLecturerName(appointment.getDetails());
@@ -95,25 +97,25 @@ public class CalendarParseMgrImpl implements CalendarParseManager {
         return map;
     }
 
-    private String getCategoryNameforAppointment(AppointmentPO app) {
-        String appName = app.getName();
-        for(String catname : this.categoryNames) {
+    private String getCategoryNameforAppointment(final AppointmentPO app) {
+        final String appName = app.getName();
+        for(final String catname : categoryNames) {
             if (appName.contains(catname)) {
                 return catname;
             }
         }
-        return this.defaultCategoryName;
+        return defaultCategoryName;
     }
 
     private final String defaultCategoryName = "Sonstiges";
     private final String[] categoryNames = { "BAI1", "BAI2", "BAI3", "BAI4", "BAI5", "BAI6", "BTI1", "BTI2", "BTI3",
                     "BTI4", "BTI5", "BTI6", "BWI1", "BWI2", "BWI3", "BWI4", "BWI5", "BWI6", "MINF1", "MINF2", "MINF3",
-                    "MINF4", "INF", "GW", this.defaultCategoryName };
+                    "MINF4", "INF", "GW", defaultCategoryName };
 
     private Map<String, CategoryPO> createCategories() {
-        Map<String, CategoryPO> map = new HashMap<String, CategoryPO>();
-        for(String name : this.categoryNames) {
-            CategoryPO newCategory = new CategoryPO();
+        final Map<String, CategoryPO> map = new HashMap<String, CategoryPO>();
+        for(final String name : categoryNames) {
+            final CategoryPO newCategory = new CategoryPO();
             newCategory.setName(name);
             newCategory.setUuid(UUID.randomUUID().toString());
             newCategory.setLastModified(new Date(System.currentTimeMillis()));
@@ -122,11 +124,11 @@ public class CalendarParseMgrImpl implements CalendarParseManager {
         return map;
     }
 
-    private List<AppointmentPO> removeDuplicateAppointments(List<AppointmentPO> appointments) {
-        List<AppointmentPO> list = new ArrayList<AppointmentPO>();
-        for(AppointmentPO appointment : appointments) {
+    private List<AppointmentPO> removeDuplicateAppointments(final List<AppointmentPO> appointments) {
+        final List<AppointmentPO> list = new ArrayList<AppointmentPO>();
+        for(final AppointmentPO appointment : appointments) {
             boolean isAlreadyPresent = false;
-            for(AppointmentPO addedAppointment : list) {
+            for(final AppointmentPO addedAppointment : list) {
                 if (addedAppointment.getName().equals(appointment.getName())
                                 && addedAppointment.getBegin().equals(appointment.getBegin())
                                 && addedAppointment.getEnd().equals(appointment.getEnd())) {
