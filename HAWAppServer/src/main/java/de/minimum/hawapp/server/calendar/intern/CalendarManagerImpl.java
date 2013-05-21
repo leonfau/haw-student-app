@@ -118,12 +118,12 @@ public class CalendarManagerImpl implements CalendarManager {
     }
 
     @Override
-    public Set<? extends CategoryBO> getAllCategories() {
+    public Set<CategoryBO> getAllCategories() {
         final Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
         final Transaction transaction = session.getTransaction();
         transaction.begin();
         @SuppressWarnings("unchecked")
-        final Set<CategoryPO> set = new HashSet<CategoryPO>(session.createCriteria(CategoryPO.class).list());
+        final Set<CategoryBO> set = new HashSet<CategoryBO>(session.createQuery("from CategoryPO").list());
         transaction.commit();
         return set;
     }
@@ -149,18 +149,30 @@ public class CalendarManagerImpl implements CalendarManager {
     }
 
     @Override
-    public Set<? extends AppointmentBO> getAppointmentsFromLecture(final String LectureUuid) {
-        return getLectureBO(LectureUuid).getAppointments();
+    public Set<? extends AppointmentBO> getAppointmentsFromLecture(final String lectureUuid) {
+        final LectureBO lecture = getLectureBO(lectureUuid);
+        if (lecture == null) {
+            return null;
+        }
+        return lecture.getAppointments();
     }
 
     @Override
     public Set<? extends LectureBO> getLecturesFromCategory(final String categoryUuid) {
-        return getCategoryBO(categoryUuid).getLectures();
+        final CategoryBO category = getCategoryBO(categoryUuid);
+        if (category == null) {
+            return null;
+        }
+        return category.getLectures();
     }
 
     @Override
-    public Set<? extends ChangeMessageBO> getChangeMessageFromLecture(final String LectureUuid) {
-        return getLectureBO(LectureUuid).getChangeMessages();
+    public Set<? extends ChangeMessageBO> getChangeMessageFromLecture(final String lectureUuid) {
+        final LectureBO lecture = getLectureBO(lectureUuid);
+        if (lecture == null) {
+            return null;
+        }
+        return lecture.getChangeMessages();
     }
 
     @Override
@@ -243,11 +255,10 @@ public class CalendarManagerImpl implements CalendarManager {
         final Session session = CalendarManagerImpl.hibernateSessionMgr.getCurrentSession();
         final Transaction transaction = session.getTransaction();
         transaction.begin();
-
-        session.createSQLQuery("delete from haw_app.calendar_appointment where uuid!=''").executeUpdate();
-        session.createSQLQuery("delete from haw_app.calendar_changemessage where uuid!=''").executeUpdate();
-        session.createSQLQuery("delete from haw_app.calendar_lecture where uuid!=''").executeUpdate();
-        session.createSQLQuery("delete from haw_app.calendar_category where uuid!=''").executeUpdate();
+        session.createQuery("DELETE FROM AppointmentPO").executeUpdate();
+        session.createQuery("DELETE FROM ChangeMessagePO").executeUpdate();
+        session.createQuery("DELETE FROM LecturePO").executeUpdate();
+        session.createQuery("DELETE FROM CategoryPO").executeUpdate();
         transaction.commit();
 
     }
