@@ -1,54 +1,115 @@
 package de.minimum.hawapp.app.activity;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.googlecode.androidannotations.annotations.Background;
 import com.googlecode.androidannotations.annotations.Click;
 import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
+import com.googlecode.androidannotations.annotations.res.StringRes;
 
 import de.minimum.hawapp.app.R;
+import de.minimum.hawapp.app.login.Login;
 
 @EActivity(R.layout.activity_login)
 public class LoginActivity extends Activity {
-	@ViewById
-	EditText editLogin;
 
-	@ViewById
-	EditText editPassword;
+    @ViewById
+    EditText editLogin;
 
-	@ViewById
-	CheckBox checkBoxLogin;
+    @ViewById
+    EditText editPassword;
 
-	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-	};
+    @ViewById
+    CheckBox checkBoxPassword;
 
-	@Click(R.id.buttonLogin)
-	public void login() {
-		// final Intent i = new Intent(LoginActivity.this,
-		// StisysActivity.class);
-		// i.putExtra("login", editLogin.getText().toString());
-		// i.putExtra("password", editPassword.getText().toString());
-		// Log.i("LoginActivity", "Login: " + login.getText());
-		// Log.i("LoginActivity", "Password: " + password.getText());
-		// startActivity(i);
-		StisysActivity.login = editLogin.getText().toString();
-		StisysActivity.password = editPassword.getText().toString();
+    @StringRes
+    String failedLogin;
 
-		Toast.makeText(getApplicationContext(), "Logindata setted",
-				Toast.LENGTH_SHORT).show();
+    @StringRes
+    String succesfulLogin;
 
-		if (!checkBoxLogin.isChecked()) {
-			editLogin.setText("");
-			editPassword.setText("");
-		}
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		MainActivity.enableStisysTab();
-	}
+        final SharedPreferences settings = getSharedPreferences("config", Context.MODE_PRIVATE);
 
+        String login;
+        if ((login = settings.getString("username", "")) != "") {
+            setLoadedLogin(Login.decrypt(login).trim());
+        }
+        String password;
+        if ((password = settings.getString("password", "")) != "") {
+            setLoadedPassword(Login.decrypt(password).trim());
+        }
+
+        if (password != "") {
+            setCheckBoxChecked();
+        }
+    };
+
+    @Click(R.id.buttonLogin)
+    public void login() {
+        login(editLogin.getText().toString(), editPassword.getText().toString());
+
+        if (Login.loggedIn()) {
+            MainActivity.enableStisysTab();
+        }
+    }
+
+    @Background
+    void login(final String login, final String password) {
+        loginToast(Login.login(login, password));
+    }
+
+    @UiThread
+    void loginToast(final boolean logged) {
+        if (!logged) {
+            Toast.makeText(getApplicationContext(), failedLogin, Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(getApplicationContext(), succesfulLogin, Toast.LENGTH_SHORT).show();
+
+            final SharedPreferences settings = getSharedPreferences("config", Context.MODE_PRIVATE);
+            final SharedPreferences.Editor editor = settings.edit();
+
+            editor.putString("username", Login.getEncryptedLogin());
+            if (checkBoxPassword.isChecked()) {
+                editor.putString("password", Login.getEncryptedPassword());
+            }
+            editor.commit();
+        }
+
+        if (!checkBoxPassword.isChecked()) {
+            final SharedPreferences settings = getSharedPreferences("config", Context.MODE_PRIVATE);
+            final SharedPreferences.Editor editor = settings.edit();
+            editor.putString("username", Login.getEncryptedLogin());
+            editor.putString("password", "");
+            editor.commit();
+            editPassword.setText("");
+        }
+    }
+
+    @UiThread
+    void setLoadedLogin(final String login) {
+        editLogin.setText(login);
+    }
+
+    @UiThread
+    void setLoadedPassword(final String password) {
+        editPassword.setText(password);
+    }
+
+    @UiThread
+    void setCheckBoxChecked() {
+        checkBoxPassword.setChecked(true);
+    }
 }
