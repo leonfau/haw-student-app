@@ -1,6 +1,8 @@
 package de.minimum.hawapp.app.login;
 
-//http://www.androidsnippets.com/encrypt-decrypt-between-android-and-php
+/**
+ * http://www.androidsnippets.com/encrypt-decrypt-between-android-and-php
+ */
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.Cipher;
@@ -10,13 +12,14 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class MCrypt {
 
-    private final String iv = "fedcba9876543210"; // Dummy iv (CHANGE IT!)
+    // Dummy iv
+    private final String iv = "ahchieshu3aideem";
     private final IvParameterSpec ivspec;
     private final SecretKeySpec keyspec;
     private Cipher cipher;
 
-    // Dummy secretKey (CHANGE IT!)
-    private final String SecretKey = "0123456789abcdef";
+    // Dummy secretKey
+    private final String SecretKey = "paengi9mahxiique";
 
     public MCrypt() {
         ivspec = new IvParameterSpec(iv.getBytes());
@@ -27,11 +30,9 @@ public class MCrypt {
             cipher = Cipher.getInstance("AES/CBC/NoPadding");
         }
         catch(final NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         catch(final NoSuchPaddingException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

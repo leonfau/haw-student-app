@@ -72,29 +72,26 @@ public class LoginActivity extends Activity {
 
     @UiThread
     void loginToast(final boolean logged) {
+        final SharedPreferences settings = getSharedPreferences("config", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = settings.edit();
+
+        editor.putString("username", Login.getEncryptedLogin());
+
         if (!logged) {
             Toast.makeText(getApplicationContext(), failedLogin, Toast.LENGTH_SHORT).show();
         }
         else {
-            Toast.makeText(getApplicationContext(), succesfulLogin, Toast.LENGTH_SHORT).show();
-
-            final SharedPreferences settings = getSharedPreferences("config", Context.MODE_PRIVATE);
-            final SharedPreferences.Editor editor = settings.edit();
-
-            editor.putString("username", Login.getEncryptedLogin());
             if (checkBoxPassword.isChecked()) {
                 editor.putString("password", Login.getEncryptedPassword());
             }
             editor.commit();
+            Toast.makeText(getApplicationContext(), succesfulLogin, Toast.LENGTH_SHORT).show();
         }
 
         if (!checkBoxPassword.isChecked()) {
-            final SharedPreferences settings = getSharedPreferences("config", Context.MODE_PRIVATE);
-            final SharedPreferences.Editor editor = settings.edit();
-            editor.putString("username", Login.getEncryptedLogin());
+            editPassword.setText("");
             editor.putString("password", "");
             editor.commit();
-            editPassword.setText("");
         }
     }
 
