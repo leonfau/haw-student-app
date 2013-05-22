@@ -35,13 +35,13 @@ public class Login {
 
             return true;
         }
-
         return false;
     }
 
     private static boolean checkLogin(final String login, final String password) {
         HttpsURLConnection conn = null;
         String html = "";
+
         try {
             final URL url = new URL("https://stisys.informatik.haw-hamburg.de/stisys/login.do");
             final String param = "username=" + URLEncoder.encode(login, "UTF-8") + "&password="
@@ -78,6 +78,7 @@ public class Login {
         }
 
         final Document doc = Jsoup.parse(html);
+
         return doc.select("title").text().contains("Benutzerdaten");
     }
 
