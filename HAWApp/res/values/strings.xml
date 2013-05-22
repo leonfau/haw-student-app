@@ -22,16 +22,20 @@
     <string name="sb_nachricht_kontakt">Kontakt</string>
      
     
-<!-- LoginActivity strings -->
-    <string name="name">ListViewBaseAdapter</string>
+	<!-- LoginActivity strings -->
     <string name="show_dialog">Dialog</string>
     <string name="loginName">Name</string>
-    <string name="loginPassword">Password</string>
-    <string name="loginAnmeldungSpeichern">Anmeldung speichern</string>
-    <string name="cal_back">Zurück</string>
+    <string name="loginPassword">Passwort</string>
+    <string name="savePassword">Passwort speichern</string>
     <string name="loginButton">Login</string>
-    <string name="hawLogoDescritpion">Haw-Logo</string>
-<!-- LoginActivity strings End -->  
+    <string name="failedLogin">Login gescheitert</string>
+    <string name="succesfulLogin">Login erfolgreich</string>
+    <string name="hawLogoDescritpion">HAW-Logo</string>
+	<!-- CalendarActivity strings End -->  
+	
+	<!-- LoginActivity strings -->
+	<string name="cal_back">Zurück</string>
+	<!-- CalendarActivity strings End --> 
 
   
 </resources>
