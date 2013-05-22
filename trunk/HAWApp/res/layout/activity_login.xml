@@ -67,10 +67,10 @@
             <!-- Login button -->
 
             <CheckBox
-                android:id="@+id/checkBoxLogin"
+                android:id="@+id/checkBoxPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/loginAnmeldungSpeichern"
+                android:text="@string/savePassword"
                 android:textColor="@color/ColorText" />
 
             <Button
