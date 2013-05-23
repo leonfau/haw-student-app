@@ -19,6 +19,7 @@ import com.googlecode.androidannotations.annotations.res.StringRes;
 import de.minimum.hawapp.app.MainActivity;
 import de.minimum.hawapp.app.R;
 import de.minimum.hawapp.app.login.Login;
+import de.minimum.hawapp.app.util.InternetConnectionUtil;
 
 @EActivity(R.layout.activity_login)
 public class LoginActivity extends Activity {
@@ -40,6 +41,9 @@ public class LoginActivity extends Activity {
 
     @StringRes
     String succesfulLogin;
+
+    @StringRes
+    String noInternet;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -63,8 +67,13 @@ public class LoginActivity extends Activity {
 
     @Click(R.id.buttonLogin)
     public void login() {
-        login(editLogin.getText().toString(), editPassword.getText().toString());
-        buttonLogin.setEnabled(false);
+        if (InternetConnectionUtil.hasInternetConnection(getApplicationContext())) {
+            login(editLogin.getText().toString(), editPassword.getText().toString());
+            buttonLogin.setEnabled(false);
+        }
+        else {
+            Toast.makeText(getApplicationContext(), noInternet, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Background
