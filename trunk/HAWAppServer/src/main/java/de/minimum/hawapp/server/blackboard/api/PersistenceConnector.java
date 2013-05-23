@@ -44,5 +44,7 @@ public interface PersistenceConnector {
 
     List<Category> loadAllCategories() throws PersistenceException;
 
+    List<Offer> loadAllOffers() throws PersistenceException;
+
     boolean removeOldOffers(int ageInDays) throws PersistenceException;
 }
