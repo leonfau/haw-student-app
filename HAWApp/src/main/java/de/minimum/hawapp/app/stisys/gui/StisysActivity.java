@@ -25,8 +25,6 @@ public class StisysActivity extends ExpandableListActivity {
 
     private ExpandableListAdapter mAdapter;
 
-    protected static String login = "";
-    protected static String password = "";
     private static Map<Integer, List<Result>> results;
     public static final int DIALOG_DOWNLOAD_INFORMATION_PROGRESS = 0;
 
@@ -85,9 +83,9 @@ public class StisysActivity extends ExpandableListActivity {
         }
 
         // Set up our adapter
-        mAdapter = new SimpleExpandableListAdapter(this, groupData, R.layout.activity_mensa_list_item_1, new String[] {
+        mAdapter = new SimpleExpandableListAdapter(this, groupData, R.layout.activity_stisys_list_item_1, new String[] {
                         NAME, DESCRIPTION }, new int[] { android.R.id.text1, android.R.id.text2 }, childData,
-                        R.layout.activity_mensa_list_item_2, new String[] { NAME, DESCRIPTION }, new int[] {
+                        R.layout.activity_stisys_list_item_2, new String[] { NAME, DESCRIPTION }, new int[] {
                                         android.R.id.text1, android.R.id.text2 });
         setListAdapter(mAdapter);
     }
@@ -96,12 +94,8 @@ public class StisysActivity extends ExpandableListActivity {
         @Override
         protected Map<Integer, List<Result>> doInBackground(final String... params) {
             final String login = params[0];
-            // Log.i("StisysActivity LoginTask", "Login: " + login);
             final String password = params[1];
-            // Log.i("StisysActivity Lo
-
             final StisysImpl stisys = new StisysImpl();
-            // cookie = stisys.getReportPage(cookie);
 
             final Map<Integer, List<Result>> ret = stisys.parseReportPage(stisys.getReportPage(stisys.login(login,
                             password)));
