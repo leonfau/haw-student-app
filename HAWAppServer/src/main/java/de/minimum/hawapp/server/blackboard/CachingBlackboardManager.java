@@ -87,10 +87,8 @@ public class CachingBlackboardManager implements BlackboardManager {
         try {
             if (!checkRequirements(category, header))
                 return CachingBlackboardManager.FAILED_CREATION;
-            Category cat = this.categories.get(category);
+            Category cat = getCategory(category);
             if (cat == null) {
-                // TODO erstmal in DB nachschauen und falls ja zur Map adden ->
-                // Clock???
                 return CachingBlackboardManager.FAILED_CREATION;
             }
             Image img = BlackboardFactoryManager.newImage(image);
@@ -152,8 +150,16 @@ public class CachingBlackboardManager implements BlackboardManager {
 
     @Override
     public List<Offer> getAllOffers() {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            return this.persConnector.loadAllOffers();// TODO ist Caching
+                                                      // möglich?
+            // TODO Kategorien anpassen?
+        }
+        catch(PersistenceException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -172,9 +178,18 @@ public class CachingBlackboardManager implements BlackboardManager {
 
     @Override
     public Category getCategory(String category) {
-        return this.categories.get(category);// TODO falls nicht vorhanden in DB
-                                             // schauen und ggf in Map
-                                             // hinzufügen -> Clock???
+        Category cat = this.categories.get(category);
+        if (cat == null)
+            try {
+                return this.persConnector.loadCategory(category);
+            }
+            catch(PersistenceException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                return null;
+            }
+        else
+            return cat;
     }
 
     @Override

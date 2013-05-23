@@ -168,6 +168,11 @@ public class HibernateConnector implements PersistenceConnector {
     }
 
     @Override
+    public List<Offer> loadAllOffers() throws PersistenceException {
+        return loadTable(OfferEntity.class);
+    }
+
+    @Override
     public boolean removeOldOffers(int ageInDays) throws PersistenceException {
         try {
             Session session = this.hibernateSessionMgr.getCurrentSession();
