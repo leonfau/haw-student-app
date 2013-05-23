@@ -1,4 +1,4 @@
-package de.minimum.hawapp.app.activity;
+package de.minimum.hawapp.app.calendar.gui;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -13,29 +13,29 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import de.minimum.hawapp.app.R;
-import de.minimum.hawapp.app.calendar.beans.AppointmentPO;
-import de.minimum.hawapp.app.calendar.beans.CategoryPO;
-import de.minimum.hawapp.app.calendar.beans.LecturePO;
-import de.minimum.hawapp.app.rest.CalendarService;
+import de.minimum.hawapp.app.calendar.beans.Appointment;
+import de.minimum.hawapp.app.calendar.beans.Category;
+import de.minimum.hawapp.app.calendar.beans.Lecture;
+import de.minimum.hawapp.app.context.ManagerFactory;
+import de.minimum.hawapp.app.mensa.management.CalendarManager;
 
 public class KalenderActivity extends ListActivity {
+    private final CalendarManager calManager = ManagerFactory.getManager(CalendarManager.class);
     private State state = State.CATEGORY;
-    private ArrayAdapter<CategoryPO> categoryAdapter;
-    private ArrayAdapter<LecturePO> lectureAdapter;
-    private ArrayAdapter<AppointmentPO> appointmentAdapter;
-    private List<CategoryPO> categories;
-    private CategoryPO actualCategory;
-    private LecturePO actualLecture;
+    private ArrayAdapter<Category> categoryAdapter;
+    private ArrayAdapter<Lecture> lectureAdapter;
+    private ArrayAdapter<Appointment> appointmentAdapter;
+    private Category actualCategory;
+    private Lecture actualLecture;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        categoryAdapter = new ArrayAdapter<CategoryPO>(this, android.R.layout.simple_list_item_1,
-                        new ArrayList<CategoryPO>());
-        lectureAdapter = new ArrayAdapter<LecturePO>(this, android.R.layout.simple_list_item_1,
-                        new ArrayList<LecturePO>());
-        appointmentAdapter = new ArrayAdapter<AppointmentPO>(this, android.R.layout.simple_list_item_1,
-                        new ArrayList<AppointmentPO>());
+        categoryAdapter = new ArrayAdapter<Category>(this, android.R.layout.simple_list_item_1,
+                        new ArrayList<Category>());
+        lectureAdapter = new ArrayAdapter<Lecture>(this, android.R.layout.simple_list_item_1, new ArrayList<Lecture>());
+        appointmentAdapter = new ArrayAdapter<Appointment>(this, android.R.layout.simple_list_item_1,
+                        new ArrayList<Appointment>());
         setContentView(R.layout.calendar_main);
         setListAdapter(categoryAdapter);
         showCategories();
@@ -43,15 +43,16 @@ public class KalenderActivity extends ListActivity {
 
     private void showCategories() {
         new AsyncTask<Void, Void, Void>() {
+            private List<Category> categories;
 
             @Override
             protected void onPostExecute(final Void arg0) {
                 categoryAdapter.clear();
                 categoryAdapter.addAll(categories);
-                categoryAdapter.sort(new Comparator<CategoryPO>() {
+                categoryAdapter.sort(new Comparator<Category>() {
 
                     @Override
-                    public int compare(final CategoryPO lhs, final CategoryPO rhs) {
+                    public int compare(final Category lhs, final Category rhs) {
                         return lhs.getName().compareTo(rhs.getName());
                     }
                 });
@@ -62,27 +63,25 @@ public class KalenderActivity extends ListActivity {
 
             @Override
             protected Void doInBackground(final Void... arg0) {
-                if (categories == null) {
-                    categories = CalendarService.getCategories();
-                }
+                categories = calManager.getCategories();
                 return null;
             }
         }.execute();
     }
 
-    private void showLectures(final CategoryPO category) {
+    private void showLectures(final Category category) {
 
-        new AsyncTask<CategoryPO, Void, Void>() {
-            List<LecturePO> lectures;
+        new AsyncTask<Category, Void, Void>() {
+            List<Lecture> lectures;
 
             @Override
             protected void onPostExecute(final Void arg0) {
                 lectureAdapter.clear();
                 lectureAdapter.addAll(lectures);
-                lectureAdapter.sort(new Comparator<LecturePO>() {
+                lectureAdapter.sort(new Comparator<Lecture>() {
 
                     @Override
-                    public int compare(final LecturePO lhs, final LecturePO rhs) {
+                    public int compare(final Lecture lhs, final Lecture rhs) {
                         return lhs.getName().compareTo(rhs.getName());
                     }
                 });
@@ -100,30 +99,27 @@ public class KalenderActivity extends ListActivity {
             }
 
             @Override
-            protected Void doInBackground(final CategoryPO... params) {
+            protected Void doInBackground(final Category... params) {
                 actualCategory = params[0];
-                lectures = actualCategory.getLectures();
-                if (lectures.size() == 0) {
-                    lectures.addAll(CalendarService.getLectures(actualCategory.getUuid()));
-                }
+                lectures = calManager.getLectures(actualCategory);
                 return null;
             }
         }.execute(category);
     }
 
-    private void showAppointments(final LecturePO lecture) {
+    private void showAppointments(final Lecture lecture) {
 
-        new AsyncTask<LecturePO, Void, Void>() {
-            List<AppointmentPO> appointments;
+        new AsyncTask<Lecture, Void, Void>() {
+            List<Appointment> appointments;
 
             @Override
             protected void onPostExecute(final Void arg0) {
                 appointmentAdapter.clear();
                 appointmentAdapter.addAll(appointments);
-                appointmentAdapter.sort(new Comparator<AppointmentPO>() {
+                appointmentAdapter.sort(new Comparator<Appointment>() {
 
                     @Override
-                    public int compare(final AppointmentPO lhs, final AppointmentPO rhs) {
+                    public int compare(final Appointment lhs, final Appointment rhs) {
                         return lhs.getBegin().compareTo(rhs.getBegin());
                     }
                 });
@@ -141,12 +137,9 @@ public class KalenderActivity extends ListActivity {
             }
 
             @Override
-            protected Void doInBackground(final LecturePO... params) {
+            protected Void doInBackground(final Lecture... params) {
                 actualLecture = params[0];
-                appointments = actualLecture.getAppointments();
-                if (appointments.size() == 0) {
-                    appointments.addAll(CalendarService.getAppointments(actualLecture.getUuid()));
-                }
+                appointments = calManager.getAppointments(actualLecture);
                 return null;
             }
         }.execute(lecture);

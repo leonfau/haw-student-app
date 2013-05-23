@@ -3,7 +3,10 @@ package de.minimum.hawapp.app.calendar.beans;
 import java.util.Date;
 import java.util.List;
 
-public interface LectureBO {
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
+@JsonDeserialize(as = LectureImpl.class)
+public interface Lecture {
 
     public String getUuid();
 
@@ -17,10 +20,10 @@ public interface LectureBO {
 
     public void setLecturerName(String lecturerName);
 
-    public CategoryBO getCategory();
+    public Category getCategory();
 
-    public List<AppointmentPO> getAppointments();
+    public List<Appointment> getAppointments();
 
-    public List<ChangeMessagePO> getChangeMessages();
+    public List<ChangeMessage> getChangeMessages();
 
 }

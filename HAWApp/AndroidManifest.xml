@@ -18,7 +18,7 @@
 		android:label="@string/app_name"
 		android:theme="@style/AppTheme" >
 		
-		<activity android:name="de.minimum.hawapp.app.activity.MainActivity"  
+		<activity android:name="de.minimum.hawapp.app.MainActivity"  
 		    android:label="@string/app_name"
 			android:theme="@android:style/Theme.NoTitleBar" >
 			<intent-filter>
@@ -26,12 +26,13 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name="de.minimum.hawapp.app.activity.LoginActivity_"></activity>
-		<activity android:name="de.minimum.hawapp.app.activity.SchwarzesBrettActivity"></activity>
-		<activity android:name="de.minimum.hawapp.app.activity.StisysActivity"></activity>
-		<activity android:name="de.minimum.hawapp.app.activity.KalenderActivity"></activity>
-		<activity android:name="de.minimum.hawapp.app.activity.MensaActivity"></activity>
-		<activity android:name="de.minimum.hawapp.gui.schwarzesbrett.NeueNachrichtActivity" android:label="@string/sb_neue_nachricht"></activity>
-		<activity android:name="de.minimum.hawapp.gui.schwarzesbrett.NachrichtActivity" android:label="@string/sb_nachricht"></activity>
+		<activity android:name="de.minimum.hawapp.app.stisys.gui.LoginActivity_"></activity>
+		<activity android:name="de.minimum.hawapp.app.blackboard.gui.SchwarzesBrettActivity"></activity>
+		<activity android:name="de.minimum.hawapp.app.stisys.gui.StisysActivity"></activity>
+		<activity android:name="de.minimum.hawapp.app.calendar.gui.KalenderActivity"></activity>
+		<activity android:name="de.minimum.hawapp.app.KalenderCategoryActivity"></activity>
+		<activity android:name="de.minimum.hawapp.app.mensa.gui.MensaActivity"></activity>
+		<activity android:name="de.minimum.hawapp.app.blackboard.gui.NeueNachrichtActivity" android:label="@string/sb_neue_nachricht"></activity>
+		<activity android:name="de.minimum.hawapp.app.blackboard.gui.NachrichtActivity" android:label="@string/sb_nachricht"></activity>
 	</application>
 </manifest>

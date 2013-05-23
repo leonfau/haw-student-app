@@ -1,3 +1,42 @@
-# view AndroidManifest.xml #generated:18
--keep class de.minimum.hawapp.app.MainActivity_ { <init>(...); }
+# view AndroidManifest.xml #generated:33
+-keep class de.minimum.hawapp.app.KalenderCategoryActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:21
+-keep class de.minimum.hawapp.app.MainActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:36
+-keep class de.minimum.hawapp.app.blackboard.gui.NachrichtActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:35
+-keep class de.minimum.hawapp.app.blackboard.gui.NeueNachrichtActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:30
+-keep class de.minimum.hawapp.app.blackboard.gui.SchwarzesBrettActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:32
+-keep class de.minimum.hawapp.app.calendar.gui.KalenderActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:34
+-keep class de.minimum.hawapp.app.mensa.gui.MensaActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:29
+-keep class de.minimum.hawapp.app.stisys.gui.LoginActivity_ { <init>(...); }
+
+# view AndroidManifest.xml #generated:31
+-keep class de.minimum.hawapp.app.stisys.gui.StisysActivity { <init>(...); }
+
+# onClick res/layout/sb_neue_nachricht.xml #generated:127
+-keepclassmembers class * { *** erstellNachricht(...); }
+
+# onClick res/layout/sb_main.xml #generated:38
+-keepclassmembers class * { *** loadAnfragen(...); }
+
+# onClick res/layout/sb_main.xml #generated:48
+-keepclassmembers class * { *** loadAngebote(...); }
+
+# onClick res/layout/sb_neue_nachricht.xml #generated:70
+-keepclassmembers class * { *** loadBildUrl(...); }
+
+# onClick res/layout/sb_main.xml #generated:29
+-keepclassmembers class * { *** loadNeueNachricht(...); }
 

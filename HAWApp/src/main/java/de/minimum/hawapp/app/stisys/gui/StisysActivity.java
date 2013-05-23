@@ -1,4 +1,4 @@
-package de.minimum.hawapp.app.activity;
+package de.minimum.hawapp.app.stisys.gui;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package de.minimum.hawapp.app.activity;
+package de.minimum.hawapp.app.stisys.gui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +15,7 @@ import com.googlecode.androidannotations.annotations.UiThread;
 import com.googlecode.androidannotations.annotations.ViewById;
 import com.googlecode.androidannotations.annotations.res.StringRes;
 
+import de.minimum.hawapp.app.MainActivity;
 import de.minimum.hawapp.app.R;
 import de.minimum.hawapp.app.login.Login;
 

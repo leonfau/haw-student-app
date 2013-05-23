@@ -2,11 +2,14 @@ package de.minimum.hawapp.app.calendar.beans;
 
 import java.util.Date;
 
-public interface AppointmentBO {
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+
+@JsonDeserialize(as = AppointmentImpl.class)
+public interface Appointment {
 
     public String getUuid();
 
-    public LectureBO getLecture();
+    public Lecture getLecture();
 
     public String getName();
 
