@@ -103,6 +103,6 @@ public class Login {
         catch(final Exception e) {
             e.printStackTrace();
         }
-        return decrypted;
+        return (decrypted.trim());
     }
 }

@@ -10,7 +10,7 @@ import android.widget.TabHost;
 import de.minimum.hawapp.app.blackboard.gui.SchwarzesBrettActivity;
 import de.minimum.hawapp.app.calendar.gui.KalenderActivity;
 import de.minimum.hawapp.app.mensa.gui.MensaActivity;
-import de.minimum.hawapp.app.stisys.gui.LoginActivity;
+import de.minimum.hawapp.app.stisys.gui.LoginActivity_;
 import de.minimum.hawapp.app.stisys.gui.StisysActivity;
 
 public class MainActivity extends TabActivity {
@@ -30,8 +30,7 @@ public class MainActivity extends TabActivity {
         Intent intent; // Reusable Intent for each tab
 
         // Create an Intent to launch an Activity for the tab (to be reused)
-        intent = new Intent().setClass(this, LoginActivity.class);
-
+        intent = new Intent().setClass(this, LoginActivity_.class);
         // Initialize a TabSpec for each tab and add it to the TabHost
         spec = tabHost.newTabSpec("Anmeldung").setIndicator("", res.getDrawable(R.drawable.ic_tab_anmeldung))
                         .setContent(intent);

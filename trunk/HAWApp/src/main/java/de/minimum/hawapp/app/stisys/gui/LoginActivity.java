@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -31,6 +32,9 @@ public class LoginActivity extends Activity {
     @ViewById
     CheckBox checkBoxPassword;
 
+    @ViewById
+    Button buttonLogin;
+
     @StringRes
     String failedLogin;
 
@@ -45,11 +49,11 @@ public class LoginActivity extends Activity {
 
         String login;
         if ((login = settings.getString("username", "")) != "") {
-            setLoadedLogin(Login.decrypt(login).trim());
+            setLoadedLogin(Login.decrypt(login));
         }
         String password;
         if ((password = settings.getString("password", "")) != "") {
-            setLoadedPassword(Login.decrypt(password).trim());
+            setLoadedPassword(Login.decrypt(password));
         }
 
         if (password != "") {
@@ -60,10 +64,7 @@ public class LoginActivity extends Activity {
     @Click(R.id.buttonLogin)
     public void login() {
         login(editLogin.getText().toString(), editPassword.getText().toString());
-
-        if (Login.loggedIn()) {
-            MainActivity.enableStisysTab();
-        }
+        buttonLogin.setEnabled(false);
     }
 
     @Background
@@ -86,6 +87,7 @@ public class LoginActivity extends Activity {
                 editor.putString("password", Login.getEncryptedPassword());
             }
             editor.commit();
+            MainActivity.enableStisysTab();
             Toast.makeText(getApplicationContext(), succesfulLogin, Toast.LENGTH_SHORT).show();
         }
 
@@ -94,6 +96,8 @@ public class LoginActivity extends Activity {
             editor.putString("password", "");
             editor.commit();
         }
+
+        buttonLogin.setEnabled(true);
     }
 
     @UiThread

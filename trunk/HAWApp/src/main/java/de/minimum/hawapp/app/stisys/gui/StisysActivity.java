@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.widget.ExpandableListAdapter;
 import android.widget.SimpleExpandableListAdapter;
 import de.minimum.hawapp.app.R;
+import de.minimum.hawapp.app.login.Login;
 import de.minimum.hawapp.app.stisys.Result;
 import de.minimum.hawapp.app.stisys.StisysImpl;
 
@@ -51,7 +52,7 @@ public class StisysActivity extends ExpandableListActivity {
 
         showDialog(DIALOG_DOWNLOAD_INFORMATION_PROGRESS);
         final ParseTask parseTask = new ParseTask();
-        parseTask.execute(login, password);
+        parseTask.execute(Login.decrypt(Login.getEncryptedLogin()), Login.decrypt(Login.getEncryptedPassword()));
     }
 
     @Override
@@ -84,10 +85,10 @@ public class StisysActivity extends ExpandableListActivity {
         }
 
         // Set up our adapter
-        mAdapter = new SimpleExpandableListAdapter(this, groupData, R.layout.activity_mensa_list_item_1,
-                        new String[] { NAME, DESCRIPTION }, new int[] { android.R.id.text1, android.R.id.text2 },
-                        childData, R.layout.activity_mensa_list_item_2, new String[] { NAME, DESCRIPTION },
-                        new int[] { android.R.id.text1, android.R.id.text2 });
+        mAdapter = new SimpleExpandableListAdapter(this, groupData, R.layout.activity_mensa_list_item_1, new String[] {
+                        NAME, DESCRIPTION }, new int[] { android.R.id.text1, android.R.id.text2 }, childData,
+                        R.layout.activity_mensa_list_item_2, new String[] { NAME, DESCRIPTION }, new int[] {
+                                        android.R.id.text1, android.R.id.text2 });
         setListAdapter(mAdapter);
     }
 
