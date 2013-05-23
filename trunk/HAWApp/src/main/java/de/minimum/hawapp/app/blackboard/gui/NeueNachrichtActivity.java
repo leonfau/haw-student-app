@@ -1,4 +1,4 @@
-package de.minimum.hawapp.gui.schwarzesbrett;
+package de.minimum.hawapp.app.blackboard.gui;
 
 import android.app.Activity;
 import android.os.Bundle;

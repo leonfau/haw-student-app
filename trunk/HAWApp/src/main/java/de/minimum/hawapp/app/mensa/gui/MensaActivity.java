@@ -1,4 +1,4 @@
-package de.minimum.hawapp.app.activity;
+package de.minimum.hawapp.app.mensa.gui;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
