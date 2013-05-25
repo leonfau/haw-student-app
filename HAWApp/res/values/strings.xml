@@ -23,6 +23,7 @@
      
     
 	<!-- LoginActivity strings -->
+	<string name="noInternet">Keine Internetverbindung</string>
     <string name="show_dialog">Dialog</string>
     <string name="loginName">Name</string>
     <string name="loginPassword">Passwort</string>
