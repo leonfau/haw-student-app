@@ -1,13 +1,19 @@
 package de.minimum.hawapp.server.facade.serviceprovider;
 
+import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +27,8 @@ import de.minimum.hawapp.server.calendar.api.CategoryBO;
 import de.minimum.hawapp.server.calendar.api.ChangeMessageBO;
 import de.minimum.hawapp.server.calendar.api.LectureBO;
 import de.minimum.hawapp.server.context.ManagerFactory;
+import de.minimum.hawapp.server.persistence.calendar.AppointmentPO;
+import de.minimum.hawapp.server.persistence.calendar.LecturePO;
 import de.minimum.hawapp.test.util.CleanUpHelper;
 
 @Singleton
@@ -40,6 +48,8 @@ public class CalendarService {
     public static final String CHANGEMESSAGE = "changeMessage";
     public static final String CHANGEMESSAGES = "changeMessages";
     public static final String LASTMODIFIED = "lastModified";
+    private static final String NEW = "new";
+    private static final String MODIFY = "modify";
 
     @GET
     @Path(CalendarService.TEST_CONTEXT + "/start")
@@ -243,4 +253,70 @@ public class CalendarService {
         }
     }
 
+    @POST
+    @Path(CalendarService.LECTURE + "/{lectureUuid}/" + CalendarService.NEW)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createNewAppointment(@PathParam("lectureUuid")
+    final String uuid, final AppointmentPO appointment) {
+        try {
+            final LecturePO lecture = (LecturePO)calMngr.getLectureBO(uuid);
+            appointment.setLecture(lecture);
+            final AppointmentBO newAppointment = calMngr.createAppointment(appointment);
+            final String whatwasChanged = String.format("Ein neuer Termin wurde hinzugefügt: %s", newAppointment);
+            calMngr.createChangeMessage(lecture, newAppointment.getLastModified(), "", whatwasChanged, "anonymous");
+        }
+        catch(final Throwable e) {
+            e.printStackTrace();
+            return Response.serverError().build();
+        }
+
+        return Response.ok().build();
+    }
+
+    @PUT
+    @Path(CalendarService.APPOINTMENT + "/" + CalendarService.MODIFY)
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean modifyAppointment(final AppointmentPO appointment) {
+        try {
+            final AppointmentBO oldAppointment = calMngr.getAppointment(appointment.getUuid());
+
+            final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,
+                            Locale.GERMANY);
+            final StringBuilder whatwasChanged = new StringBuilder();
+
+            whatwasChanged.append(String.format("Beim Termin %s wurde folgendes geändert: ", oldAppointment));
+            if (!appointment.getName().equals(oldAppointment.getName())) {
+                whatwasChanged.append(String.format("\n Name von %s zu %s", oldAppointment.getName(),
+                                appointment.getName()));
+            }
+            if (!appointment.getBegin().equals(oldAppointment.getBegin())) {
+                whatwasChanged.append(String.format(" \n Begin von %s zu %s",
+                                dateFormat.format(oldAppointment.getBegin()), dateFormat.format(appointment.getBegin())));
+            }
+            if (!appointment.getEnd().equals(oldAppointment.getEnd())) {
+                whatwasChanged.append(String.format("\n Ende von %s zu %s", dateFormat.format(oldAppointment.getEnd()),
+                                dateFormat.format(appointment.getEnd())));
+            }
+            if (!appointment.getLocation().equals(oldAppointment.getLocation())) {
+                whatwasChanged.append(String.format("\n Ort von %s zu %s", oldAppointment.getLocation(),
+                                appointment.getLocation()));
+            }
+            if (!appointment.getDetails().equals(oldAppointment.getDetails())) {
+                whatwasChanged.append("\n Die Termindetails wurden geändert");
+            }
+
+            calMngr.createChangeMessage(oldAppointment.getLecture(), new Date(System.currentTimeMillis()), "",
+                            whatwasChanged.toString(), "anonymous");
+            appointment.setLecture((LecturePO)oldAppointment.getLecture());
+            calMngr.modify(appointment);
+        }
+        catch(final Throwable e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+
+    }
 }

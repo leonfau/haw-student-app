@@ -2,7 +2,9 @@ package de.minimum.hawapp.server.persistence.calendar;
 
 // Generated 26.04.2013 13:35:12 by Hibernate Tools 3.4.0.CR1
 
+import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,6 +26,13 @@ import de.minimum.hawapp.server.calendar.api.AppointmentBO;
 @Entity
 @Table(name = "Calendar_Appointment", catalog = "haw_app")
 public class AppointmentPO implements AppointmentBO, java.io.Serializable {
+    private static final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT,
+                    Locale.GERMANY);
+
+    @Override
+    public String toString() {
+        return name + " von " + dateFormat.format(begin) + " bis " + dateFormat.format(end);
+    }
 
     /**
 	 * 
@@ -41,16 +50,16 @@ public class AppointmentPO implements AppointmentBO, java.io.Serializable {
     public AppointmentPO() {
     }
 
-    public AppointmentPO(String uuid, LecturePO calendarLecture, Date lastModified) {
+    public AppointmentPO(final String uuid, final LecturePO calendarLecture, final Date lastModified) {
         this.uuid = uuid;
-        this.lecture = calendarLecture;
+        lecture = calendarLecture;
         this.lastModified = lastModified;
     }
 
-    public AppointmentPO(String uuid, LecturePO calendarLecture, String name, Date begin, Date end, String location,
-                    String details, Date lastModified) {
+    public AppointmentPO(final String uuid, final LecturePO calendarLecture, final String name, final Date begin,
+                    final Date end, final String location, final String details, final Date lastModified) {
         this.uuid = uuid;
-        this.lecture = calendarLecture;
+        lecture = calendarLecture;
         this.name = name;
         this.begin = begin;
         this.end = end;
@@ -63,10 +72,10 @@ public class AppointmentPO implements AppointmentBO, java.io.Serializable {
     @Id
     @Column(name = "uuid", unique = true, nullable = false)
     public String getUuid() {
-        return this.uuid;
+        return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(final String uuid) {
         this.uuid = uuid;
     }
 
@@ -75,21 +84,21 @@ public class AppointmentPO implements AppointmentBO, java.io.Serializable {
     @JoinColumn(name = "Lecture_uuid", nullable = false)
     @JsonIgnore
     public LecturePO getLecture() {
-        return this.lecture;
+        return lecture;
     }
 
-    public void setLecture(LecturePO calendarLecture) {
-        this.lecture = calendarLecture;
+    public void setLecture(final LecturePO calendarLecture) {
+        lecture = calendarLecture;
     }
 
     @Override
     @Column(name = "name")
     public String getName() {
-        return this.name;
+        return name;
     }
 
     @Override
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -97,11 +106,11 @@ public class AppointmentPO implements AppointmentBO, java.io.Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "begin", length = 19)
     public Date getBegin() {
-        return this.begin;
+        return begin;
     }
 
     @Override
-    public void setBegin(Date begin) {
+    public void setBegin(final Date begin) {
         this.begin = begin;
     }
 
@@ -109,33 +118,33 @@ public class AppointmentPO implements AppointmentBO, java.io.Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end", length = 19)
     public Date getEnd() {
-        return this.end;
+        return end;
     }
 
     @Override
-    public void setEnd(Date end) {
+    public void setEnd(final Date end) {
         this.end = end;
     }
 
     @Override
     @Column(name = "location")
     public String getLocation() {
-        return this.location;
+        return location;
     }
 
     @Override
-    public void setLocation(String location) {
+    public void setLocation(final String location) {
         this.location = location;
     }
 
     @Override
     @Column(name = "details", length = 1000)
     public String getDetails() {
-        return this.details;
+        return details;
     }
 
     @Override
-    public void setDetails(String details) {
+    public void setDetails(final String details) {
         this.details = details;
     }
 
@@ -143,10 +152,10 @@ public class AppointmentPO implements AppointmentBO, java.io.Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "lastModified", nullable = false, length = 19)
     public Date getLastModified() {
-        return this.lastModified;
+        return lastModified;
     }
 
-    public void setLastModified(Date lastModified) {
+    public void setLastModified(final Date lastModified) {
         this.lastModified = lastModified;
     }
 
@@ -154,25 +163,30 @@ public class AppointmentPO implements AppointmentBO, java.io.Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((this.uuid == null) ? 0 : this.uuid.hashCode());
+        result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
         return result;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
+    public boolean equals(final Object obj) {
+        if (this == obj) {
             return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        AppointmentPO other = (AppointmentPO)obj;
-        if (this.uuid == null) {
-            if (other.uuid != null)
-                return false;
         }
-        else if (!this.uuid.equals(other.uuid))
+        if (obj == null) {
             return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final AppointmentPO other = (AppointmentPO)obj;
+        if (uuid == null) {
+            if (other.uuid != null) {
+                return false;
+            }
+        }
+        else if (!uuid.equals(other.uuid)) {
+            return false;
+        }
         return true;
     }
 }
