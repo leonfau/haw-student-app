@@ -17,8 +17,7 @@ public class AppointmentImpl implements Appointment, java.io.Serializable {
     public String toString() {
         final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT,
                         Locale.GERMANY);
-        return "Termin" + name + " \n" + dateFormat.format(begin) + " - " + dateFormat.format(end) + "\n Ort "
-                        + location;
+        return name + " \n" + dateFormat.format(begin) + " - " + dateFormat.format(end) + "\n Ort " + location;
     }
 
     private static final long serialVersionUID = 1L;

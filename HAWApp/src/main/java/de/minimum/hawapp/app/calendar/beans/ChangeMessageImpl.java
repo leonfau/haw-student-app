@@ -1,8 +1,10 @@
-  package de.minimum.hawapp.app.calendar.beans;
+package de.minimum.hawapp.app.calendar.beans;
 
 // Generated 26.04.2013 13:35:12 by Hibernate Tools 3.4.0.CR1
 
+import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -12,6 +14,17 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 
 public class ChangeMessageImpl implements ChangeMessage, java.io.Serializable {
 
+    @Override
+    public String toString() {
+        final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT,
+                        Locale.GERMANY);
+        return "Am " + dateFormat.format(changeat) + " wurde folgendes geändert\n" + what;
+    }
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 6064404786591155719L;
     private String uuid;
     private LectureImpl calendarLecture;
     private Date lastModified;

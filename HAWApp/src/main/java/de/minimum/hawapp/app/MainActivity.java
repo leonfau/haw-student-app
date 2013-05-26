@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TabHost;
 import de.minimum.hawapp.app.blackboard.gui.SchwarzesBrettActivity;
-import de.minimum.hawapp.app.calendar.gui.KalenderActivity;
+import de.minimum.hawapp.app.calendar.gui.CalendarCategoriesActivity;
 import de.minimum.hawapp.app.mensa.gui.MensaActivity;
 import de.minimum.hawapp.app.stisys.gui.LoginActivity_;
 import de.minimum.hawapp.app.stisys.gui.StisysActivity;
@@ -47,7 +47,7 @@ public class MainActivity extends TabActivity {
                         .setContent(intent);
         tabHost.addTab(spec);
 
-        intent = new Intent().setClass(this, KalenderActivity.class);
+        intent = new Intent().setClass(this, CalendarCategoriesActivity.class);
         spec = tabHost.newTabSpec("Kalender").setIndicator("", res.getDrawable(R.drawable.ic_tab_kalender))
                         .setContent(intent);
         tabHost.addTab(spec);

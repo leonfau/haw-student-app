@@ -1,0 +1,92 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".CalendarlectureActivity" >
+
+    <TextView
+        android:id="@+id/lecture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Vorlesung"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/lecturer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/lecture"
+        android:layout_below="@+id/lecture"
+        android:text="Dozent"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/lectureName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/lecture"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/lecture"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/lecturerName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/lecturer"
+        android:layout_alignBottom="@+id/lecturer"
+        android:layout_alignLeft="@+id/lectureName"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/Termine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/lecturerName"
+        android:layout_marginTop="16dp"
+        android:text="Termine"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/subscripeLecture"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/Termine" >
+
+    </ListView>
+
+    <Button
+        android:id="@+id/subscripeLecture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/listView1"
+        android:layout_alignParentBottom="true"
+        android:text="abonnieren" />
+
+    <Button
+        android:id="@+id/cal_btn_changelog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@android:id/list"
+        android:layout_below="@android:id/list"
+        android:text="ChangeLog" />
+
+    <Button
+        android:id="@+id/newAppointment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/subscripeLecture"
+        android:layout_alignBottom="@+id/subscripeLecture"
+        android:layout_toLeftOf="@+id/cal_btn_changelog"
+        android:text="neuer Termin" />
+
+</RelativeLayout>

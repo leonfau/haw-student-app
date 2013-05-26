@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import de.minimum.hawapp.app.calendar.beans.Appointment;
 import de.minimum.hawapp.app.calendar.beans.Category;
+import de.minimum.hawapp.app.calendar.beans.ChangeMessage;
 import de.minimum.hawapp.app.calendar.beans.Lecture;
 
 public class CalendarService {
@@ -71,6 +72,16 @@ public class CalendarService {
         }
     }
 
+    public static Date getLectureLastModifiedFromWeb(final String uuid) throws RestClientException {
+        final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "lecture/lastModified/" + uuid;
+        try {
+            return restTemplate.getForObject(url, Date.class);
+        }
+        catch(final Throwable e) {
+            return null;
+        }
+    }
+
     public static List<Appointment> getAppointments(final String lectureUuid) {
         final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "appointments/" + lectureUuid;
         try {
@@ -80,6 +91,30 @@ public class CalendarService {
             e.printStackTrace();
             return Collections.EMPTY_LIST;
         }
+    }
+
+    public static List<ChangeMessage> getChangeMessages(final String lectureUuid) {
+        final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "changeMessages/" + lectureUuid;
+        try {
+            return Arrays.asList(restTemplate.getForObject(url, ChangeMessage[].class));
+        }
+        catch(final Throwable e) {
+            e.printStackTrace();
+            return Collections.EMPTY_LIST;
+        }
+    }
+
+    public static boolean createNewAppoinment(final Appointment appointment, final String lectureUUID) {
+        final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "lecture/" + lectureUUID + "/new";
+        try {
+            restTemplate.postForEntity(url, appointment, null);
+        }
+        catch(final Throwable e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
     }
 
 }
