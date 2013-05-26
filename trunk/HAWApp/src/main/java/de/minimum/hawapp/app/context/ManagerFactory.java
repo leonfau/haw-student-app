@@ -3,8 +3,8 @@ package de.minimum.hawapp.app.context;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.minimum.hawapp.app.mensa.management.CalendarManager;
-import de.minimum.hawapp.app.mensa.management.CalendarManagerImpl;
+import de.minimum.hawapp.app.calendar.intern.CalendarManager;
+import de.minimum.hawapp.app.calendar.intern.CalendarManagerImpl;
 import de.minimum.hawapp.app.mensa.management.MensaManager;
 import de.minimum.hawapp.app.mensa.management.MensaManagerImpl;
 

@@ -24,6 +24,10 @@ public interface Lecture {
 
     public List<Appointment> getAppointments();
 
+    public void setAppointments(List<Appointment> appointments);
+
     public List<ChangeMessage> getChangeMessages();
+
+    public void setChangeMessages(List<ChangeMessage> messages);
 
 }

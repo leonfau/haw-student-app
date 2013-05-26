@@ -1,38 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<manifest 
-    xmlns:android="http://schemas.android.com/apk/res/android"
-	package="de.minimum.hawapp.app"
-	android:versionCode="1"
-	android:versionName="1.0" >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="de.minimum.hawapp.app"
+    android:versionCode="1"
+    android:versionName="1.0" >
 
-	<uses-sdk
-		android:minSdkVersion="14"
-		android:targetSdkVersion="14" />
-        
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-               
-	<application
-		android:allowBackup="false"
-		android:icon="@drawable/ic_launcher"
-		android:label="@string/app_name"
-		android:theme="@style/AppTheme" >
-		
-		<activity android:name="de.minimum.hawapp.app.MainActivity"  
-		    android:label="@string/app_name"
-			android:theme="@android:style/Theme.NoTitleBar" >
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-		<activity android:name="de.minimum.hawapp.app.stisys.gui.LoginActivity_"></activity>
-		<activity android:name="de.minimum.hawapp.app.blackboard.gui.SchwarzesBrettActivity"></activity>
-		<activity android:name="de.minimum.hawapp.app.stisys.gui.StisysActivity"></activity>
-		<activity android:name="de.minimum.hawapp.app.calendar.gui.KalenderActivity"></activity>
-		<activity android:name="de.minimum.hawapp.app.KalenderCategoryActivity"></activity>
-		<activity android:name="de.minimum.hawapp.app.mensa.gui.MensaActivity"></activity>
-		<activity android:name="de.minimum.hawapp.app.blackboard.gui.NeueNachrichtActivity" android:label="@string/sb_neue_nachricht"></activity>
-		<activity android:name="de.minimum.hawapp.app.blackboard.gui.NachrichtActivity" android:label="@string/sb_nachricht"></activity>
-	</application>
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="14" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="de.minimum.hawapp.app.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="de.minimum.hawapp.app.stisys.gui.LoginActivity_" >
+        </activity>
+        <activity android:name="de.minimum.hawapp.app.blackboard.gui.SchwarzesBrettActivity" >
+        </activity>
+        <activity android:name="de.minimum.hawapp.app.stisys.gui.StisysActivity" >
+        </activity>
+        <activity android:name="de.minimum.hawapp.app.calendar.gui.CalendarCategoriesActivity" >
+        </activity>
+        <activity android:name="de.minimum.hawapp.app.KalenderCategoryActivity" >
+        </activity>
+        <activity android:name="de.minimum.hawapp.app.mensa.gui.MensaActivity" >
+        </activity>
+        <activity
+            android:name="de.minimum.hawapp.app.blackboard.gui.NeueNachrichtActivity"
+            android:label="@string/sb_neue_nachricht" >
+        </activity>
+        <activity
+            android:name="de.minimum.hawapp.app.blackboard.gui.NachrichtActivity"
+            android:label="@string/sb_nachricht" >
+        </activity>
+        <activity
+            android:name="de.minimum.hawapp.app.calendar.gui.CalendarLectureActivity"
+            android:label="@string/title_activity_calendarlecture" >
+        </activity>
+        <activity
+            android:name="de.minimum.hawapp.app.calendar.gui.CalendarLecturesActivity"
+            android:label="Vorlesungen" >
+        </activity>
+        <activity
+            android:name="de.minimum.hawapp.app.calendar.gui.CalendarSubscribedLectureActivity"
+            android:label="@string/title_activity_calendar_subcripted_lectures" >
+        </activity>
+        <activity
+            android:name="de.minimum.hawapp.app.calendar.gui.CalendarAppointmentActivity"
+            android:label="@string/title_activity_calendar_appointment" >
+        </activity>
+        <activity
+            android:name="de.minimum.hawapp.app.calendar.gui.CalendarChangeMessagesActivity"
+            android:label="ChangeLog" >
+        </activity>
+    </application>
+
 </manifest>
