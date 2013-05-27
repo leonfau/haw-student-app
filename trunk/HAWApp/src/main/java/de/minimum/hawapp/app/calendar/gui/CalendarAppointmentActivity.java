@@ -111,7 +111,7 @@ public class CalendarAppointmentActivity extends Activity {
                         final String beginText = dateFormat.format(appointment.getBegin());
                         begin.setText(beginText);
 
-                        final String endText = dateFormat.format(appointment.getBegin());
+                        final String endText = dateFormat.format(appointment.getEnd());
                         end.setText(endText);
 
                         location.setText(appointment.getLocation());
