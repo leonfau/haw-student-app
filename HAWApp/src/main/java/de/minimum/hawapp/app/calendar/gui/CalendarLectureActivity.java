@@ -146,7 +146,7 @@ public class CalendarLectureActivity extends ListActivity {
     }
 
     private void showToastSomethingFailed() {
-        Toast.makeText(this, "Endweder hat die Vorlesungen keine Termine oder es ist ein Problem ist aufgetreten",
+        Toast.makeText(this, "Entweder hat die Vorlesungen keine Termine oder es ist ein Problem ist aufgetreten",
                         Toast.LENGTH_LONG).show();
     }
 
