@@ -28,4 +28,6 @@ public interface CalendarManager {
 
     boolean createNewAppointment(Appointment appointment, String lectureUUID);
 
+    public boolean modifyExistingAppointment(Appointment appointment);
+
 }

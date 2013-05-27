@@ -79,4 +79,9 @@ public class CalendarManagerImpl implements CalendarManager {
 
     }
 
+    @Override
+    public boolean modifyExistingAppointment(final Appointment appointment) {
+        return CalendarService.modifyAppointment(appointment);
+    }
+
 }

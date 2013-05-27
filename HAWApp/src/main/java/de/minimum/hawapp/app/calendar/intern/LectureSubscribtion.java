@@ -10,7 +10,7 @@ import de.minimum.hawapp.app.calendar.beans.Lecture;
 public final class LectureSubscribtion implements Serializable {
     @Override
     public String toString() {
-        return lecturerName;
+        return lectureName;
     }
 
     /**

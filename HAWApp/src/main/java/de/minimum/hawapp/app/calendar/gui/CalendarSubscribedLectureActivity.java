@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import android.app.Dialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import de.minimum.hawapp.app.calendar.intern.LectureSubscribtion;
 import de.minimum.hawapp.app.context.ManagerFactory;
 
 public class CalendarSubscribedLectureActivity extends ListActivity {
+    private static final int DIALOG_DOWNLOAD_JSON_PROGRESS = 0;
     private final CalendarManager calManager = ManagerFactory.getManager(CalendarManager.class);
     private CalendarAboService aboService;
     private ArrayAdapter<LectureSubscribtion> lectureSubscribtionAdapter;
@@ -30,7 +33,7 @@ public class CalendarSubscribedLectureActivity extends ListActivity {
                         new ArrayList<LectureSubscribtion>());
         setContentView(R.layout.calendar_subcripted_lectures);
         setListAdapter(lectureSubscribtionAdapter);
-        showLectureSubscription();
+
     }
 
     @Override
@@ -40,12 +43,14 @@ public class CalendarSubscribedLectureActivity extends ListActivity {
     }
 
     private void showLectureSubscription() {
-
+        showDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
         new AsyncTask<Void, Void, Void>() {
             List<LectureSubscribtion> lectureSubscriptions;
 
             @Override
             protected void onPostExecute(final Void arg0) {
+                dismissDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+                removeDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
                 lectureSubscribtionAdapter.clear();
                 lectureSubscribtionAdapter.addAll(lectureSubscriptions);
                 lectureSubscribtionAdapter.sort(new Comparator<LectureSubscribtion>() {
@@ -75,5 +80,20 @@ public class CalendarSubscribedLectureActivity extends ListActivity {
         startActivity(intent);
         super.onListItemClick(l, v, position, id);
 
+    }
+
+    @Override
+    protected Dialog onCreateDialog(final int id) {
+        ProgressDialog mProgressDialog;
+        switch(id) {
+            case DIALOG_DOWNLOAD_JSON_PROGRESS:
+                mProgressDialog = new ProgressDialog(this);
+                mProgressDialog.setMessage("Updating.....");
+                mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                mProgressDialog.setCancelable(true);
+                mProgressDialog.show();
+                return mProgressDialog;
+        }
+        return null;
     }
 }

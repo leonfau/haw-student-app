@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import android.app.Dialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import de.minimum.hawapp.app.calendar.intern.CalendarManager;
 import de.minimum.hawapp.app.context.ManagerFactory;
 
 public class CalendarLectureActivity extends ListActivity {
+    private static final int DIALOG_DOWNLOAD_JSON_PROGRESS = 0;
     private final CalendarManager calManager = ManagerFactory.getManager(CalendarManager.class);
     private CalendarAboService aboService;
     private ArrayAdapter<Appointment> appointmentAdapter;
@@ -32,6 +35,9 @@ public class CalendarLectureActivity extends ListActivity {
     private Button newAppointmentBtn;
     private final String abbestellen = "abbestellen";
     private final String abonieren = "abbonieren";
+    private TextView lecturename;
+    private TextView lecturername;
+    private String lectureUUID;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -41,17 +47,13 @@ public class CalendarLectureActivity extends ListActivity {
                         new ArrayList<Appointment>());
         setContentView(R.layout.calendarlecture);
         setListAdapter(appointmentAdapter);
-
-        final String lectureUUID = getIntent().getExtras().getString(CalendarCategoriesActivity.LECTURE_UUID);
-        lecture = calManager.getLecture(lectureUUID);
-        showAppointments(lecture);
-        final TextView lecturename = (TextView)findViewById(R.id.lectureName);
-        lecturename.setText(lecture.getName());
-        final TextView lecturername = (TextView)findViewById(R.id.lecturerName);
-        lecturername.setText(lecture.getLecturerName());
-        // abonnieren Button
+        lecturename = (TextView)findViewById(R.id.lectureName);
+        lecturername = (TextView)findViewById(R.id.lecturerName);
         subscribeLectureBtn = (Button)findViewById(R.id.subscripeLecture);
 
+        lectureUUID = getIntent().getExtras().getString(CalendarCategoriesActivity.LECTURE_UUID);
+
+        // abonnieren Button
         subscribeLectureBtn.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -59,10 +61,7 @@ public class CalendarLectureActivity extends ListActivity {
                 processSubscribeLectureButton();
             }
         });
-        if (aboService.isSubscribted(lectureUUID)) {
 
-            subscribeLectureBtn.setText("abbestellen");
-        }
         final Button changeLogBtn = (Button)findViewById(R.id.cal_btn_changelog);
 
         changeLogBtn.setOnClickListener(new OnClickListener() {
@@ -86,33 +85,69 @@ public class CalendarLectureActivity extends ListActivity {
 
     }
 
-    private void showAppointments(final Lecture lecture) {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showAppointmentsAndLectureDetails();
+        if (aboService.isSubscribted(lectureUUID)) {
 
-        new AsyncTask<Lecture, Void, Void>() {
+            subscribeLectureBtn.setText("abbestellen");
+        }
+        else {
+            subscribeLectureBtn.setText("abonieren");
+        }
+    }
+
+    private void showAppointmentsAndLectureDetails() {
+        showDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+        new AsyncTask<Void, Void, Void>() {
             List<Appointment> appointments;
+            private boolean successful = false;
 
             @Override
             protected void onPostExecute(final Void arg0) {
+                dismissDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+                removeDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
                 appointmentAdapter.clear();
-                appointmentAdapter.addAll(appointments);
-                appointmentAdapter.sort(new Comparator<Appointment>() {
+                if (successful) {
+                    lecturename.setText(lecture.getName());
+                    lecturername.setText(lecture.getLecturerName());
+                    appointmentAdapter.addAll(appointments);
+                    appointmentAdapter.sort(new Comparator<Appointment>() {
+                        @Override
+                        public int compare(final Appointment lhs, final Appointment rhs) {
+                            return lhs.getBegin().compareTo(rhs.getBegin());
+                        }
+                    });
+                    setListAdapter(appointmentAdapter);
+                }
+                else {
+                    showToastSomethingFailed();
+                }
 
-                    @Override
-                    public int compare(final Appointment lhs, final Appointment rhs) {
-                        return lhs.getBegin().compareTo(rhs.getBegin());
-                    }
-                });
-                setListAdapter(appointmentAdapter);
                 super.onPostExecute(arg0);
             }
 
             @Override
-            protected Void doInBackground(final Lecture... params) {
-                final Lecture actualLecture = params[0];
-                appointments = calManager.getAppointments(actualLecture);
+            protected Void doInBackground(final Void... params) {
+                try {
+                    lecture = calManager.getLecture(lectureUUID);
+                    appointments = calManager.getAppointments(lecture);
+                    successful = !appointments.isEmpty();
+                }
+                catch(final Throwable e) {
+                    e.printStackTrace();
+                    successful = false;
+                }
+
                 return null;
             }
-        }.execute(lecture);
+        }.execute();
+    }
+
+    private void showToastSomethingFailed() {
+        Toast.makeText(this, "Endweder hat die Vorlesungen keine Termine oder es ist ein Problem ist aufgetreten",
+                        Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -127,7 +162,7 @@ public class CalendarLectureActivity extends ListActivity {
 
     private void processSubscribeLectureButton() {
         if (subscribeLectureBtn.getText().equals(abbestellen)) {
-            aboService.unsubscribeLecture(lecture.getUuid());
+            aboService.unsubscribeLecture(lectureUUID);
             subscribeLectureBtn.setText(abonieren);
         }
         else {
@@ -153,25 +188,22 @@ public class CalendarLectureActivity extends ListActivity {
         final Intent intent = new Intent(this, CalendarAppointmentActivity.class);
         intent.putExtra(CalendarCategoriesActivity.LECTURE_UUID, lecture.getUuid());
         startActivity(intent);
-        // new AsyncTask<Void, Void, Void>() {
-        //
-        // @Override
-        // protected void onPostExecute(final Void arg0) {
-        //
-        // }
-        //
-        // @Override
-        // protected Void doInBackground(final Void... params) {
-        // final Appointment appointment = new AppointmentImpl();
-        // appointment.setBegin(new Date(System.currentTimeMillis()));
-        // appointment.setEnd(new Date(System.currentTimeMillis()));
-        // appointment.setName("Neuer Termin");
-        // CalendarService.createNewAppoinment(appointment,
-        // "6ded8547-a533-4d67-b001-16d633075b7a");
-        // return null;
-        // }
-        // }.execute();
+    }
 
+    @Override
+    protected Dialog onCreateDialog(final int id) {
+
+        ProgressDialog mProgressDialog;
+        switch(id) {
+            case DIALOG_DOWNLOAD_JSON_PROGRESS:
+                mProgressDialog = new ProgressDialog(this);
+                mProgressDialog.setMessage("Updating.....");
+                mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                mProgressDialog.setCancelable(true);
+                mProgressDialog.show();
+                return mProgressDialog;
+        }
+        return null;
     }
 
 }

@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.AsyncTask;
@@ -30,6 +31,7 @@ public class CalendarAppointmentActivity extends Activity {
     private static final int END_DATE_DIALOG_ID = 2;
     private static final int BEGIN_TIME_DIALOG_ID = 3;
     private static final int END_TIME_DIALOG_ID = 4;
+    private static final int DIALOG_DOWNLOAD_JSON_PROGRESS = 5;
     private final Calendar beginCal = Calendar.getInstance(Locale.GERMANY);
     private final Calendar endCal = Calendar.getInstance(Locale.GERMANY);
     private final CalendarManager calManager = ManagerFactory.getManager(CalendarManager.class);
@@ -43,6 +45,7 @@ public class CalendarAppointmentActivity extends Activity {
     private EditText details;
     private Button save;
     private Appointment appointment = null;
+    private String appointmentUUID;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -54,16 +57,8 @@ public class CalendarAppointmentActivity extends Activity {
         location = (EditText)findViewById(R.id.cal_app_location);
         details = (EditText)findViewById(R.id.cal_app_details);
 
-        final String appointmentUUID = getIntent().getExtras().getString(CalendarCategoriesActivity.APPOINTMENT_UUID);
-        if (appointmentUUID != null) {
-            appointment = calManager.getAppointment(appointmentUUID);
-            if (appointment != null) {
-                beginCal.setTime(appointment.getBegin());
-                endCal.setTime(appointment.getEnd());
-                fillTextFields();
-            }
+        appointmentUUID = getIntent().getExtras().getString(CalendarCategoriesActivity.APPOINTMENT_UUID);
 
-        }
         save = (Button)findViewById(R.id.cal_btn_app_modify);
         save.setOnClickListener(new OnClickListener() {
 
@@ -92,51 +87,114 @@ public class CalendarAppointmentActivity extends Activity {
 
     }
 
-    private void fillTextFields() {
-        name.setText(appointment.getName());
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateTextFields();
+    }
 
-        final String beginText = dateFormat.format(appointment.getBegin());
-        begin.setText(beginText);
+    private void updateTextFields() {
+        showDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+        new AsyncTask<String, Void, Void>() {
+            private boolean successful = false;
 
-        final String endText = dateFormat.format(appointment.getBegin());
-        end.setText(endText);
+            @Override
+            protected void onPostExecute(final Void arg0) {
+                dismissDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+                removeDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+                if (successful) {
+                    if (appointment != null) {
+                        beginCal.setTime(appointment.getBegin());
+                        endCal.setTime(appointment.getEnd());
+                        name.setText(appointment.getName());
 
-        location.setText(appointment.getLocation());
+                        final String beginText = dateFormat.format(appointment.getBegin());
+                        begin.setText(beginText);
 
-        details.setText(appointment.getDetails());
+                        final String endText = dateFormat.format(appointment.getBegin());
+                        end.setText(endText);
+
+                        location.setText(appointment.getLocation());
+
+                        details.setText(appointment.getDetails());
+
+                    }
+                }
+                else {
+                    showToastSomethingFailed();
+                }
+            }
+
+            @Override
+            protected Void doInBackground(final String... params) {
+                try {
+                    if (appointmentUUID != null) {
+                        appointment = calManager.getAppointment(appointmentUUID);
+                        successful = appointment != null;
+                    }
+                    else {
+                        successful = true;
+                    }
+                    return null;
+                }
+                catch(final Throwable e) {
+                    e.printStackTrace();
+                    successful = false;
+                }
+
+                return null;
+            }
+        }.execute();
+    }
+
+    private void showToastSomethingFailed() {
+        Toast.makeText(this, "Es ist ein Problem ist aufgetreten", Toast.LENGTH_LONG).show();
     }
 
     private void saveChanges() {
         new AsyncTask<Void, Void, Void>() {
+            boolean isSuccessful = false;
 
             @Override
             protected void onPostExecute(final Void arg0) {
+                if (isSuccessful) {
+                    showSavedCompletToast();
+                }
+                else {
+                    showSavedFailToast();
+                }
 
             }
 
             @Override
             protected Void doInBackground(final Void... params) {
                 if (appointment == null) {
-                    createNewAppointment();
-                    return null;
+                    isSuccessful = createNewAppointment();
+                    if (!isSuccessful) {
+                        appointment = null;
+                    }
+                }
+                else {
+                    isSuccessful = modifyAppointment();
                 }
                 return null;
             }
+
         }.execute();
 
     }
 
-    private void createNewAppointment() {
+    private boolean createNewAppointment() {
         appointment = new AppointmentImpl();
         putChangesInAppointment();
         final String lectureUUID = getIntent().getExtras().getString(CalendarCategoriesActivity.LECTURE_UUID);
-        if (calManager.createNewAppointment(appointment, lectureUUID)) {
-            showSavedFailToast();
-        }
-        else {
-            showSavedCompletToast();
-        }
+        return calManager.createNewAppointment(appointment, lectureUUID);
 
+    }
+
+    private boolean modifyAppointment() {
+        putChangesInAppointment();
+        return calManager.modifyExistingAppointment(appointment);
     }
 
     private void showSavedCompletToast() {
@@ -185,6 +243,7 @@ public class CalendarAppointmentActivity extends Activity {
 
     @Override
     protected Dialog onCreateDialog(final int id) {
+        ProgressDialog mProgressDialog;
         switch(id) {
             case BEGIN_DATE_DIALOG_ID:
                 return new DatePickerDialog(this, beginDatePickerListener, beginCal.get(Calendar.YEAR),
@@ -199,6 +258,13 @@ public class CalendarAppointmentActivity extends Activity {
                 return new TimePickerDialog(this, endTimePickerListener, endCal.get(Calendar.HOUR_OF_DAY),
                                 endCal.get(Calendar.MINUTE), true);
 
+            case DIALOG_DOWNLOAD_JSON_PROGRESS:
+                mProgressDialog = new ProgressDialog(this);
+                mProgressDialog.setMessage("Updating.....");
+                mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                mProgressDialog.setCancelable(true);
+                mProgressDialog.show();
+                return mProgressDialog;
         }
         return null;
     }
