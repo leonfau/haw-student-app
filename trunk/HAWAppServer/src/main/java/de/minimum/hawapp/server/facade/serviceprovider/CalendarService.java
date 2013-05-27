@@ -8,7 +8,6 @@ import java.util.Set;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -273,11 +272,10 @@ public class CalendarService {
         return Response.ok().build();
     }
 
-    @PUT
+    @POST
     @Path(CalendarService.APPOINTMENT + "/" + CalendarService.MODIFY)
-    @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public boolean modifyAppointment(final AppointmentPO appointment) {
+    public Response modifyAppointment(final AppointmentPO appointment) {
         try {
             final AppointmentBO oldAppointment = calMngr.getAppointment(appointment.getUuid());
 
@@ -313,10 +311,10 @@ public class CalendarService {
         }
         catch(final Throwable e) {
             e.printStackTrace();
-            return false;
+            return Response.serverError().build();
         }
 
-        return true;
+        return Response.ok().build();
 
     }
 }
