@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -28,6 +29,7 @@ public class CalendarService {
         messageConverters.add(new StringHttpMessageConverter());
         messageConverters.add(new MappingJacksonHttpMessageConverter());
         restTemplate.setMessageConverters(messageConverters);
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
 
     public static List<Category> getCategoriesFromWeb() throws RestClientException {
@@ -37,7 +39,7 @@ public class CalendarService {
         }
         catch(final Throwable e) {
             e.printStackTrace();
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 
@@ -47,6 +49,17 @@ public class CalendarService {
             return restTemplate.getForObject(url, Date.class);
         }
         catch(final Throwable e) {
+            return new Date(0);
+        }
+    }
+
+    public static Category getCategory(final String categoryUuid) {
+        final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "category/" + categoryUuid;
+        try {
+            return restTemplate.getForObject(url, Category.class);
+        }
+        catch(final Throwable e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -57,7 +70,7 @@ public class CalendarService {
             return restTemplate.getForObject(url, Date.class);
         }
         catch(final Throwable e) {
-            return null;
+            return new Date(0);
         }
     }
 
@@ -68,7 +81,18 @@ public class CalendarService {
         }
         catch(final Throwable e) {
             e.printStackTrace();
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
+        }
+    }
+
+    public static Lecture getLecture(final String lectureUuid) {
+        final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "lecture/" + lectureUuid;
+        try {
+            return restTemplate.getForObject(url, Lecture.class);
+        }
+        catch(final Throwable e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -78,7 +102,7 @@ public class CalendarService {
             return restTemplate.getForObject(url, Date.class);
         }
         catch(final Throwable e) {
-            return null;
+            return new Date(0);
         }
     }
 
@@ -89,7 +113,28 @@ public class CalendarService {
         }
         catch(final Throwable e) {
             e.printStackTrace();
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
+        }
+    }
+
+    public static Appointment getAppointment(final String appointmentUuid) {
+        final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "appointment/" + appointmentUuid;
+        try {
+            return restTemplate.getForObject(url, Appointment.class);
+        }
+        catch(final Throwable e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Date getAppointmentLastModifiedFromWeb(final String appointmentUUID) {
+        final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "appointment/lastModified/" + appointmentUUID;
+        try {
+            return restTemplate.getForObject(url, Date.class);
+        }
+        catch(final Throwable e) {
+            return new Date(0);
         }
     }
 
@@ -100,12 +145,46 @@ public class CalendarService {
         }
         catch(final Throwable e) {
             e.printStackTrace();
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
+        }
+    }
+
+    public static ChangeMessage getChangeMessage(final String changeMessage) {
+        final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "changeMessage/" + changeMessage;
+        try {
+            return restTemplate.getForObject(url, ChangeMessage.class);
+        }
+        catch(final Throwable e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Date getChangeMessageLastModifiedFromWeb(final String uuid) throws RestClientException {
+        final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "changeMessage/lastModified/" + uuid;
+        try {
+            return restTemplate.getForObject(url, Date.class);
+        }
+        catch(final Throwable e) {
+            return new Date(0);
         }
     }
 
     public static boolean createNewAppoinment(final Appointment appointment, final String lectureUUID) {
         final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "lecture/" + lectureUUID + "/new";
+        try {
+            restTemplate.postForEntity(url, appointment, null);
+        }
+        catch(final Throwable e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public static boolean modifyAppointment(final Appointment appointment) {
+        final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "appointment/modify";
         try {
             restTemplate.postForEntity(url, appointment, null);
         }

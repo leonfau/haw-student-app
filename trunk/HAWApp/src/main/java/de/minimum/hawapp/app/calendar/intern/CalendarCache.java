@@ -134,44 +134,41 @@ public final class CalendarCache {
     }
 
     public static Lecture getLecture(final String lectureUUID) {
-        return lectureMap.get(lectureUUID);
-        // Lecture lecture = null;
-        // for(final Category cat : categories) {
-        // for(final Lecture lec : cat.getLectures()) {
-        // if (lec.getUuid().equals(lectureUUID)) {
-        // lecture = lec;
-        // }
-        // }
-        // }
-        // // TODO Sicherstellen, dass nicht null zurückgegeben wird
-        // return lecture;
+        Lecture lecture = lectureMap.get(lectureUUID);
+        if (lecture == null
+                        || lecture.getLastModified().before(CalendarService.getLectureLastModifiedFromWeb(lectureUUID))) {
+            lecture = CalendarService.getLecture(lectureUUID);
+            if (lecture != null) {
+                lectureMap.put(lectureUUID, lecture);
+            }
+
+        }
+        return lecture;
     }
 
     public static Category getCategory(final String categoryUUID) {
-        return categoryMap.get(categoryUUID);
-        // Category category = null;
-        // for(final Category cat : categories) {
-        // if (cat.getUuid().equals(categoryUUID)) {
-        // category = cat;
-        // }
-        // }
-        // // TODO Sicherstellen, dass nicht null zurückgegeben wird
-        // return category;
+        Category category = categoryMap.get(categoryUUID);
+        if (category == null
+                        || category.getLastModified().before(
+                                        CalendarService.getCategoryLastModifiedFromWeb(categoryUUID))) {
+            category = CalendarService.getCategory(categoryUUID);
+            if (category != null) {
+                categoryMap.put(categoryUUID, category);
+            }
+        }
+        return category;
     }
 
     public static Appointment getAppointment(final String appointmentUUID) {
-        return appointmentMap.get(appointmentUUID);
-        // Appointment appointment = null;
-        // for(final Category cat : categories) {
-        //
-        // for(final Lecture lec : cat.getLectures()) {
-        // for(final Appointment app : lec.getAppointments()) {
-        // if (app.getUuid().equals(appointmentUUID)) {
-        // appointment = app;
-        // }
-        // }
-        // }
-        // }
-        // return appointment;
+        Appointment appointment = appointmentMap.get(appointmentUUID);
+        if (appointment == null
+                        || appointment.getLastModified().before(
+                                        CalendarService.getAppointmentLastModifiedFromWeb(appointmentUUID))) {
+            appointment = CalendarService.getAppointment(appointmentUUID);
+            if (appointment != null) {
+                appointmentMap.put(appointmentUUID, appointment);
+            }
+        }
+        return appointment;
     }
 }

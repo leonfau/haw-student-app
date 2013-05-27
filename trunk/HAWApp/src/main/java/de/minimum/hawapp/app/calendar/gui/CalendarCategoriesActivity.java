@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import android.app.Dialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 import de.minimum.hawapp.app.R;
 import de.minimum.hawapp.app.calendar.beans.Category;
 import de.minimum.hawapp.app.calendar.intern.CalendarManager;
@@ -22,6 +25,7 @@ public class CalendarCategoriesActivity extends ListActivity {
     public final static String LECTURE_UUID = "calendar_lecture_uuid";
     public final static String CATEGORY_UUID = "calendar_category_uuid";
     public final static String APPOINTMENT_UUID = "calendar_appointment_uuid";
+    private static final int DIALOG_DOWNLOAD_JSON_PROGRESS = 0;
     private final CalendarManager calManager = ManagerFactory.getManager(CalendarManager.class);
     private ArrayAdapter<Category> categoryAdapter;
 
@@ -32,7 +36,6 @@ public class CalendarCategoriesActivity extends ListActivity {
                         new ArrayList<Category>());
         setContentView(R.layout.calendar_main);
         setListAdapter(categoryAdapter);
-        showCategories();
 
         final Button b1 = (Button)findViewById(R.id.cal_btn_subLectures);
         b1.setOnClickListener(new OnClickListener() {
@@ -45,36 +48,64 @@ public class CalendarCategoriesActivity extends ListActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        showCategories();
+    }
+
     protected void viewSubscribedLectures() {
         final Intent intent = new Intent(this, CalendarSubscribedLectureActivity.class);
         startActivity(intent);
     }
 
     private void showCategories() {
+        showDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
         new AsyncTask<Void, Void, Void>() {
             private List<Category> categories;
+            private boolean successful = false;
 
             @Override
             protected void onPostExecute(final Void arg0) {
+                dismissDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+                removeDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
                 categoryAdapter.clear();
-                categoryAdapter.addAll(categories);
-                categoryAdapter.sort(new Comparator<Category>() {
+                if (successful) {
+                    categoryAdapter.addAll(categories);
+                    categoryAdapter.sort(new Comparator<Category>() {
 
-                    @Override
-                    public int compare(final Category lhs, final Category rhs) {
-                        return lhs.getName().compareTo(rhs.getName());
-                    }
-                });
-                setListAdapter(categoryAdapter);
+                        @Override
+                        public int compare(final Category lhs, final Category rhs) {
+                            return lhs.getName().compareTo(rhs.getName());
+                        }
+                    });
+                    setListAdapter(categoryAdapter);
+                }
+                else {
+                    showToastSomethingFailed();
+                }
+
                 super.onPostExecute(arg0);
             }
 
             @Override
             protected Void doInBackground(final Void... arg0) {
-                categories = calManager.getCategories();
+                try {
+                    categories = calManager.getCategories();
+                    successful = !categories.isEmpty();
+                }
+                catch(final Throwable e) {
+                    e.printStackTrace();
+                    successful = false;
+                }
+
                 return null;
             }
         }.execute();
+    }
+
+    private void showToastSomethingFailed() {
+        Toast.makeText(this, "Es gibt keine Einträge oder ein Problem ist aufgetreten", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -86,5 +117,20 @@ public class CalendarCategoriesActivity extends ListActivity {
 
         super.onListItemClick(l, v, position, id);
 
+    }
+
+    @Override
+    protected Dialog onCreateDialog(final int id) {
+        ProgressDialog mProgressDialog;
+        switch(id) {
+            case DIALOG_DOWNLOAD_JSON_PROGRESS:
+                mProgressDialog = new ProgressDialog(this);
+                mProgressDialog.setMessage("Updating.....");
+                mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                mProgressDialog.setCancelable(true);
+                mProgressDialog.show();
+                return mProgressDialog;
+        }
+        return null;
     }
 }
