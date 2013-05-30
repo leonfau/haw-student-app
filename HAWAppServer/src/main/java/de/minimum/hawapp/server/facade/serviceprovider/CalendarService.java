@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -49,6 +50,7 @@ public class CalendarService {
     public static final String LASTMODIFIED = "lastModified";
     private static final String NEW = "new";
     private static final String MODIFY = "modify";
+    private static final String DELETE = "delete";
 
     @GET
     @Path(CalendarService.TEST_CONTEXT + "/start")
@@ -283,21 +285,21 @@ public class CalendarService {
                             Locale.GERMANY);
             final StringBuilder whatwasChanged = new StringBuilder();
 
-            whatwasChanged.append(String.format("Beim Termin %s wurde folgendes geändert: ", oldAppointment));
+            whatwasChanged.append(String.format("Beim Termin \" %s \" wurde folgendes geändert: ", oldAppointment));
             if (!appointment.getName().equals(oldAppointment.getName())) {
-                whatwasChanged.append(String.format("\n Name von %s zu %s", oldAppointment.getName(),
+                whatwasChanged.append(String.format("\n Name geändert von %s zu %s", oldAppointment.getName(),
                                 appointment.getName()));
             }
             if (!appointment.getBegin().equals(oldAppointment.getBegin())) {
-                whatwasChanged.append(String.format(" \n Begin von %s zu %s",
+                whatwasChanged.append(String.format(" \n Begin geändert von %s zu %s",
                                 dateFormat.format(oldAppointment.getBegin()), dateFormat.format(appointment.getBegin())));
             }
             if (!appointment.getEnd().equals(oldAppointment.getEnd())) {
-                whatwasChanged.append(String.format("\n Ende von %s zu %s", dateFormat.format(oldAppointment.getEnd()),
-                                dateFormat.format(appointment.getEnd())));
+                whatwasChanged.append(String.format("\n Ende geändert von %s zu %s",
+                                dateFormat.format(oldAppointment.getEnd()), dateFormat.format(appointment.getEnd())));
             }
             if (!appointment.getLocation().equals(oldAppointment.getLocation())) {
-                whatwasChanged.append(String.format("\n Ort von %s zu %s", oldAppointment.getLocation(),
+                whatwasChanged.append(String.format("\n Ort geändert von %s zu %s", oldAppointment.getLocation(),
                                 appointment.getLocation()));
             }
             if (!appointment.getDetails().equals(oldAppointment.getDetails())) {
@@ -316,5 +318,26 @@ public class CalendarService {
 
         return Response.ok().build();
 
+    }
+
+    @DELETE
+    @Path(CalendarService.APPOINTMENT + "/{appointmentUUID}/" + CalendarService.DELETE)
+    public Response deleteAppointment(@PathParam("appointmentUUID")
+    final String uuid) {
+        try {
+            final AppointmentBO oldAppointment = calMngr.getAppointment(uuid);
+            final String lectureuuid = oldAppointment.getLecture().getUuid();
+            final String whatchanged = String.format("Der Termin \"%s\" wurde gelöscht", oldAppointment);
+            calMngr.delete(oldAppointment);
+
+            calMngr.createChangeMessage(calMngr.getLectureBO(lectureuuid), new Date(System.currentTimeMillis()), "",
+                            whatchanged, "anonymous");
+
+        }
+        catch(final Throwable e) {
+            e.printStackTrace();
+            return Response.serverError().build();
+        }
+        return Response.ok().build();
     }
 }
