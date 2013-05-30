@@ -1,13 +1,18 @@
 package de.minimum.hawapp.app.calendar.provider;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract.Calendars;
+import android.provider.CalendarContract.Events;
 
 public class CalendarProviderImpl implements CalendarProvider {
 
@@ -57,6 +62,63 @@ public class CalendarProviderImpl implements CalendarProvider {
 
 		return calendars;
 	}
-	
-	
+
+	public long addEvent(Calendar calendar, Event event) {
+		ContentResolver cr = context.getContentResolver();
+		ContentValues values = new ContentValues();
+		values.put(Events.DTSTART, event.getStartMillis());
+		values.put(Events.DTEND, event.getEndMillis());
+		values.put(Events.TITLE, event.getTitle());
+		values.put(Events.DESCRIPTION,
+				event.getDescription() + " " + event.getLocation());
+		values.put(Events.CALENDAR_ID, calendar.getID());
+		values.put(Events.EVENT_TIMEZONE, "Europe/Berlin");
+		Uri uri = cr.insert(Events.CONTENT_URI, values);
+
+		// get the event ID that is the last element in the Uri
+		long eventID = Long.parseLong(uri.getLastPathSegment());
+
+		return eventID;
+	}
+
+	@Override
+	public List<Long> addEvents(Calendar calendar, List<Event> events) {
+		List<Long> idList = new ArrayList<Long>();
+
+		for (Event event : events) {
+			idList.add(this.addEvent(calendar, event));
+		}
+		return idList;
+	}
+
+	@Override
+	public void deleteEvent(Event event) {
+		Uri deleteUri = null;
+		deleteUri = ContentUris.withAppendedId(Events.CONTENT_URI,
+				event.getID());
+		context.getContentResolver().delete(deleteUri, null, null);
+	}
+
+	@Override
+	public void deleteEvents(List<Event> events) {
+		for (Event event : events) {
+			this.deleteEvent(event);
+		}
+	}
+
+	@Override
+	public void updateEvent(Event event) {
+		ContentValues values = new ContentValues();
+		Uri updateUri = null;
+		// The new title for the event
+		values.put(Events.DTSTART, event.getStartMillis());
+		values.put(Events.DTEND, event.getEndMillis());
+		values.put(Events.TITLE, event.getTitle());
+		values.put(Events.DESCRIPTION,
+				event.getDescription() + " " + event.getLocation());
+		updateUri = ContentUris.withAppendedId(Events.CONTENT_URI,
+				event.getID());
+		context.getContentResolver().update(updateUri, values, null, null);
+	}
+
 }
