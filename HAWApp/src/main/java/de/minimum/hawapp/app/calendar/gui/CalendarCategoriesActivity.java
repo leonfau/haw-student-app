@@ -45,6 +45,20 @@ public class CalendarCategoriesActivity extends ListActivity {
                 viewSubscribedLectures();
             }
         });
+        final Button b2 = (Button)findViewById(R.id.cal_btn_Calendars);
+        b2.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(final View v) {
+                viewCalendars();
+            }
+        });
+
+    }
+
+    protected void viewCalendars() {
+        final Intent intent = new Intent(this, CalendarCalendarActivity.class);
+        startActivity(intent);
 
     }
 
