@@ -126,9 +126,7 @@ public class BlackboardServiceTest extends RestTest {
                         + "/remove/offerid/" + offer.getId() + "/deletionkey/" + deletionKey);
         ClientResponse getCategoriesResponse = getCategoriesResource.accept(MediaType.APPLICATION_JSON).delete(
                         ClientResponse.class);
-        checkResponse(getCategoriesResponse);
-        boolean removed = getCategoriesResponse.getEntity(Boolean.class);
-        return removed;
+        return getCategoriesResponse.getStatus() == 200;
     }
 
     private boolean isSameDay(Date d1, Date d2) {

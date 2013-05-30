@@ -28,7 +28,7 @@ import de.minimum.hawapp.server.blackboard.util.OfferCreationStatus;
 public class CachingBlackboardManager implements BlackboardManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(BlackboardManager.class);
 
-    private static final OfferCreationStatus FAILED_CREATION = new OfferCreationStatus(-1, false, "");
+    private static final OfferCreationStatus FAILED_CREATION = new OfferCreationStatus(-1, false, "", null);
     private static final int OFFER_MAX_AGE_IN_DAYS = 7;// TODO abklären
     private static final int DELETION_TIMERINTERVAL_IN_HOURS = 24;// TODO
                                                                   // abklären
@@ -58,6 +58,7 @@ public class CachingBlackboardManager implements BlackboardManager {
                 try {
                     CachingBlackboardManager.this.persConnector
                                     .removeOldOffers(CachingBlackboardManager.OFFER_MAX_AGE_IN_DAYS);
+                    removeOldOffers();
                 }
                 catch(PersistenceException e) {
                     // TODO Auto-generated catch block
@@ -81,6 +82,10 @@ public class CachingBlackboardManager implements BlackboardManager {
 
     }
 
+    private void removeOldOffers() {
+
+    }
+
     @Override
     public OfferCreationStatus createOffer(String category, String header, String description, String contact,
                     byte[] image) {
@@ -98,7 +103,7 @@ public class CachingBlackboardManager implements BlackboardManager {
             Offer offer = BlackboardFactoryManager.newOffer(cat, header, description, contact, new Date(), img.getId());
             offer = this.persConnector.persistOffer(offer);
             this.offers.put(offer.getId(), offer);
-            return new OfferCreationStatus(offer.getId(), true, offer.getDeletionKey());
+            return new OfferCreationStatus(offer.getId(), true, offer.getDeletionKey(), offer.getDateOfCreation());
         }
         catch(PersistenceException ex) {
             // TODO was genau tun? nochmal Ausprobieren???
