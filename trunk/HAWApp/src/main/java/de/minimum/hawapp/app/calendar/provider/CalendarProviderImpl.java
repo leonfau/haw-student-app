@@ -36,8 +36,8 @@ public class CalendarProviderImpl implements CalendarProvider {
 		Cursor cur = null;
 		ContentResolver cr = ((Context) context).getContentResolver();
 		Uri uri = Calendars.CONTENT_URI;
-		String selection = "( * )";
-		String[] selectionArgs = new String[] { "" };
+		String selection = null;
+		String[] selectionArgs = null;
 		// Submit the query and get a Cursor object back.
 		cur = cr.query(uri, EVENT_PROJECTION, selection, selectionArgs, null);
 
@@ -57,4 +57,6 @@ public class CalendarProviderImpl implements CalendarProvider {
 
 		return calendars;
 	}
+	
+	
 }

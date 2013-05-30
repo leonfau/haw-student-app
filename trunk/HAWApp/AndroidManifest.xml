@@ -68,6 +68,10 @@
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarChangeMessagesActivity"
             android:label="ChangeLog" >
         </activity>
+        <activity
+            android:name="de.minimum.hawapp.app.calendar.gui.CalendarCalendarActivity"
+            android:label="Calendars" >
+        </activity>
     </application>
 
 </manifest>

@@ -169,5 +169,9 @@ public class CalendarImpl implements Calendar {
 		this.allowedAttendeeTypes = allowedAttendeeTypes;
 
 	}
+	
+	public String toString(){
+		return this.displayName;
+	}
 
 }
