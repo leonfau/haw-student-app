@@ -44,6 +44,7 @@ public class CalendarAppointmentActivity extends Activity {
     private EditText location;
     private EditText details;
     private Button save;
+    private Button delete;
     private Appointment appointment = null;
     private String appointmentUUID;
 
@@ -65,6 +66,14 @@ public class CalendarAppointmentActivity extends Activity {
             @Override
             public void onClick(final View v) {
                 saveChanges();
+            }
+        });
+        delete = (Button)findViewById(R.id.cal_btn_app_delete);
+        delete.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(final View v) {
+                delete();
             }
         });
         // begin.setTextIsSelectable(false);
@@ -148,7 +157,7 @@ public class CalendarAppointmentActivity extends Activity {
     }
 
     private void showToastSomethingFailed() {
-        Toast.makeText(this, "Es ist ein Problem ist aufgetreten", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Es ist ein Problem aufgetreten", Toast.LENGTH_LONG).show();
     }
 
     private void saveChanges() {
@@ -184,6 +193,53 @@ public class CalendarAppointmentActivity extends Activity {
 
     }
 
+    private void showSavedCompletToast() {
+        Toast.makeText(this, "Änderungen wurden gespeichert", Toast.LENGTH_LONG).show();
+
+    }
+
+    private void showSavedFailToast() {
+        Toast.makeText(this, "Änderungen konnten nicht gespeichert werden", Toast.LENGTH_LONG).show();
+    }
+
+    private void delete() {
+        new AsyncTask<Void, Void, Void>() {
+            boolean isSuccessful = false;
+
+            @Override
+            protected void onPostExecute(final Void arg0) {
+                if (isSuccessful) {
+                    showDeleteCompletToast();
+                    finish();
+
+                }
+                else {
+                    showDeleteFailToast();
+                }
+
+            }
+
+            @Override
+            protected Void doInBackground(final Void... params) {
+                if (appointment != null) {
+                    isSuccessful = calManager.deleteAppointment(appointment.getUuid());
+                }
+
+                return null;
+            }
+
+        }.execute();
+    }
+
+    private void showDeleteCompletToast() {
+        Toast.makeText(this, "Der Termin wurde gelöscht", Toast.LENGTH_LONG).show();
+
+    }
+
+    private void showDeleteFailToast() {
+        Toast.makeText(this, "Der Termin konnte nicht gelöscht werden", Toast.LENGTH_LONG).show();
+    }
+
     private boolean createNewAppointment() {
         appointment = new AppointmentImpl();
         putChangesInAppointment();
@@ -196,24 +252,6 @@ public class CalendarAppointmentActivity extends Activity {
         putChangesInAppointment();
         return calManager.modifyExistingAppointment(appointment);
     }
-
-    private void showSavedCompletToast() {
-        Toast.makeText(this, "Änderungen wurden gespeichert", Toast.LENGTH_LONG).show();
-
-    }
-
-    private void showSavedFailToast() {
-        Toast.makeText(this, "Änderungen konnten nicht gespeichert werden", Toast.LENGTH_LONG).show();
-    }
-
-    // private boolean modifyAppointment() {
-    // try {
-    // putChangesInAppointment();
-    // }
-    // catch(final ParseException e) {
-    // return false;
-    // }
-    // }
 
     private boolean putChangesInAppointment() {
         boolean somethingHasChanged = false;

@@ -35,16 +35,6 @@ public class CalendarManagerImpl implements CalendarManager {
     public CalendarAboService getCalendarAboService(final Context context) {
         if (calendarAboService == null) {
             calendarAboService = CalendarAboService.getSavedCalendarAboService(context);
-            // if (calendarAboService != null) {
-            // Toast.makeText(context.getApplicationContext(),
-            // "AboService wiederhergestellt", Toast.LENGTH_SHORT)
-            // .show();
-            // }
-            // else {
-            // Toast.makeText(context.getApplicationContext(),
-            // "AboService nicht! wiederhergestellt",
-            // Toast.LENGTH_SHORT).show();
-            // }
 
         }
         if (calendarAboService == null) {
@@ -82,6 +72,12 @@ public class CalendarManagerImpl implements CalendarManager {
     @Override
     public boolean modifyExistingAppointment(final Appointment appointment) {
         return CalendarService.modifyAppointment(appointment);
+    }
+
+    @Override
+    public boolean deleteAppointment(final String appointmentUUID) {
+
+        return CalendarService.deleteAppointment(appointmentUUID);
     }
 
 }
