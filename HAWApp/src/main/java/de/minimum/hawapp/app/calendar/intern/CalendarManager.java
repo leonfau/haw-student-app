@@ -30,4 +30,6 @@ public interface CalendarManager {
 
     public boolean modifyExistingAppointment(Appointment appointment);
 
+    public boolean deleteAppointment(String appointmentUUID);
+
 }

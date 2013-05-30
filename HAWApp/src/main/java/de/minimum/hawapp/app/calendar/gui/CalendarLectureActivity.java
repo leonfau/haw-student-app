@@ -34,7 +34,7 @@ public class CalendarLectureActivity extends ListActivity {
     private Button subscribeLectureBtn;
     private Button newAppointmentBtn;
     private final String abbestellen = "abbestellen";
-    private final String abonieren = "abbonieren";
+    private final String abonnieren = "abonnieren";
     private TextView lecturename;
     private TextView lecturername;
     private String lectureUUID;
@@ -91,10 +91,10 @@ public class CalendarLectureActivity extends ListActivity {
         showAppointmentsAndLectureDetails();
         if (aboService.isSubscribted(lectureUUID)) {
 
-            subscribeLectureBtn.setText("abbestellen");
+            subscribeLectureBtn.setText(abbestellen);
         }
         else {
-            subscribeLectureBtn.setText("abonieren");
+            subscribeLectureBtn.setText(abonnieren);
         }
     }
 
@@ -163,7 +163,7 @@ public class CalendarLectureActivity extends ListActivity {
     private void processSubscribeLectureButton() {
         if (subscribeLectureBtn.getText().equals(abbestellen)) {
             aboService.unsubscribeLecture(lectureUUID);
-            subscribeLectureBtn.setText(abonieren);
+            subscribeLectureBtn.setText(abonnieren);
         }
         else {
             aboService.subscribeLecture(lecture);

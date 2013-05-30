@@ -196,4 +196,17 @@ public class CalendarService {
         return true;
     }
 
+    public static boolean deleteAppointment(final String appointmentuuid) {
+        final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "appointment/" + appointmentuuid + "/delete";
+        try {
+            restTemplate.delete(url);
+        }
+        catch(final Throwable e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
 }
