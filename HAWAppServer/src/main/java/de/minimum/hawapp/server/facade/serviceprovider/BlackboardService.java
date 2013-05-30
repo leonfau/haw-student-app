@@ -23,6 +23,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Charsets;
 import com.sun.jersey.multipart.FormDataParam;
 import com.sun.jersey.spi.resource.Singleton;
 
@@ -92,16 +93,27 @@ public class BlackboardService {
      * @param delKey
      *            Schlüssel der einen Autorisiert das Angebot zu löschen ->
      *            diesen hat man beim Erstellen des Angebots erhalten
-     * @return true wenn das Löschen erfolgreich war
+     * @return Http Code 200 wenn erfolgreich und Http Code 403 wenn nicht
+     *         erfolgreich (Weil nicht mehr vorhanden oder der Deletion Key
+     *         falsch ist)
      */
     @DELETE
     @Path("remove/offerid/{offerId}/deletionkey/{delKey}")
     @Produces(MediaType.APPLICATION_JSON)
-    public boolean removeOffer(@PathParam("offerId") long offerId, @PathParam("delKey") String delKey,
+    public Response removeOffer(@PathParam("offerId") long offerId, @PathParam("delKey") String delKey,
                     @Context HttpServletRequest req) {
         ServiceProviderLogger.logRequest("Trial to remove offer with id: " + offerId + " with key: " + delKey,
                         BlackboardService.LOGGER, req);
-        return this.bbMngr.removeOffer(offerId, delKey);
+        try {
+            return this.bbMngr.removeOffer(offerId, URLDecoder.decode(delKey, Charsets.UTF_8.name())) ? Response.ok()
+                            .build() : Response.status(403).build();
+        }
+        catch(UnsupportedEncodingException e) {
+            BlackboardService.LOGGER.error("Unable to encode: " + delKey + " with encoding: " + Charsets.UTF_8.name(),
+                            e);
+            e.printStackTrace();
+            return Response.serverError().build();
+        }
     }
 
     /**
@@ -162,7 +174,13 @@ public class BlackboardService {
     @Produces(MediaType.APPLICATION_JSON)
     public Category getCategory(@PathParam("category") String cat, @Context HttpServletRequest req) {
         ServiceProviderLogger.logRequest("Request for category: " + cat, BlackboardService.LOGGER, req);
-        return this.bbMngr.getCategory(cat);
+        try {
+            return this.bbMngr.getCategory(URLDecoder.decode(cat, Charsets.UTF_8.name()));
+        }
+        catch(UnsupportedEncodingException e) {
+            BlackboardService.LOGGER.error("Unable to encode: " + cat + " with encoding: " + Charsets.UTF_8.name(), e);
+            return null;
+        }
     }
 
     /**
@@ -178,11 +196,11 @@ public class BlackboardService {
     public List<Offer> getOffersBySearchStr(@PathParam("searchStr") String searchStr, @Context HttpServletRequest req) {
         String searchString = null;
         try {
-            searchString = URLDecoder.decode(searchStr, req.getCharacterEncoding());
+            searchString = URLDecoder.decode(searchStr, Charsets.UTF_8.name());
         }
         catch(UnsupportedEncodingException e) {
             BlackboardService.LOGGER.error(
-                            "Unable to encode: " + searchStr + " with encoding: " + req.getCharacterEncoding(), e);
+                            "Unable to encode: " + searchStr + " with encoding: " + Charsets.UTF_8.name(), e);
             // TODO was tun?
             e.printStackTrace();
         }
@@ -205,19 +223,27 @@ public class BlackboardService {
     public List<Offer> getOffersBySearchStrAndCategory(@PathParam("searchStr") String searchStr,
                     @PathParam("category") String cat, @Context HttpServletRequest req) {
         String searchString = null;
+        String category = null;
         try {
-            searchString = URLDecoder.decode(searchStr, req.getCharacterEncoding());// TODO
-                                                                                    // auch
-                                                                                    // category
-                                                                                    // encoden?
+            searchString = URLDecoder.decode(searchStr, Charsets.UTF_8.name());
         }
         catch(UnsupportedEncodingException e) {
             BlackboardService.LOGGER.error(
-                            "Unable to encode: " + searchStr + " with encoding: " + req.getCharacterEncoding(), e);
+                            "Unable to encode: " + searchStr + " with encoding: " + Charsets.UTF_8.name(), e);
             // TODO was tun?
             e.printStackTrace();
+            return null;
         }
-        ServiceProviderLogger.logRequest("Searchrequest for: " + searchString + " in category: " + cat,
+        try {
+            category = URLDecoder.decode(cat, Charsets.UTF_8.name());
+        }
+        catch(UnsupportedEncodingException e) {
+            BlackboardService.LOGGER.error("Unable to encode: " + cat + " with encoding: " + Charsets.UTF_8.name(), e);
+            // TODO was tun?
+            e.printStackTrace();
+            return null;
+        }
+        ServiceProviderLogger.logRequest("Searchrequest for: " + searchString + " in category: " + category,
                         BlackboardService.LOGGER, req);
         return this.bbMngr.getOffersBySearchStrAndCategory(searchString, cat);
     }
