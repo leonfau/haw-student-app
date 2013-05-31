@@ -1,28 +1,49 @@
-# view AndroidManifest.xml #generated:33
+# view AndroidManifest.xml #generated:16
+-keep class android.test.InstrumentationTestRunner { <init>(...); }
+
+# view AndroidManifest.xml #generated:44
 -keep class de.minimum.hawapp.app.KalenderCategoryActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:21
+# view AndroidManifest.xml #generated:26
 -keep class de.minimum.hawapp.app.MainActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:36
+# view AndroidManifest.xml #generated:52
 -keep class de.minimum.hawapp.app.blackboard.gui.NachrichtActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:35
+# view AndroidManifest.xml #generated:48
 -keep class de.minimum.hawapp.app.blackboard.gui.NeueNachrichtActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:30
+# view AndroidManifest.xml #generated:38
 -keep class de.minimum.hawapp.app.blackboard.gui.SchwarzesBrettActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:32
--keep class de.minimum.hawapp.app.calendar.gui.KalenderActivity { <init>(...); }
+# view AndroidManifest.xml #generated:68
+-keep class de.minimum.hawapp.app.calendar.gui.CalendarAppointmentActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:34
+# view AndroidManifest.xml #generated:76
+-keep class de.minimum.hawapp.app.calendar.gui.CalendarCalendarActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:42
+-keep class de.minimum.hawapp.app.calendar.gui.CalendarCategoriesActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:72
+-keep class de.minimum.hawapp.app.calendar.gui.CalendarChangeMessagesActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:56
+-keep class de.minimum.hawapp.app.calendar.gui.CalendarLectureActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:60
+-keep class de.minimum.hawapp.app.calendar.gui.CalendarLecturesActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:64
+-keep class de.minimum.hawapp.app.calendar.gui.CalendarSubscribedLectureActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:46
 -keep class de.minimum.hawapp.app.mensa.gui.MensaActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:29
+# view AndroidManifest.xml #generated:36
 -keep class de.minimum.hawapp.app.stisys.gui.LoginActivity_ { <init>(...); }
 
-# view AndroidManifest.xml #generated:31
+# view AndroidManifest.xml #generated:40
 -keep class de.minimum.hawapp.app.stisys.gui.StisysActivity { <init>(...); }
 
 # onClick res/layout/sb_neue_nachricht.xml #generated:127
