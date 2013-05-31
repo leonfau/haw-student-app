@@ -100,7 +100,8 @@ public class DefaultBlackboardManager implements BlackboardManager {
         offer.getCategory().removeOffer(offer);
         try {
             this.persConnector.deleteOffer(offer);// TODO evtl. archivieren?
-            this.persConnector.deleteImage(offer.getImageId());
+            if (offer.getImageId() != null)
+                this.persConnector.deleteImage(offer.getImageId());
         }
         catch(PersistenceException ex) {
             // TODO
