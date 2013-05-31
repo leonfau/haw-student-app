@@ -12,12 +12,17 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_CALENDAR"/>
     <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
-
+	
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="de.minimum.hawapp.app" />
+    
     <application
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <uses-library android:name="android.test.runner" />
         <activity
             android:name="de.minimum.hawapp.app.MainActivity"
             android:label="@string/app_name"
