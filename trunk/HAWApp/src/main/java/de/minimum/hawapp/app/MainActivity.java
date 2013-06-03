@@ -10,6 +10,7 @@ import android.widget.TabHost;
 import de.minimum.hawapp.app.blackboard.gui.SchwarzesBrettActivity;
 import de.minimum.hawapp.app.calendar.gui.CalendarCategoriesActivity;
 import de.minimum.hawapp.app.mensa.gui.MensaActivity;
+import de.minimum.hawapp.app.pub.gui.PubActivity;
 import de.minimum.hawapp.app.stisys.gui.LoginActivity_;
 import de.minimum.hawapp.app.stisys.gui.StisysActivity;
 
@@ -53,12 +54,12 @@ public class MainActivity extends TabActivity {
         tabHost.addTab(spec);
 
         //TODO: Pub.class
-        intent = new Intent().setClass(this, SchwarzesBrettActivity.class);
+        intent = new Intent().setClass(this, PubActivity.class);
         spec = tabHost.newTabSpec("Pub").setIndicator("", res.getDrawable(R.drawable.ic_tab_pub))
                         .setContent(intent);
         tabHost.addTab(spec);
         
-
+        
         intent = new Intent().setClass(this, SchwarzesBrettActivity.class);
         spec = tabHost.newTabSpec("Blackboard").setIndicator("", res.getDrawable(R.drawable.ic_tab_brett))
                         .setContent(intent);
