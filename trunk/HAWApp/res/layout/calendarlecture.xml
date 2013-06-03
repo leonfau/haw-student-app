@@ -15,6 +15,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:text="Vorlesung"
+        
+        android:textColor="@color/Color2"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -24,6 +26,8 @@
         android:layout_alignRight="@+id/lecture"
         android:layout_below="@+id/lecture"
         android:text="Dozent"
+        
+        android:textColor="@color/Color2"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -33,6 +37,8 @@
         android:layout_alignBottom="@+id/lecture"
         android:layout_marginLeft="16dp"
         android:layout_toRightOf="@+id/lecture"
+        
+        android:textColor="@color/Color2"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -42,6 +48,8 @@
         android:layout_alignBaseline="@+id/lecturer"
         android:layout_alignBottom="@+id/lecturer"
         android:layout_alignLeft="@+id/lectureName"
+        
+        android:textColor="@color/Color2"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -52,6 +60,8 @@
         android:layout_below="@+id/lecturerName"
         android:layout_marginTop="16dp"
         android:text="Termine"
+        
+        android:textColor="@color/Color2"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ListView
@@ -70,6 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/listView1"
         android:layout_alignParentBottom="true"
+        android:textColor="@color/ColorText"
         android:text="abonnieren" />
 
     <Button
@@ -78,6 +89,7 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@android:id/list"
         android:layout_below="@android:id/list"
+		android:textColor="@color/ColorText"
         android:text="ChangeLog" />
 
     <Button
@@ -87,6 +99,7 @@
         android:layout_alignBaseline="@+id/subscripeLecture"
         android:layout_alignBottom="@+id/subscripeLecture"
         android:layout_toLeftOf="@+id/cal_btn_changelog"
+        android:textColor="@color/ColorText"
         android:text="neuer Termin" />
 
 </RelativeLayout>
