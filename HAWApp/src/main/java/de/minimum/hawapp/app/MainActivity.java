@@ -52,6 +52,13 @@ public class MainActivity extends TabActivity {
                         .setContent(intent);
         tabHost.addTab(spec);
 
+        //TODO: Pub.class
+        intent = new Intent().setClass(this, SchwarzesBrettActivity.class);
+        spec = tabHost.newTabSpec("Pub").setIndicator("", res.getDrawable(R.drawable.ic_tab_pub))
+                        .setContent(intent);
+        tabHost.addTab(spec);
+        
+
         intent = new Intent().setClass(this, SchwarzesBrettActivity.class);
         spec = tabHost.newTabSpec("Blackboard").setIndicator("", res.getDrawable(R.drawable.ic_tab_brett))
                         .setContent(intent);
@@ -65,6 +72,7 @@ public class MainActivity extends TabActivity {
         tabHost.getTabWidget().getChildAt(2).setBackgroundColor(Color.parseColor("#06091C"));
         tabHost.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#06091C"));
         tabHost.getTabWidget().getChildAt(4).setBackgroundColor(Color.parseColor("#06091C"));
+        tabHost.getTabWidget().getChildAt(5).setBackgroundColor(Color.parseColor("#06091C"));
 
         tabHost.setCurrentTab(0);
     }

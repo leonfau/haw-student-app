@@ -12,19 +12,23 @@
          android:id="@+id/name"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:textColor="#00FF00"
    		 android:typeface="monospace"
+         android:textColor="@color/Color2"
          android:textSize="15sp" />
  
      <TextView android:id="@+id/beschreibung"
          android:layout_width="wrap_content"
          android:textStyle="italic"
-   		 android:textSize="11sp"
-         android:layout_height="wrap_content" android:layout_weight="1"/>
+         android:textColor="@color/Color2"
+         android:textSize="11sp"
+         android:layout_height="wrap_content" 
+         android:layout_weight="1"/>
  
      <TextView android:id="@+id/preis"
          android:layout_width="wrap_content"
-         android:layout_height="wrap_content"  android:layout_weight="1"/>
+         android:layout_height="wrap_content"
+         android:textColor="@color/Color2"
+         android:layout_weight="1"/>
      
      
 </LinearLayout>
