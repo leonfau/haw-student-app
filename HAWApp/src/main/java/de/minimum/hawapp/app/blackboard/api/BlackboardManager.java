@@ -3,6 +3,7 @@ package de.minimum.hawapp.app.blackboard.api;
 import java.io.File;
 import java.util.List;
 
+import android.content.Context;
 import de.minimum.hawapp.app.blackboard.exceptions.OfferCreationFailedException;
 
 public interface BlackboardManager {
@@ -51,9 +52,11 @@ public interface BlackboardManager {
 
     public Offer getOfferById(Long id);
 
-    List<String> getAllCategoryNames();
+    public List<String> getAllCategoryNames();
 
     public Image getImageById(Long id);
+
+    public void setContext(Context context);
 
     /**
      * 

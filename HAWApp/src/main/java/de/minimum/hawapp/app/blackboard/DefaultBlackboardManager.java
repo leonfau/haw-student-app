@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import android.content.Context;
 import de.minimum.hawapp.app.blackboard.api.BlackboardManager;
 import de.minimum.hawapp.app.blackboard.api.Category;
 import de.minimum.hawapp.app.blackboard.api.Image;
@@ -23,6 +24,7 @@ public class DefaultBlackboardManager implements BlackboardManager {
 
     private Map<Long, String> ownOffersToDelKey = new HashMap<Long, String>();
     private Set<Long> ignoredOffers = new HashSet<Long>();
+    private Context context = null;// Beim benutzen immer auf Null Checken!!!
 
     public DefaultBlackboardManager() {
         // TODO eigene Offer aus dem Speicher holen
@@ -125,6 +127,11 @@ public class DefaultBlackboardManager implements BlackboardManager {
         else {
             throw new OfferCreationFailedException("Offer could not be created");
         }
+    }
+
+    @Override
+    public void setContext(Context context) {
+        this.context = context;
     }
 
 }
