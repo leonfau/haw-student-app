@@ -76,13 +76,15 @@ public class MainActivity extends TabActivity {
 
         MainActivity.pub = tabHost.getTabWidget().getChildTabViewAt(4);
         MainActivity.pub.setEnabled(MainActivity.boolPub);
+        MainActivity.pub.setVisibility(View.GONE);
+        MainActivity.stisys.setVisibility(View.GONE);
 
         tabHost.getTabWidget().getChildAt(0).setBackgroundColor(Color.parseColor("#06091C"));
         tabHost.getTabWidget().getChildAt(1).setBackgroundColor(Color.parseColor("#06091C"));
         tabHost.getTabWidget().getChildAt(2).setBackgroundColor(Color.parseColor("#06091C"));
         tabHost.getTabWidget().getChildAt(3).setBackgroundColor(Color.parseColor("#06091C"));
-        tabHost.getTabWidget().getChildAt(4).setBackgroundColor(Color.parseColor("#8EBAE5"));
-        tabHost.getTabWidget().getChildAt(5).setBackgroundColor(Color.parseColor("#8EBAE5"));
+        tabHost.getTabWidget().getChildAt(4).setBackgroundColor(Color.parseColor("#06091C"));
+        tabHost.getTabWidget().getChildAt(5).setBackgroundColor(Color.parseColor("#06091C"));
 
         tabHost.setCurrentTab(0);
     }
@@ -90,9 +92,10 @@ public class MainActivity extends TabActivity {
     public static void enableStisysTab() {
         MainActivity.boolStisys = true;
         MainActivity.boolPub = true; 
-        MainActivity.stisys.setEnabled(MainActivity.boolStisys);     
+        MainActivity.stisys.setEnabled(MainActivity.boolStisys);  
         MainActivity.stisys.setEnabled(MainActivity.boolPub);
-        MainActivity.stisys.setBackgroundColor(Color.parseColor("#06091C"));
-        MainActivity.pub.setBackgroundColor(Color.parseColor("#06091C"));
+        MainActivity.pub.setVisibility(View.VISIBLE);
+        MainActivity.stisys.setVisibility(View.VISIBLE);
+
     }
 }
