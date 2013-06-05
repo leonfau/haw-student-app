@@ -96,7 +96,7 @@ public class LoginActivity extends Activity {
                 editor.putString("password", Login.getEncryptedPassword());
             }
             editor.commit();
-            MainActivity.enableStisysTab();
+            MainActivity.loggedIn();
             Toast.makeText(getApplicationContext(), succesfulLogin, Toast.LENGTH_SHORT).show();
         }
 

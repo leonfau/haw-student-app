@@ -34,7 +34,7 @@ public class StisysActivity extends ExpandableListActivity {
         switch(id) {
             case DIALOG_DOWNLOAD_INFORMATION_PROGRESS:
                 mProgressDialog = new ProgressDialog(this);
-                mProgressDialog.setMessage("Loading Information...");
+                mProgressDialog.setMessage("Loading StISys...");
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 mProgressDialog.setCancelable(true);
                 mProgressDialog.show();
