@@ -44,7 +44,7 @@ public class BlackboardService {
     public List<Offer> retrieveAllOffers() {
         final String url = BlackboardService.SERVICE_URL + "alloffers";
         try {
-            return Arrays.asList(BlackboardService.restTemplate.getForObject(url, Offer[].class));
+            return Arrays.asList((Offer[])BlackboardService.restTemplate.getForObject(url, OfferBean[].class));
         }
         catch(RestClientException ex) {
             ex.printStackTrace();
