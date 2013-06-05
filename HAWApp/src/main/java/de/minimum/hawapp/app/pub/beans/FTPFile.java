@@ -5,7 +5,7 @@ package de.minimum.hawapp.app.pub.beans;
  * @author Erwin
  *
  */
-public interface FTPFile {
+public interface FTPFile extends Comparable<FTPFile> {
 
 	/**
 	 * gibt zurück ob es sich um einen Ordner oder eine Datei handelt
