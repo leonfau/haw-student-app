@@ -5,9 +5,9 @@ import java.io.File;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -20,6 +20,10 @@ import de.minimum.hawapp.app.context.ManagerFactory;
 
 public class NewOfferActivity extends Activity {
 	private static final int DIALOG_DOWNLOAD_JSON_PROGRESS = 0;
+
+	private static final int REQUEST_PATH = 1;
+	String curFileName;
+	String curFilePath;
 
 	private EditText titelET;
 	private EditText bildET;
@@ -59,20 +63,25 @@ public class NewOfferActivity extends Activity {
 
 		});
 
-		final Button btnImage = (Button) findViewById(R.id.sb_new_offer_image_btn);
-		btnImage.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(final View v) {
-				Log.i("SB_Neue_Nachricht", "BILD Url");
-				searchImage();
-			}
-
-		});
 	}
 
-	private void searchImage() {
+	public void getfile(final View view) {
+		final Intent intent1 = new Intent(this, FileChooser.class);
+		startActivityForResult(intent1, REQUEST_PATH);
+	}
 
+	// Listen for results.
+	@Override
+	protected void onActivityResult(final int requestCode,
+			final int resultCode, final Intent data) {
+		// See which child activity is calling us back.
+		if (requestCode == REQUEST_PATH) {
+			if (resultCode == RESULT_OK) {
+				curFileName = data.getStringExtra("GetFileName");
+				curFilePath = data.getStringExtra("GetPath");
+				bildET.setText(curFilePath + "/" + curFileName);
+			}
+		}
 	}
 
 	@Override
