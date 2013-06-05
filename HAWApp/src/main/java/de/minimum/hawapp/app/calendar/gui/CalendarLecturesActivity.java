@@ -33,7 +33,7 @@ public class CalendarLecturesActivity extends ListActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        lectureAdapter = new ArrayAdapter<Lecture>(this, android.R.layout.simple_list_item_1, new ArrayList<Lecture>());
+        lectureAdapter = new ArrayAdapter<Lecture>(this, R.layout.activity_stisys_list_item_1, new ArrayList<Lecture>());
         setContentView(R.layout.calendar_main);
         setListAdapter(lectureAdapter);
         categoryUUID = getIntent().getExtras().getString(CalendarCategoriesActivity.CATEGORY_UUID);

@@ -24,7 +24,7 @@
         android:layout_below="@+id/cal_app_end"
         android:layout_marginTop="14dp"
         android:text="Ort"
-        android:textColor="@color/Color2"
+        android:textColor="@color/Color3"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
@@ -67,7 +67,7 @@
         android:layout_alignRight="@+id/textView1"
         android:layout_below="@+id/cal_app_begin"
         android:text="Ende"
-        android:textColor="@color/Color2"
+        android:textColor="@color/Color3"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
@@ -116,7 +116,7 @@
         android:layout_below="@+id/cal_app_name"
         android:layout_toLeftOf="@+id/cal_app_begin"
         android:text="Beginn"
-        android:textColor="@color/Color2"
+        android:textColor="@color/Color3"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -127,7 +127,7 @@
         android:layout_alignBottom="@+id/cal_app_name"
         android:layout_alignLeft="@+id/textView1"
         android:text="Name"
-        android:textColor="@color/Color2"
+        android:textColor="@color/Color3"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

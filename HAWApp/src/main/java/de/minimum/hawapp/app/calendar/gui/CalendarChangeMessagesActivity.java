@@ -31,7 +31,7 @@ public class CalendarChangeMessagesActivity extends ListActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        changeMessageAdapter = new ArrayAdapter<ChangeMessage>(this, android.R.layout.simple_list_item_1,
+        changeMessageAdapter = new ArrayAdapter<ChangeMessage>(this, R.layout.activity_stisys_list_item_1,
                         new ArrayList<ChangeMessage>());
         setContentView(R.layout.calendar_main);
         setListAdapter(changeMessageAdapter);

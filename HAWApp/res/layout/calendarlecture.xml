@@ -2,9 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:background="@color/ColorHintText"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".CalendarlectureActivity" >
 
@@ -15,9 +13,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:text="Vorlesung"
-        
-        android:textColor="@color/Color2"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/Color3" />
 
     <TextView
         android:id="@+id/lecturer"
@@ -26,9 +23,8 @@
         android:layout_alignRight="@+id/lecture"
         android:layout_below="@+id/lecture"
         android:text="Dozent"
-        
-        android:textColor="@color/Color2"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/Color3" />
 
     <TextView
         android:id="@+id/lectureName"
@@ -37,9 +33,8 @@
         android:layout_alignBottom="@+id/lecture"
         android:layout_marginLeft="16dp"
         android:layout_toRightOf="@+id/lecture"
-        
-        android:textColor="@color/Color2"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/Color2" />
 
     <TextView
         android:id="@+id/lecturerName"
@@ -48,9 +43,8 @@
         android:layout_alignBaseline="@+id/lecturer"
         android:layout_alignBottom="@+id/lecturer"
         android:layout_alignLeft="@+id/lectureName"
-        
-        android:textColor="@color/Color2"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/Color2" />
 
     <TextView
         android:id="@+id/Termine"
@@ -60,9 +54,8 @@
         android:layout_below="@+id/lecturerName"
         android:layout_marginTop="16dp"
         android:text="Termine"
-        
-        android:textColor="@color/Color2"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/ColorBackground" />
 
     <ListView
         android:id="@android:id/list"
@@ -70,36 +63,48 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/subscripeLecture"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/Termine" >
-
+        android:layout_below="@+id/Termine"
+        android:background="@color/ColorBackground" >
     </ListView>
 
-    <Button
-        android:id="@+id/subscripeLecture"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/listView1"
         android:layout_alignParentBottom="true"
-        android:textColor="@color/ColorText"
-        android:text="abonnieren" />
+        android:background="@color/ColorHintText" >
 
-    <Button
-        android:id="@+id/cal_btn_changelog"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@android:id/list"
-        android:layout_below="@android:id/list"
-		android:textColor="@color/ColorText"
-        android:text="ChangeLog" />
+        <Button
+            android:id="@+id/subscripeLecture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:text="abonnieren"
+            android:textColor="@color/ColorText" />
+        <Button
+            android:id="@+id/newAppointment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/subscripeLecture"
+            android:layout_alignBottom="@+id/subscripeLecture"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@+id/cal_btn_changelog"
+            android:layout_weight="1"
+            android:text="neuer Termin"
+            android:textColor="@color/ColorText" />
+        <Button
+            android:id="@+id/cal_btn_changelog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@android:id/list"
+            android:layout_below="@android:id/list"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:text="ChangeLog"
+            android:textColor="@color/ColorText" />
 
-    <Button
-        android:id="@+id/newAppointment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/subscripeLecture"
-        android:layout_alignBottom="@+id/subscripeLecture"
-        android:layout_toLeftOf="@+id/cal_btn_changelog"
-        android:textColor="@color/ColorText"
-        android:text="neuer Termin" />
+
+    </LinearLayout>
 
 </RelativeLayout>

@@ -43,7 +43,7 @@ public class CalendarLectureActivity extends ListActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         aboService = calManager.getCalendarAboService(this);
-        appointmentAdapter = new ArrayAdapter<Appointment>(this, android.R.layout.simple_list_item_1,
+        appointmentAdapter = new ArrayAdapter<Appointment>(this, R.layout.activity_stisys_list_item_1,
                         new ArrayList<Appointment>());
         setContentView(R.layout.calendarlecture);
         setListAdapter(appointmentAdapter);
