@@ -98,40 +98,32 @@ public class StisysImpl implements Stisys {
         final Elements tablecontent = doc.select("#ergebnisuebersicht .tablecontent");
 
         for(int i = 0; i < tableframe.size(); i++) {
-            // Log.i("StisysImple",
-            // "Semester: " + tableframe.get(i).select("tr td").text());
+            // Log.i("StisysImple", "Semester: " +
+            // tableframe.get(i).select("tr td").text());
             final List<Result> retList = new ArrayList<Result>();
-            final int semester = Integer.parseInt(tableframe
-                            .get(i)
-                            .select("tr td")
-                            .text()
-                            .substring(tableframe.get(i).select("tr td").text().length() - 1,
-                                            tableframe.get(i).select("tr td").text().length()));
+            final int lengthBAIText = tableframe.get(i).select("tr td").text().length();
+            final int semester = Integer.parseInt(tableframe.get(i).select("tr td").text()
+                            .substring(lengthBAIText - 1, lengthBAIText));
 
-            for(int j = 1; j < tablecontent.get(i).select("tr table tr").size(); j++) {
-                // Log.i("StisysImple",
-                // "Modul: "
-                // + tablecontent.get(i).select("tr table tr")
-                // .get(j).select("td").get(1).text());
-                final String name = tablecontent.get(i).select("tr table tr").get(j).select("td").get(1).text();
+            final int sizeSemTableContent = tablecontent.get(i).select("tr table tr").size();
+            final Elements semTableContent = tablecontent.get(i).select("tr table tr");
 
-                // Log.i("StisysImple",
-                // "Prof: "
-                // + tablecontent.get(i).select("tr table tr")
-                // .get(j).select("td").get(3).text());
-                final String prof = tablecontent.get(i).select("tr table tr").get(j).select("td").get(3).text();
+            for(int j = 1; j < sizeSemTableContent; j++) {
+                // Log.i("StisysImple", "Modul: " +
+                // tablecontent.get(i).select("tr table tr").get(j).select("td").get(1).text());
+                final String name = semTableContent.get(j).select("td").get(1).text();
 
-                // Log.i("StisysImple",
-                // "Datum: "
-                // + tablecontent.get(i).select("tr table tr")
-                // .get(j).select("td").get(5).text());
-                final String date = tablecontent.get(i).select("tr table tr").get(j).select("td").get(5).text();
+                // Log.i("StisysImple", "Prof: " +
+                // tablecontent.get(i).select("tr table tr").get(j).select("td").get(3).text());
+                final String prof = semTableContent.get(j).select("td").get(3).text();
 
-                // Log.i("StisysImple",
-                // "Ergebnis: "
-                // + tablecontent.get(i).select("tr table tr")
-                // .get(j).select("td").get(7).text());
-                final String result = tablecontent.get(i).select("tr table tr").get(j).select("td").get(7).text();
+                // Log.i("StisysImple", "Datum: " +
+                // tablecontent.get(i).select("tr table tr").get(j).select("td").get(5).text());
+                final String date = semTableContent.get(j).select("td").get(5).text();
+
+                // Log.i("StisysImple", "Ergebnis: " +
+                // tablecontent.get(i).select("tr table tr").get(j).select("td").get(7).text());
+                final String result = semTableContent.get(j).select("td").get(7).text();
 
                 boolean note = false;
                 int k = 0;

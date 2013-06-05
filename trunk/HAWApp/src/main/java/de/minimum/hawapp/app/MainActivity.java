@@ -18,8 +18,6 @@ public class MainActivity extends TabActivity {
 
     private static View stisys;
     private static View pub;
-//    protected static boolean boolStisys = false;
-//    protected static boolean boolPub = false;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -45,37 +43,28 @@ public class MainActivity extends TabActivity {
                         .setContent(intent);
         tabHost.addTab(spec);
 
-
         intent = new Intent().setClass(this, CalendarCategoriesActivity.class);
         spec = tabHost.newTabSpec("Kalender").setIndicator("", res.getDrawable(R.drawable.ic_tab_kalender))
                         .setContent(intent);
         tabHost.addTab(spec);
 
-        
-
-        
         intent = new Intent().setClass(this, SchwarzesBrettActivity.class);
         spec = tabHost.newTabSpec("Blackboard").setIndicator("", res.getDrawable(R.drawable.ic_tab_brett))
                         .setContent(intent);
         tabHost.addTab(spec);
 
-        
-        //TODO: Pub.class
         intent = new Intent().setClass(this, PubActivity.class);
-        spec = tabHost.newTabSpec("Pub").setIndicator("", res.getDrawable(R.drawable.ic_tab_pub))
-                        .setContent(intent);
+        spec = tabHost.newTabSpec("Pub").setIndicator("", res.getDrawable(R.drawable.ic_tab_pub)).setContent(intent);
         tabHost.addTab(spec);
-        
+
         intent = new Intent().setClass(this, StisysActivity.class);
         spec = tabHost.newTabSpec("Stisys").setIndicator("", res.getDrawable(R.drawable.ic_tab_stisys))
                         .setContent(intent);
         tabHost.addTab(spec);
 
-        MainActivity.stisys = tabHost.getTabWidget().getChildTabViewAt(5);
-//        MainActivity.stisys.setEnabled(MainActivity.boolStisys);
-
         MainActivity.pub = tabHost.getTabWidget().getChildTabViewAt(4);
-//        MainActivity.pub.setEnabled(MainActivity.boolPub);
+        MainActivity.stisys = tabHost.getTabWidget().getChildTabViewAt(5);
+
         MainActivity.pub.setVisibility(View.GONE);
         MainActivity.stisys.setVisibility(View.GONE);
 
@@ -89,13 +78,8 @@ public class MainActivity extends TabActivity {
         tabHost.setCurrentTab(0);
     }
 
-    public static void enableStisysTab() {
-//        MainActivity.boolStisys = true;
-//        MainActivity.boolPub = true; 
-//        MainActivity.stisys.setEnabled(MainActivity.boolStisys);  
-//        MainActivity.stisys.setEnabled(MainActivity.boolPub);
+    public static void loggedIn() {
         MainActivity.pub.setVisibility(View.VISIBLE);
         MainActivity.stisys.setVisibility(View.VISIBLE);
-
     }
 }
