@@ -18,8 +18,8 @@ public class MainActivity extends TabActivity {
 
     private static View stisys;
     private static View pub;
-    protected static boolean boolStisys = false;
-    protected static boolean boolPub = false;
+//    protected static boolean boolStisys = false;
+//    protected static boolean boolPub = false;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -72,10 +72,10 @@ public class MainActivity extends TabActivity {
         tabHost.addTab(spec);
 
         MainActivity.stisys = tabHost.getTabWidget().getChildTabViewAt(5);
-        MainActivity.stisys.setEnabled(MainActivity.boolStisys);
+//        MainActivity.stisys.setEnabled(MainActivity.boolStisys);
 
         MainActivity.pub = tabHost.getTabWidget().getChildTabViewAt(4);
-        MainActivity.pub.setEnabled(MainActivity.boolPub);
+//        MainActivity.pub.setEnabled(MainActivity.boolPub);
         MainActivity.pub.setVisibility(View.GONE);
         MainActivity.stisys.setVisibility(View.GONE);
 
@@ -90,10 +90,10 @@ public class MainActivity extends TabActivity {
     }
 
     public static void enableStisysTab() {
-        MainActivity.boolStisys = true;
-        MainActivity.boolPub = true; 
-        MainActivity.stisys.setEnabled(MainActivity.boolStisys);  
-        MainActivity.stisys.setEnabled(MainActivity.boolPub);
+//        MainActivity.boolStisys = true;
+//        MainActivity.boolPub = true; 
+//        MainActivity.stisys.setEnabled(MainActivity.boolStisys);  
+//        MainActivity.stisys.setEnabled(MainActivity.boolPub);
         MainActivity.pub.setVisibility(View.VISIBLE);
         MainActivity.stisys.setVisibility(View.VISIBLE);
 
