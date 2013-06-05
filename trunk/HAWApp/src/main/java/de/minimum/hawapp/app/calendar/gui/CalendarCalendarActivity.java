@@ -25,7 +25,7 @@ public class CalendarCalendarActivity extends ListActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         calProvider = new CalendarProviderImpl(this);
-        calendarAdapter = new ArrayAdapter<Calendar>(this, android.R.layout.simple_list_item_1,
+        calendarAdapter = new ArrayAdapter<Calendar>(this, R.layout.activity_stisys_list_item_1,
                         new ArrayList<Calendar>());
         setContentView(R.layout.calendar_subcripted_lectures);
         setListAdapter(calendarAdapter);

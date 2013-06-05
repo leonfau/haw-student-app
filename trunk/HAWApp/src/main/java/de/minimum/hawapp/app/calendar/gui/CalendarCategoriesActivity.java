@@ -32,7 +32,7 @@ public class CalendarCategoriesActivity extends ListActivity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        categoryAdapter = new ArrayAdapter<Category>(this, android.R.layout.simple_list_item_1,
+        categoryAdapter = new ArrayAdapter<Category>(this, R.layout.activity_stisys_list_item_1,
                         new ArrayList<Category>());
         setContentView(R.layout.calendar_main);
         setListAdapter(categoryAdapter);
