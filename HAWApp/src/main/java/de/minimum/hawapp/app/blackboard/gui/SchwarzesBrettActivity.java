@@ -4,257 +4,373 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.database.DataSetObserver;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AbsListView;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.CheckedTextView;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import de.minimum.hawapp.app.R;
+import de.minimum.hawapp.app.blackboard.api.BlackboardManager;
+import de.minimum.hawapp.app.blackboard.api.Offer;
+import de.minimum.hawapp.app.blackboard.beans.OfferBean;
+import de.minimum.hawapp.app.context.ManagerFactory;
 
 public class SchwarzesBrettActivity extends Activity {
 
-    /*
-     * ##########################################################################
-     * ########################## Test Daten
-     * ####################################
-     * ################################################################
-     */
-    // Anfragen
-    String[] titelAnfragen = { "Fahrrad zu verkaufen", "neuer Drucker", "Fernseher" };
-    String[] autorenAnfragen = { "Alex", "Wlad", "Alex" };
-    String[] datumAnfragen = { "10.04.2013", "04.03.2013", "29.03.2013" };
-    String[] textAnfragen = {
-                    "Guterhaltenes, wenig gefahrenes SPECIALIZED Mountainbike mit folgenden Komponenten: "
-                                    + "Rehmenhöhe : 18 , 165 bis 180 cm Körpergröße Rahmen: M4 Alu, endverstärkt, ORE Ober-und Unterrohr, "
-                                    + "Scheibenbremsauflage, austauschbares Schaltauge. GabeL: Fox FloatF-80 RLT,80mmLuftfederung,einstellbar,"
-                                    + "lockout Bremsen: Avid SD-5 Schaltwerk: Shimano XTR, 27-Gang Schalthebel: Shimano LX Cassette: Shimano LX Kurbel: "
-                                    + "Specialized Strongarm 7050 Pedale: Shimano 515 Klickpedale Kettenblätter: "
-                                    + "4-Arm, 44/32/22 Sattelstütze: Alu schwarz gefedert Felgen: Mavic X225, 26 "
-                                    + "Neupreis: 2000 Euro ", "Neuer Drucker zu verkaufen",
-                    "Alter Fernseher zu verkaufen" };
-    String[] kontaktAnfragen = { "Alex S. Tel. 040123456", "Str. Rosenstr 14", "Alex S. Tel. 040123456" };
-    int anzahlAnfragen = titelAnfragen.length;
+	private static final int DIALOG_DOWNLOAD_JSON_PROGRESS = 0;
 
-    // Angebote
-    String[] titelAngebote = { "Nebenjob", "Mitbewohner", "Tutorium" };
-    String[] autorenAngebote = { "Alex", "Wlad", "Alex" };
-    String[] datumAngebote = { "10.04.2013", "04.03.2013", "29.03.2013" };
-    String[] textAngebote = { "Aushilfe (W/M) Aufgaben: Programmieren ...", "Suche Mitbewohner",
-                    "Java tutorium am 04.05.2013" };
-    String[] kontaktAngebote = { "Alex S. Tel. 040123456", "Str. Rosenstr 14", "Berliner Tor R565" };
-    int anzahlAngebote = titelAngebote.length;
-    // ####################################################################################################
+	protected static final String CATEGORY_ALL = "Alles";
 
-    // Nachrichten attribute
-    private String[] titel = titelAnfragen;
-    private String[] autor = autorenAnfragen;
-    private String[] datum = datumAnfragen;
-    private String[] text = textAnfragen;
-    private String[] kontakt = kontaktAnfragen;
+	protected static final String CATEGORY_RUBBISH = "Papierkorb";
 
-    // Button Edit im Menu
-    private MenuItem menuitemEdit;
-    // Modus Flag true = Nachrichten markieren false = Nachrichten lesen
-    private boolean editFlag;
-    // die Pinnwand
-    private ListView pinnwand;
-    // Markierte Nachrichten
-    private final List<TextView> editNachricht = new ArrayList<TextView>();
+	protected static final String CATEGORY_OWN = "Meins";
 
-    @Override
-    protected void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.sb_main);
+	BlackboardManager manager = ManagerFactory
+			.getManager(BlackboardManager.class);
 
-        createPinnwand();
+	private Spinner categorySpinner;
 
-        if (menuitemEdit != null) {
-            editFlag = menuitemEdit.isChecked();
-        }
-        else {
-            editFlag = false;
-        }
-    }
+	private List<String> allCategoryNames;
 
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        final MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.layout.sb_main_menu, menu);
-        menuitemEdit = menu.getItem(1);
-        menuitemEdit.setChecked(true);
-        return true;
-    }
+	private ListView offerListView;
 
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        // Menubuttons OnClick
-        switch(item.getItemId()) {
-            case R.id.sb_main_menu_delete:
+	@Override
+	protected void onCreate(final Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.sb_main);
 
-                if (!editNachricht.isEmpty()) {
+		categorySpinner = (Spinner) findViewById(R.id.sb_categorie_spinner);
+		offerListView = (ListView) findViewById(R.id.sb_offerList);
 
-                    String str = "";
-                    for(int i = 0; i < editNachricht.size(); i++) {
-                        str += editNachricht.get(i).getText();
-                        str += i == editNachricht.size() - 1 ? "" : ", ";
-                    }
+		final Button newOfferBtn = (Button) findViewById(R.id.sb_newOffer_btn);
+		newOfferBtn.setOnClickListener(new OnClickListener() {
 
-                    Toast.makeText(SchwarzesBrettActivity.this, "Delete = " + str, Toast.LENGTH_SHORT).show();
-                }
+			@Override
+			public void onClick(final View v) {
+				final Intent intent = new Intent(getBaseContext(),
+						NewOfferActivity.class);
+				final Bundle b = new Bundle();
+				final ArrayList<String> newCNames = new ArrayList<String>();
+				newCNames.addAll(allCategoryNames);
+				newCNames.remove(CATEGORY_ALL);
+				newCNames.remove(CATEGORY_RUBBISH);
+				newCNames.remove(CATEGORY_OWN);
 
-                return true;
-            case R.id.sb_main_menu_edit:
-                editFlag = item.isChecked();
-                item.setChecked(!editFlag);
+				b.putStringArrayList("CATEGORY", newCNames);
+				intent.putExtras(b);
+				startActivity(intent);
+			}
+		});
+	}
 
-                if (editFlag) {
-                    item.setIcon(R.drawable.ic_menu_edit);
-                }
-                else {
-                    item.setIcon(R.drawable.ic_menu_edit_disable);
-                }
+	@Override
+	protected void onResume() {
+		super.onResume();
+		getCategory();
+	}
 
-                final String text = editFlag ? "an" : "aus";
-                Toast.makeText(SchwarzesBrettActivity.this, "Markier Modus " + text, Toast.LENGTH_SHORT).show();
+	private void getCategory() {
+		showDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+		new AsyncTask<Void, Void, Void>() {
 
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+			private final List<String> categoryNames = new ArrayList<String>();
+			private boolean successful = false;
+			private List<String> newNames;
 
-    public void loadNeueNachricht(final View view) {
-        final Intent intent = new Intent(getBaseContext(), NeueNachrichtActivity.class);
-        startActivity(intent);
-        editNachricht.clear();
+			@Override
+			protected void onPostExecute(final Void arg0) {
+				dismissDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+				removeDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+				categoryNames.clear();
+				if (successful) {
+					categoryNames.add(CATEGORY_ALL);
+					categoryNames.add(CATEGORY_RUBBISH);
+					categoryNames.add(CATEGORY_OWN);
+					categoryNames.addAll(newNames);
+					setCategoryAdapter(categoryNames);
+				} else {
+					showToastSomethingFailed();
+				}
 
-    }
+				super.onPostExecute(arg0);
+			}
 
-    public void loadAnfragen(final View view) {
-        setTitel(titelAnfragen);
-        setAutor(autorenAnfragen);
-        setDatum(datumAnfragen);
-        setText(textAnfragen);
-        setKontakt(kontaktAnfragen);
-        editNachricht.clear();
-        createPinnwand();
-    }
+			@Override
+			protected Void doInBackground(final Void... arg0) {
+				try {
+					newNames = manager.getAllCategoryNames();
+					successful = !newNames.isEmpty();
+				} catch (final Throwable e) {
+					e.printStackTrace();
+					successful = false;
+				}
+				return null;
+			}
 
-    public void loadAngebote(final View view) {
-        setTitel(titelAngebote);
-        setAutor(autorenAngebote);
-        setDatum(datumAngebote);
-        setText(textAngebote);
-        setKontakt(kontaktAngebote);
-        editNachricht.clear();
-        createPinnwand();
-    }
+		}.execute();
+	}
 
-    /**
-     * erstellt die Pinnwand
-     */
-    private void createPinnwand() {
+	private void setCategoryAdapter(final List<String> names) {
+		allCategoryNames = names;
+		final ArrayAdapter<String> categorieAdapter = new ArrayAdapter<String>(
+				this, android.R.layout.simple_spinner_item, allCategoryNames);
+		categorySpinner.setAdapter(categorieAdapter);
+		categorySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
-        pinnwand = (ListView)findViewById(R.id.sb_main_pinnwand_list_view);
+			@Override
+			public void onItemSelected(final AdapterView<?> adapter,
+					final View view, final int index, final long arg3) {
 
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.sb_main_pinnwand_elem, getTitel());
-        pinnwand.setAdapter(adapter);
-        pinnwand.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+				getOfferList(index);
 
-        pinnwand.setOnItemClickListener(new OnPinnwandClickListener());
-    }
+			}
 
-    // ####### GETTER & SETTER
+			@Override
+			public void onNothingSelected(final AdapterView<?> arg0) {
 
-    public String[] getTitel() {
-        return titel;
-    }
+			}
+		});
+	}
 
-    public void setTitel(final String[] titel) {
-        this.titel = titel;
-    }
+	private void getOfferList(final int index) {
 
-    public String[] getAutor() {
-        return autor;
-    }
+		showDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+		new AsyncTask<Void, Void, Void>() {
 
-    public void setAutor(final String[] autor) {
-        this.autor = autor;
-    }
+			private boolean successful;
+			private List<Offer> offer = new ArrayList<Offer>();
 
-    public String[] getDatum() {
-        return datum;
-    }
+			@Override
+			protected void onPostExecute(final Void arg0) {
+				dismissDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+				removeDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+				if (successful) {
+					setOfferList(offer);
+				} else {
+					showToastSomethingFailed();
+				}
 
-    public void setDatum(final String[] datum) {
-        this.datum = datum;
-    }
+				super.onPostExecute(arg0);
+			}
 
-    public String[] getText() {
-        return text;
-    }
+			@Override
+			protected Void doInBackground(final Void... arg0) {
+				try {
+					switch (index) {
+					case 0:
+						// Alle Nachrichten
+						Log.v("SB OfferList", "alle Nachrichten");
+						offer = manager.getAllOffers();
+						break;
+					case 1:
+						// Papierkorb
+						Log.v("SB OfferList", "Papierkorb");
+						offer = manager.getIgnoredOffers();
+						break;
 
-    public void setText(final String[] text) {
-        this.text = text;
-    }
+					case 2:
+						// Meine Nachrichten
+						Log.v("SB OfferList", "Meine Nachrichten");
+						offer = manager.getAllOwnOffers();
+						break;
 
-    public String[] getKontakt() {
-        return kontakt;
-    }
+					default:
+						// Log.v("SB OfferList", "sonstige Nachrichten");
+						// final String aktCategoryName = allCategoryNames
+						// .get(index);
+						// final Category category = manager
+						// .getCategory(aktCategoryName);
+						// offer = category.getAllOffers();
+						final Offer o = new OfferBean("Test",
+								"das ist ein Test", "ich", "Angebote");
+						offer.add(o);
+						break;
+					}
+					successful = !offer.isEmpty();
 
-    public void setKontakt(final String[] kontakt) {
-        this.kontakt = kontakt;
-    }
+				} catch (final Throwable e) {
+					e.printStackTrace();
+					successful = false;
+				}
+				return null;
+			}
 
-    // ########## Innere Klasse
-    private class OnPinnwandClickListener implements OnItemClickListener {
+		}.execute();
+	}
 
-        @Override
-        public void onItemClick(final AdapterView<?> arg0, final View arg1, final int arg2, final long arg3) {
+	private void setOfferList(final List<Offer> offerList) {
+		offerListView.setAdapter(new OfferAdapter(SchwarzesBrettActivity.this,
+				offerList));
+	}
 
-            final CheckedTextView tv = (CheckedTextView)pinnwand.getChildAt(arg2);
-            final String s = tv.getText().toString();
-            int index = -1;
-            for(int i = 0; i < titel.length; i++) {
-                if (titel[i] == s) {
-                    index = i;
-                }
-            }
+	private void showToastSomethingFailed() {
+		Toast.makeText(this,
+				"Es gibt keine Einträge oder ein Problem ist aufgetreten",
+				Toast.LENGTH_LONG).show();
+	}
 
-            pinnwand.getCheckItemIds();
-            if (editNachricht.contains(tv)) {
-                editNachricht.remove(tv);
-            }
-            else {
-                editNachricht.add(tv);
-            }
+	@Override
+	protected Dialog onCreateDialog(final int id) {
+		ProgressDialog mProgressDialog;
+		switch (id) {
+		case DIALOG_DOWNLOAD_JSON_PROGRESS:
+			mProgressDialog = new ProgressDialog(this);
+			mProgressDialog.setMessage("Updating.....");
+			mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+			mProgressDialog.setCancelable(true);
+			mProgressDialog.show();
+			return mProgressDialog;
+		}
+		return null;
+	}
 
-            // Wenn Nicht im Markieren Modus
-            if (!editFlag) {
-                pinnwand.clearChoices();
-                editNachricht.clear();
-                final Intent intent = new Intent(SchwarzesBrettActivity.this, NachrichtActivity.class);
-                final Bundle b = new Bundle();
-                b.putString("titel", titel[index]);
-                b.putString("autor", autor[index]);
-                b.putString("datum", datum[index]);
-                b.putString("text", text[index]);
-                b.putString("kontakt", kontakt[index]);
-                intent.putExtras(b);
+	public class OfferAdapter implements ListAdapter {
 
-                startActivity(intent);
-            }
-        }
+		private final List<Offer> myArr;
+		private final Context context;
 
-    }
+		public OfferAdapter(final Context c, final List<Offer> myArrList) {
+			context = c;
+			myArr = myArrList;
+		}
 
+		@Override
+		public int getCount() {
+			return myArr.size();
+		}
+
+		@Override
+		public Object getItem(final int position) {
+			return position;
+		}
+
+		@Override
+		public long getItemId(final int position) {
+			return position;
+		}
+
+		@Override
+		public int getItemViewType(final int arg0) {
+			return 1;
+		}
+
+		@Override
+		public View getView(final int position, View convertView,
+				final ViewGroup parent) {
+
+			final LayoutInflater inflater = (LayoutInflater) context
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+			if (convertView == null) {
+				convertView = inflater
+						.inflate(R.layout.sb_offerlist_frag, null);
+			}
+
+			// TITEL
+			final TextView title = (TextView) convertView
+					.findViewById(R.id.sb_offerlist_titel);
+			final Offer offer = myArr.get(position);
+			title.setText(offer.getHeader());
+
+			title.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(final View v) {
+					final Intent intent = new Intent(
+							SchwarzesBrettActivity.this, OfferActivity.class);
+					final Bundle b = new Bundle();
+					b.putString("TITLE", offer.getHeader());
+					b.putString("DATE", offer.getDateOfCreation() + "");
+					b.putString("TEXT", offer.getDescription());
+					b.putString("CONTAKT", offer.getContact());
+					b.putString("IMAGE", offer.getImageId() + "");
+					intent.putExtras(b);
+
+					startActivity(intent);
+				}
+			});
+
+			// Button Rubbish
+			final ImageButton rubbishBtn = (ImageButton) convertView
+					.findViewById(R.id.sb_offerlist_rubbish_btn);
+			rubbishBtn.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(final View v) {
+					// TODO: Nachricht in die Rubbish Liste verschieben
+					Log.v("BB", title.getText() + " rubbish");
+
+				}
+			});
+
+			// Button Delete
+			final ImageButton deleteBtn = (ImageButton) convertView
+					.findViewById(R.id.sb_offerlist_delete_btn);
+			deleteBtn.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(final View v) {
+
+					// TODO: Nachricht löschen
+					// TODO: prüfen ob eigene nachricht
+					Log.v("BB", title.getText() + " delete");
+
+				}
+			});
+
+			return convertView;
+		}
+
+		@Override
+		public int getViewTypeCount() {
+			return 1;
+		}
+
+		@Override
+		public boolean hasStableIds() {
+			return false;
+		}
+
+		@Override
+		public boolean isEmpty() {
+			return false;
+		}
+
+		@Override
+		public void registerDataSetObserver(final DataSetObserver arg0) {
+
+		}
+
+		@Override
+		public void unregisterDataSetObserver(final DataSetObserver arg0) {
+
+		}
+
+		@Override
+		public boolean areAllItemsEnabled() {
+			return false;
+		}
+
+		@Override
+		public boolean isEnabled(final int arg0) {
+			return false;
+		}
+	}
 }

@@ -49,11 +49,11 @@
         <activity android:name="de.minimum.hawapp.app.pub.gui.PubActivity" >
         </activity>
         <activity
-            android:name="de.minimum.hawapp.app.blackboard.gui.NeueNachrichtActivity"
+            android:name="de.minimum.hawapp.app.blackboard.gui.NewOfferActivity"
             android:label="@string/sb_neue_nachricht" >
         </activity>
         <activity
-            android:name="de.minimum.hawapp.app.blackboard.gui.NachrichtActivity"
+            android:name="de.minimum.hawapp.app.blackboard.gui.OfferActivity"
             android:label="@string/sb_nachricht" >
         </activity>
         <activity
