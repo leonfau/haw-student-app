@@ -17,6 +17,12 @@ import android.app.Activity;
 public interface PubManager {
 
 	/**
+	 * Gibt eine Repräsentation des obersten Ordners im Pub als FTPFile zurück
+	 * @return
+	 */
+	public FTPFile getRootDirectory();
+	
+	/**
 	 * Lädt die übergebene Datei aus dem Pub herunter und speichert sie unter dem gleichen Namen im Downloadordner
 	 * @param remoteFile
 	 * @return
@@ -24,6 +30,14 @@ public interface PubManager {
 	 * @throws SftpException wenn Download fehlschlägt
 	 */
 	public FTPFile downloadFile(FTPFile remoteFile) throws IllegalArgumentException, SftpException;
+	
+	/**
+	 * Gibt den übergeordneten Ordner zurück
+	 * @param dir
+	 * @return
+	 * @throws IllegalArgumentException Wenn Datei statt Ordner oder root übergeben wird
+	 */
+	public FTPFile getUpperDirectory(FTPFile dir) throws IllegalArgumentException;
 	
 	/**
 	 * Gibt eine Liste mit den Dateien in einem Ordner zurück.
@@ -45,7 +59,7 @@ public interface PubManager {
 	/**
 	 * Speichert den Übergebenen Ordner als Favorit persistent
 	 * @param favoriteDir
-	 * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException wenn Datei statt Ordner übergeben wird
 	 */
 	public void makeFavorite(FTPFile favoriteDir) throws IllegalArgumentException;
 	

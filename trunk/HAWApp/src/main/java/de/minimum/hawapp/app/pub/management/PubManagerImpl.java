@@ -12,8 +12,10 @@ import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 
+import de.minimum.hawapp.app.login.Login;
 import de.minimum.hawapp.app.pub.beans.FTPFile;
 import de.minimum.hawapp.app.pub.beans.FTPFileBeansImpl;
+import de.minimum.hawapp.app.pub.beans.UpperDirFTPFile;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,9 +25,9 @@ import android.webkit.MimeTypeMap;
 
 public class PubManagerImpl implements PubManager {
 
-	private final static String server = "sftp.informatik.haw-hamburg.de";
-	private final static String user = ""; //Eintragen zum testen
-	private final static String pw = "";
+	private final String server = "sftp.informatik.haw-hamburg.de";
+	private String user;
+	private String pw;
 	
 	private final String FTP_TYPE = "sftp";
 	private final String SEPERATOR = "/";
@@ -39,6 +41,8 @@ public class PubManagerImpl implements PubManager {
 	private Session session;
 	
 	private void connect() {
+		user = Login.decrypt(Login.getEncryptedLogin());
+		pw = Login.decrypt(Login.getEncryptedPassword());
 		JSch jsch = new JSch();
         session = null;
         try {
@@ -52,6 +56,11 @@ public class PubManagerImpl implements PubManager {
 	} catch (JSchException e) {
         e.printStackTrace();  
 	}
+	}
+	
+	@Override
+	public FTPFile getRootDirectory() {
+		return new FTPFileBeansImpl("pub", "/home/", true);
 	}
 	
 	@Override
@@ -73,16 +82,15 @@ public class PubManagerImpl implements PubManager {
 			throws IllegalArgumentException, SftpException {
 		if (sftpChannel == null || sftpChannel.isClosed() || !sftpChannel.isConnected()) connect();
 		if (!dir.isDirectory()) throw new IllegalArgumentException(ERROR_ARGUMENT_MUST_BE_DIR);
-		
 		sftpChannel.cd(dir.getAbsolutePath() + dir.getFileName());
+		
 		
         @SuppressWarnings("unchecked")
 		Vector<LsEntry> list = sftpChannel.ls("*");
         List<FTPFile> resultFiles = new ArrayList<FTPFile>();
         
         for(LsEntry ls : list) {
-            System.out.println(ls.getFilename() + ": is directory: " + ls.getAttrs().isDir() );
-            resultFiles.add(new FTPFileBeansImpl(ls.getFilename(), dir.getAbsolutePath() + dir.getFileName(), ls.getAttrs().isDir()));
+            resultFiles.add(new FTPFileBeansImpl(ls.getFilename(), dir.getAbsolutePath() + dir.getFileName() + SEPERATOR , ls.getAttrs().isDir() || ls.getAttrs().isLink()));
         }
         
         sftpChannel.exit();
@@ -102,6 +110,17 @@ public class PubManagerImpl implements PubManager {
 	    newApp.setDataAndType(Uri.parse(file),mimetype);
 	    fromActivity.startActivity(newApp);
 	}
+	
+	@Override
+	public FTPFile getUpperDirectory(FTPFile dir)
+			throws IllegalArgumentException {
+		if (!dir.isDirectory() || dir.equals(getRootDirectory())) throw new IllegalArgumentException(ERROR_ARGUMENT_MUST_BE_DIR);
+		String oldPath = dir.getAbsolutePath();
+		oldPath = oldPath.substring(0,oldPath.length()-1); //letzen Slash abschneiden
+		String path = oldPath.substring(0, oldPath.lastIndexOf(SEPERATOR)+1 ); //bis zum vorletzen Slash
+		String filename = oldPath.substring(oldPath.lastIndexOf(SEPERATOR)+1);
+		return new UpperDirFTPFile(filename, path, true);
+	}
 
 	@Override
 	public void makeFavorite(FTPFile favoriteDir)
@@ -114,5 +133,7 @@ public class PubManagerImpl implements PubManager {
 		// TODO Nice to Have
 		return null;
 	}
+
+
 
 }
