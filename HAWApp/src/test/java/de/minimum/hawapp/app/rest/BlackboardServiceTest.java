@@ -30,4 +30,8 @@ public class BlackboardServiceTest extends TestCase {
 
         Assert.assertNull("Angebot ist weg", this.bbService.retrieveOfferById(o2.getId()));
     }
+
+    public void testRetrieveAllOffers() {
+        Assert.assertNotNull("Es existiert eine Liste", this.bbService.retrieveAllOffers());
+    }
 }
