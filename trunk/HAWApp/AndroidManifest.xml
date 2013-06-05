@@ -38,6 +38,8 @@
         </activity>
         <activity android:name="de.minimum.hawapp.app.blackboard.gui.BlackBoardActivity" >
         </activity>
+        <activity android:name="de.minimum.hawapp.app.blackboard.gui.FileChooser" >
+        </activity>
         <activity android:name="de.minimum.hawapp.app.stisys.gui.StisysActivity" >
         </activity>
         <activity android:name="de.minimum.hawapp.app.calendar.gui.CalendarCategoriesActivity" >

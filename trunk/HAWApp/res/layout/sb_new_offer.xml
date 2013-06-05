@@ -92,6 +92,7 @@
                     android:id="@+id/sb_new_offer_image_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:onClick="getfile"
                     android:text="@string/sb_new_offer_btn_bild" />
             </LinearLayout>
 
