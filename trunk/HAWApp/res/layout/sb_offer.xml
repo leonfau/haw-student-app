@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"  
+    android:background="@color/ColorBackground"
+    android:padding="20dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.29"
+        android:background="@color/ColorWhite">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" 
+            android:padding="15dp">
+
+            <TextView
+                android:id="@+id/sb_offer_title_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sb_offer_title" />
+
+            <TextView
+                android:id="@+id/sb_offer_date_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sb_offer_date" />
+
+            <TextView
+                android:id="@+id/sb_offer_text_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sb_offer_text" />
+
+            <TextView
+                android:id="@+id/sb_offer_border_text_view"
+                android:layout_width="fill_parent"
+                android:layout_height="2sp"
+                android:background="#000000" />
+
+            <TextView
+                android:id="@+id/sb_offer_contakt_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sb_offer_contakt" />
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

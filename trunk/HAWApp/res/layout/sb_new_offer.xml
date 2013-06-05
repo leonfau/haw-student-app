@@ -16,32 +16,53 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <Spinner
-                android:id="@+id/sb_neueNachricht_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                tools:listitem="@android:layout/simple_spinner_item" >
-            </Spinner>
+            <!-- <Spinner -->
+            <!-- android:id="@+id/sb_new_offer_spinner" -->
+            <!-- android:layout_width="match_parent" -->
+            <!-- android:layout_height="wrap_content" -->
+            <!-- android:orientation="horizontal" -->
+            <!-- tools:listitem="@android:layout/simple_spinner_item" > -->
+            <!-- </Spinner> -->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:id="@+id/sb_neue_nachricht_titel_text_view"
+                    android:id="@+id/sb_new_offer_category_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="@string/sb_neue_nachricht_titel" />
+                    android:text="@string/sb_new_offer_category" />
 
                 <EditText
-                    android:id="@+id/sb_neue_nachricht_titel_edit_text"
+                    android:id="@+id/sb_new_offer_category_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
-                    android:ems="10" 
-                    android:inputType="">
+                    android:ems="10"
+                    android:inputType="" >
+                </EditText>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/sb_new_offer_titel_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/sb_new_offer_titel" />
+
+                <EditText
+                    android:id="@+id/sb_new_offer_titel_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:ems="10"
+                    android:inputType="" >
 
                     <requestFocus />
                 </EditText>
@@ -53,26 +74,25 @@
                 android:orientation="horizontal" >
 
                 <TextView
-                    android:id="@+id/sb_neue_nachricht_bild_text_view"
+                    android:id="@+id/sb_new_offer_image_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/sb_neue_nachricht_bild" />
+                    android:text="@string/sb_new_offer_image" />
 
                 <EditText
-                    android:id="@+id/sb_neue_nachricht_bild_edit_text"
+                    android:id="@+id/sb_new_offer_image_edit_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.36"
-                    android:ems="10" 
-                    android:inputType="">
+                    android:ems="10"
+                    android:inputType="" >
                 </EditText>
 
                 <Button
-                    android:id="@+id/sb_neue_nachricht_bild_btn"
+                    android:id="@+id/sb_new_offer_image_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:onClick="loadBildUrl"
-                    android:text="@string/sb_neue_nachricht_btn_bild" />
+                    android:text="@string/sb_new_offer_btn_bild" />
             </LinearLayout>
 
             <LinearLayout
@@ -81,13 +101,13 @@
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/sb_neue_nachricht_text_text_view"
+                    android:id="@+id/sb_new_offer_text_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/sb_neue_nachricht_text" />
+                    android:text="@string/sb_new_offer_text" />
 
                 <EditText
-                    android:id="@+id/sb_neue_nachricht_text_edit_text"
+                    android:id="@+id/sb_new_offer_text_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -100,19 +120,17 @@
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/sb_neue_nachricht_kontakt_text_view"
+                    android:id="@+id/sb_neue_new_offer_contakt_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/sb_neue_nachricht_kontakt" />
- 
+                    android:text="@string/sb_new_offer_contakt" />
 
                 <EditText
-                    android:id="@+id/sb_neue_nachricht_kontakt_edit_text"
+                    android:id="@+id/sb_new_offer_contakt_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textPostalAddress" />
-
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
@@ -125,13 +143,12 @@
         android:padding="9dp" >
 
         <Button
-            android:id="@+id/sb_neue_nachricht_btn_erstellen"
+            android:id="@+id/sb_new_offer_btn_create"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="bottom"
             android:layout_weight="1"
-            android:onClick="erstellNachricht"
-            android:text="@string/sb_neue_nachricht_btn_erstellen" />
+            android:text="@string/sb_new_offer_btn_create" />
     </LinearLayout>
 
 </LinearLayout>

@@ -20,6 +20,21 @@
     <string name="sb_nachricht_datum">Datum</string>
     <string name="sb_nachricht_text">Text</string>
     <string name="sb_nachricht_kontakt">Kontakt</string>
+    
+    <string name="sb_new_offer_titel">Titel:</string>
+    <string name="sb_new_offer_image">Bild:</string>
+    <string name="sb_new_offer_btn_bild">...</string>
+    <string name="sb_new_offer_text">Text:</string>
+    <string name="sb_new_offer_contakt">Kontakt:</string>
+    <string name="sb_new_offer_btn_create">erstellen</string>
+    <string name="ol_text">Text</string>
+    <string name="rubbish">Papierkorb</string>
+    <string name="Delete">Löschen</string>
+    <string name="sb_offer_title">Titel</string>
+    <string name="sb_offer_autor">Autor</string>
+    <string name="sb_offer_date">Datum</string>
+    <string name="sb_offer_text">Text</string>
+    <string name="sb_offer_contakt">Kontakt</string>
      
     
 	<!-- LoginActivity strings -->
@@ -42,6 +57,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_calendar_subcripted_lectures">Abonnierte Vorlesungen</string>
     <string name="title_activity_calendar_appointment">Termin</string>
+    <string name="sb_new_offer_category">Kategorie</string>
 
   
 </resources>
