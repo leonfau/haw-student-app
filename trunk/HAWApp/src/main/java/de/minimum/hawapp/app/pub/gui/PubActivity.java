@@ -30,6 +30,7 @@ public class PubActivity extends Activity {
     private final List<FTPFile> listItems = new ArrayList<FTPFile>();
     private ArrayAdapter<FTPFile> adapter;
     private ListView lv;
+    private String loading;
 
     private FTPFile currentDirectory;
     public static final int DIALOG_DOWNLOAD_INFORMATION_PROGRESS = 0;
@@ -40,7 +41,7 @@ public class PubActivity extends Activity {
         switch(id) {
             case DIALOG_DOWNLOAD_INFORMATION_PROGRESS:
                 mProgressDialog = new ProgressDialog(this);
-                mProgressDialog.setMessage("Loading Pub...");
+                mProgressDialog.setMessage(loading + " Pub...");
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 mProgressDialog.setCancelable(true);
                 mProgressDialog.show();
@@ -59,6 +60,7 @@ public class PubActivity extends Activity {
 
         adapter = new ArrayAdapter<FTPFile>(this, R.layout.activity_pub_list_item_1, listItems);
         lv = (ListView)findViewById(R.id.publist);
+        loading = getString(R.string.loading);
 
         lv.setOnItemClickListener(new OnItemClickListener() {
 
@@ -129,6 +131,8 @@ public class PubActivity extends Activity {
             protected void onPostExecute(final Void arg0) {
                 super.onPostExecute(arg0);
                 runFileFromActivity(downloaded);
+                dismissDialog(DIALOG_DOWNLOAD_INFORMATION_PROGRESS);
+                removeDialog(DIALOG_DOWNLOAD_INFORMATION_PROGRESS);
             }
 
             @Override

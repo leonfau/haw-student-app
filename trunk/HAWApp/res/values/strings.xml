@@ -36,6 +36,7 @@
     <string name="sb_offer_text">Text</string>
     <string name="sb_offer_contakt">Kontakt</string>
      
+    <string name="loading">Lade</string>
     
 	<!-- LoginActivity strings -->
 	<string name="noInternet">Keine Internetverbindung</string>
@@ -44,6 +45,7 @@
     <string name="loginPassword">Passwort</string>
     <string name="savePassword">Passwort speichern</string>
     <string name="loginButton">Login</string>
+    <string name="checkLogin">Überprüfe Login...</string>
     <string name="failedLogin">Login gescheitert</string>
     <string name="succesfulLogin">Login erfolgreich</string>
     <string name="hawLogoDescritpion">HAW-Logo</string>
