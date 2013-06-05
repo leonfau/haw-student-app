@@ -1,6 +1,8 @@
 package de.minimum.hawapp.app.stisys.gui;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -45,6 +47,11 @@ public class LoginActivity extends Activity {
     @StringRes
     String noInternet;
 
+    @StringRes
+    String checkLogin;
+
+    public static final int DIALOG_DOWNLOAD_INFORMATION_PROGRESS = 0;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,9 +72,26 @@ public class LoginActivity extends Activity {
         }
     };
 
+    @Override
+    protected Dialog onCreateDialog(final int id) {
+        ProgressDialog mProgressDialog;
+        switch(id) {
+            case DIALOG_DOWNLOAD_INFORMATION_PROGRESS:
+                mProgressDialog = new ProgressDialog(this);
+                mProgressDialog.setMessage(checkLogin);
+                mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                mProgressDialog.setCancelable(true);
+                mProgressDialog.show();
+                return mProgressDialog;
+            default:
+                return null;
+        }
+    }
+
     @Click(R.id.buttonLogin)
     public void login() {
         if (InternetConnectionUtil.hasInternetConnection(getApplicationContext())) {
+            showDialog(DIALOG_DOWNLOAD_INFORMATION_PROGRESS);
             login(editLogin.getText().toString(), editPassword.getText().toString());
             buttonLogin.setEnabled(false);
         }
@@ -87,6 +111,9 @@ public class LoginActivity extends Activity {
         final SharedPreferences.Editor editor = settings.edit();
 
         editor.putString("username", Login.getEncryptedLogin());
+
+        dismissDialog(DIALOG_DOWNLOAD_INFORMATION_PROGRESS);
+        removeDialog(DIALOG_DOWNLOAD_INFORMATION_PROGRESS);
 
         if (!logged) {
             Toast.makeText(getApplicationContext(), failedLogin, Toast.LENGTH_SHORT).show();
