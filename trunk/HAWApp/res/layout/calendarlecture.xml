@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="Vorlesung"
+        android:text="@string/title_activity_calendarlecture"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/Color3" />
 
@@ -22,12 +22,13 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/lecture"
         android:layout_below="@+id/lecture"
-        android:text="Dozent"
+        android:text="@string/txtTitle_Dozent"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/Color3" />
 
     <TextView
         android:id="@+id/lectureName"
+        android:textIsSelectable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/lecture"
@@ -38,6 +39,7 @@
 
     <TextView
         android:id="@+id/lecturerName"
+        android:textIsSelectable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/lecturer"
@@ -53,7 +55,7 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/lecturerName"
         android:layout_marginTop="16dp"
-        android:text="Termine"
+        android:text="@string/title_activity_calendar_appointments"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textColor="@color/ColorBackground" />
 
@@ -77,31 +79,28 @@
             android:id="@+id/subscripeLecture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:text="abonnieren"
+            style="?android:attr/buttonBarButtonStyle" 
+            android:text="@string/btnTitle_abonnieren"
             android:textColor="@color/ColorText" />
         <Button
             android:id="@+id/newAppointment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/subscripeLecture"
-            android:layout_alignBottom="@+id/subscripeLecture"
+            style="?android:attr/buttonBarButtonStyle" 
             android:layout_marginTop="5dp"
-            android:layout_toLeftOf="@+id/cal_btn_changelog"
             android:layout_weight="1"
-            android:text="neuer Termin"
+            android:text="@string/btnTitle_neuerTermin"
             android:textColor="@color/ColorText" />
         <Button
-            android:id="@+id/cal_btn_changelog"
+            android:id="@+id/cal_btn_changelog"            
+            style="?android:attr/buttonBarButtonStyle" 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@android:id/list"
-            android:layout_below="@android:id/list"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:text="ChangeLog"
+            android:text="@string/title_activity_changeLog"
             android:textColor="@color/ColorText" />
 
 

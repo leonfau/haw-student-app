@@ -64,7 +64,7 @@ public class MensaActivity extends Activity {
 		switch (id) {
 		case DIALOG_DOWNLOAD_JSON_PROGRESS:
 			mProgressDialog = new ProgressDialog(this);
-			mProgressDialog.setMessage("Downloading.....");
+			mProgressDialog.setMessage("Lade Essen...");
 			mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			mProgressDialog.setCancelable(true);
 			mProgressDialog.show();
@@ -223,7 +223,7 @@ public class MensaActivity extends Activity {
 						if (stars != 0) rate(mealId, stars);
 						dialog.dismiss();
 					}
-				}).setNegativeButton("Cancel",
+				}).setNegativeButton("Abbrechen",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						dialog.cancel();

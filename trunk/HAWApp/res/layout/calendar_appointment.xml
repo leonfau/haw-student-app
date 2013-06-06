@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:textColor="@color/ColorText"
-        android:text="Änderungen speichern" />
+        android:text="@string/btnTitle_aenderungSpeichern" />
 
     <TextView
         android:id="@+id/textView3"
@@ -22,7 +22,7 @@
         android:layout_alignRight="@+id/textView2"
         android:layout_below="@+id/cal_app_end"
         android:layout_marginTop="14dp"
-        android:text="Ort"
+        android:text="@string/btnTitle_Ort"
         android:textColor="@color/Color3"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -57,6 +57,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/cal_app_begin"
         android:layout_marginTop="14dp"
+        android:inputType="text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -65,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/textView1"
         android:layout_below="@+id/cal_app_begin"
-        android:text="Ende"
+        android:text="@string/txtTitle_Ende"
         android:textColor="@color/Color3"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -85,7 +86,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/cal_app_name"
-        android:text="Details"
+        android:text="@string/txtTitle_Details"
         android:textColor="@color/Color2"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -106,7 +107,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/cal_app_details"
         android:textColor="@color/ColorText"
-        android:text="Termin löschen" />
+        android:text="@string/btnTitle_DeleteTermin" />
 
     <TextView
         android:id="@+id/textView1"
@@ -114,7 +115,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/cal_app_name"
         android:layout_toLeftOf="@+id/cal_app_begin"
-        android:text="Beginn"
+        android:text="@string/txtTitle_Beginn"
         android:textColor="@color/Color3"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -125,7 +126,7 @@
         android:layout_alignBaseline="@+id/cal_app_name"
         android:layout_alignBottom="@+id/cal_app_name"
         android:layout_alignLeft="@+id/textView1"
-        android:text="Name"
+        android:text="@string/txtTitle_Name"
         android:textColor="@color/Color3"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
