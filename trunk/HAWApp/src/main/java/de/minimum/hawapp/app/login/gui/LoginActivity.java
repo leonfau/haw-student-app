@@ -75,9 +75,6 @@ public class LoginActivity extends Activity {
         String password;
         if ((password = settings.getString("password", "")) != "") {
             setLoadedPassword(Login.decrypt(password));
-        }
-
-        if (password != "") {
             setCheckBoxChecked();
         }
     };
@@ -102,21 +99,17 @@ public class LoginActivity extends Activity {
     void loginClicked() {
         if (InternetConnectionUtil.hasInternetConnection(getApplicationContext())) {
             showDialog(DIALOG_DOWNLOAD_INFORMATION_PROGRESS);
-            login(editLogin.getText().toString(), editPassword.getText().toString());
             buttonLogin.setEnabled(false);
+            login(editLogin.getText().toString(), editPassword.getText().toString());
         }
         else {
             Toast.makeText(getApplicationContext(), noInternet, Toast.LENGTH_SHORT).show();
         }
-        checkboxClicked();
     }
 
     @Click(R.id.buttonLogout)
     void logoutClicked() {
         loggedOut();
-        checkboxClicked();
-        MainActivity.loggedOut();
-        Login.logout();
     }
 
     @Click(R.id.checkBoxPassword)
@@ -145,6 +138,7 @@ public class LoginActivity extends Activity {
         final SharedPreferences.Editor editor = settings.edit();
 
         editor.putString("username", Login.getEncryptedLogin());
+        editor.commit();
 
         dismissDialog(DIALOG_DOWNLOAD_INFORMATION_PROGRESS);
         removeDialog(DIALOG_DOWNLOAD_INFORMATION_PROGRESS);
@@ -154,15 +148,9 @@ public class LoginActivity extends Activity {
         }
         else {
             loggedIn();
-            MainActivity.loggedIn();
             Toast.makeText(getApplicationContext(), succesfulLogin, Toast.LENGTH_SHORT).show();
         }
 
-        if (!checkBoxPassword.isChecked()) {
-            editPassword.setText("");
-        }
-
-        editor.commit();
         buttonLogin.setEnabled(true);
     }
 
@@ -183,18 +171,24 @@ public class LoginActivity extends Activity {
 
     @UiThread
     void loggedIn() {
+        MainActivity.loggedIn();
         buttonLogin.setVisibility(View.GONE);
         buttonLogout.setVisibility(View.VISIBLE);
+        checkboxClicked();
     }
 
     @UiThread
     void loggedOut() {
+        MainActivity.loggedOut();
         buttonLogin.setVisibility(View.VISIBLE);
         buttonLogout.setVisibility(View.GONE);
 
         if (!checkBoxPassword.isChecked()) {
             editPassword.setText("");
         }
+        checkboxClicked();
+
+        Login.logout();
 
         Toast.makeText(getApplicationContext(), loggedOut, Toast.LENGTH_SHORT).show();
     }

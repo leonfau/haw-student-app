@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.TabHost;
 import de.minimum.hawapp.app.blackboard.gui.BlackBoardActivity;
 import de.minimum.hawapp.app.calendar.gui.CalendarCategoriesActivity;
+import de.minimum.hawapp.app.login.Login;
 import de.minimum.hawapp.app.login.gui.LoginActivity_;
 import de.minimum.hawapp.app.mensa.gui.MensaActivity;
 import de.minimum.hawapp.app.pub.gui.PubActivity;
@@ -65,7 +66,12 @@ public class MainActivity extends TabActivity {
         MainActivity.pub = tabHost.getTabWidget().getChildTabViewAt(4);
         MainActivity.stisys = tabHost.getTabWidget().getChildTabViewAt(5);
 
-        loggedOut();
+        if (Login.loggedIn()) {
+            loggedIn();
+        }
+        else {
+            loggedOut();
+        }
 
         tabHost.getTabWidget().getChildAt(0).setBackgroundColor(Color.parseColor("#06091C"));
         tabHost.getTabWidget().getChildAt(1).setBackgroundColor(Color.parseColor("#06091C"));
