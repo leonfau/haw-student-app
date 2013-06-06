@@ -69,8 +69,8 @@ public class CalendarProviderImpl implements CalendarProvider {
 		values.put(Events.DTSTART, event.getStartMillis());
 		values.put(Events.DTEND, event.getEndMillis());
 		values.put(Events.TITLE, event.getTitle());
-		values.put(Events.DESCRIPTION,
-				event.getDescription() + " " + event.getLocation());
+		values.put(Events.DESCRIPTION, event.getDescription());
+		values.put(Events.EVENT_LOCATION, event.getLocation());
 		values.put(Events.CALENDAR_ID, calendar.getID());
 		values.put(Events.EVENT_TIMEZONE, "Europe/Berlin");
 		Uri uri = cr.insert(Events.CONTENT_URI, values);
@@ -93,9 +93,14 @@ public class CalendarProviderImpl implements CalendarProvider {
 
 	@Override
 	public void deleteEvent(Event event) {
+		this.deleteEventById(event.getID());
+	}
+	
+	@Override
+	public void deleteEventById(long id){
 		Uri deleteUri = null;
 		deleteUri = ContentUris.withAppendedId(Events.CONTENT_URI,
-				event.getID());
+				id);
 		context.getContentResolver().delete(deleteUri, null, null);
 	}
 
@@ -103,6 +108,13 @@ public class CalendarProviderImpl implements CalendarProvider {
 	public void deleteEvents(List<Event> events) {
 		for (Event event : events) {
 			this.deleteEvent(event);
+		}
+	}
+	
+	@Override
+	public void deleteEventsById(List<Long> ids){
+		for (Long id : ids) {
+			this.deleteEventById(id);
 		}
 	}
 
@@ -114,8 +126,8 @@ public class CalendarProviderImpl implements CalendarProvider {
 		values.put(Events.DTSTART, event.getStartMillis());
 		values.put(Events.DTEND, event.getEndMillis());
 		values.put(Events.TITLE, event.getTitle());
-		values.put(Events.DESCRIPTION,
-				event.getDescription() + " " + event.getLocation());
+		values.put(Events.DESCRIPTION, event.getDescription());
+		values.put(Events.EVENT_LOCATION, event.getLocation());
 		updateUri = ContentUris.withAppendedId(Events.CONTENT_URI,
 				event.getID());
 		context.getContentResolver().update(updateUri, values, null, null);
