@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
@@ -54,13 +55,6 @@ public class BlackboardServiceTest extends RestTest {
         String header = "Fish and chips";
         String description = "Englischer genuss!!! Noch Fragen?";
         String contact = "London in der Telefonzelle :-P";
-        try {
-            System.out.println(new File(".").getCanonicalPath());
-        }
-        catch(IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
         List<String> categoryNames = getAllCategories();
         Assert.assertTrue("Namen vorhanden", categoryNames.size() > 0);
 
@@ -109,6 +103,26 @@ public class BlackboardServiceTest extends RestTest {
 
         OfferCreationStatusEntity status3 = createOffer(categoryName, null, null, null, null);
         Assert.assertFalse("Nicht optionales Feld", status3.isSuccessfull());
+    }
+
+    @Test
+    public void allCategoriesUnique() {
+        String header = "Fish and chips";
+        String description = "Englischer genuss!!! Noch Fragen?";
+        String contact = "London in der Telefonzelle :-P";
+        List<String> categoryNames = getAllCategories();
+        Assert.assertTrue("Namen vorhanden", categoryNames.size() > 0);
+
+        String categoryName = categoryNames.get(0);
+
+        createOffer(categoryName, header, description, contact, null);
+        createOffer(categoryName, header, description, contact, null);
+        createOffer(categoryName, header, description, contact, null);
+        createOffer(categoryName, header, description, contact, null);
+        createOffer(categoryName, header, description, contact, null);
+
+        List<String> allCategoryNames = getAllCategories();
+        Assert.assertEquals("Alle Namen Unique", new HashSet<String>(allCategoryNames).size(), allCategoryNames.size());
     }
 
     private CategoryEntity getCategory(String categoryName) {
