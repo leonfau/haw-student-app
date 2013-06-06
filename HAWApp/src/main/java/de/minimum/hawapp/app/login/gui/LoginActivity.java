@@ -1,4 +1,4 @@
-package de.minimum.hawapp.app.stisys.gui;
+package de.minimum.hawapp.app.login.gui;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -38,6 +39,9 @@ public class LoginActivity extends Activity {
     @ViewById
     Button buttonLogin;
 
+    @ViewById
+    Button buttonLogout;
+
     @StringRes
     String failedLogin;
 
@@ -49,6 +53,12 @@ public class LoginActivity extends Activity {
 
     @StringRes
     String checkLogin;
+
+    @StringRes
+    String logout;
+
+    @StringRes
+    String loggedOut;
 
     public static final int DIALOG_DOWNLOAD_INFORMATION_PROGRESS = 0;
 
@@ -89,7 +99,7 @@ public class LoginActivity extends Activity {
     }
 
     @Click(R.id.buttonLogin)
-    public void login() {
+    void loginClicked() {
         if (InternetConnectionUtil.hasInternetConnection(getApplicationContext())) {
             showDialog(DIALOG_DOWNLOAD_INFORMATION_PROGRESS);
             login(editLogin.getText().toString(), editPassword.getText().toString());
@@ -98,6 +108,28 @@ public class LoginActivity extends Activity {
         else {
             Toast.makeText(getApplicationContext(), noInternet, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Click(R.id.buttonLogout)
+    void logoutClicked() {
+        loggedOut();
+        MainActivity.loggedOut();
+        Login.logout();
+    }
+
+    @Click(R.id.checkBoxPassword)
+    void checkboxClicked() {
+        final SharedPreferences settings = getSharedPreferences("config", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = settings.edit();
+
+        if (checkBoxPassword.isChecked()) {
+            editor.putString("password", Login.getEncryptedPassword());
+        }
+        else {
+            editor.putString("password", "");
+        }
+
+        editor.commit();
     }
 
     @Background
@@ -119,20 +151,16 @@ public class LoginActivity extends Activity {
             Toast.makeText(getApplicationContext(), failedLogin, Toast.LENGTH_SHORT).show();
         }
         else {
-            if (checkBoxPassword.isChecked()) {
-                editor.putString("password", Login.getEncryptedPassword());
-            }
-            editor.commit();
+            loggedIn();
             MainActivity.loggedIn();
             Toast.makeText(getApplicationContext(), succesfulLogin, Toast.LENGTH_SHORT).show();
         }
 
         if (!checkBoxPassword.isChecked()) {
             editPassword.setText("");
-            editor.putString("password", "");
-            editor.commit();
         }
 
+        editor.commit();
         buttonLogin.setEnabled(true);
     }
 
@@ -149,5 +177,23 @@ public class LoginActivity extends Activity {
     @UiThread
     void setCheckBoxChecked() {
         checkBoxPassword.setChecked(true);
+    }
+
+    @UiThread
+    void loggedIn() {
+        buttonLogin.setVisibility(View.GONE);
+        buttonLogout.setVisibility(View.VISIBLE);
+    }
+
+    @UiThread
+    void loggedOut() {
+        buttonLogin.setVisibility(View.VISIBLE);
+        buttonLogout.setVisibility(View.GONE);
+
+        if (!checkBoxPassword.isChecked()) {
+            editPassword.setText("");
+        }
+
+        Toast.makeText(getApplicationContext(), loggedOut, Toast.LENGTH_SHORT).show();
     }
 }

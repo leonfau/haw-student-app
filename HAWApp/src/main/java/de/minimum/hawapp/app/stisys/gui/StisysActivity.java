@@ -21,7 +21,7 @@ import de.minimum.hawapp.app.stisys.StisysImpl;
 
 public class StisysActivity extends ExpandableListActivity {
 
-    String loading;
+    String loadingStisys;
 
     private static final String NAME = "NAME";
     private static final String DESCRIPTION = "DESCRIPTION";
@@ -37,7 +37,7 @@ public class StisysActivity extends ExpandableListActivity {
         switch(id) {
             case DIALOG_DOWNLOAD_INFORMATION_PROGRESS:
                 mProgressDialog = new ProgressDialog(this);
-                mProgressDialog.setMessage(loading + " StISys...");
+                mProgressDialog.setMessage(loadingStisys);
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 mProgressDialog.setCancelable(true);
                 mProgressDialog.show();
@@ -50,7 +50,7 @@ public class StisysActivity extends ExpandableListActivity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loading = getString(R.string.loading);
+        loadingStisys = getString(R.string.loadingStisys);
 
         showDialog(DIALOG_DOWNLOAD_INFORMATION_PROGRESS);
         final ParseTask parseTask = new ParseTask();

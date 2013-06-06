@@ -38,6 +38,10 @@ public class Login {
         return false;
     }
 
+    public static void logout() {
+        loggedIn = false;
+    }
+
     private static boolean checkLogin(final String login, final String password) {
         HttpsURLConnection conn = null;
         String html = "";
