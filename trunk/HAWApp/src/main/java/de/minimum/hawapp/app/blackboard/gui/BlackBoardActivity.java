@@ -46,7 +46,7 @@ public class BlackBoardActivity extends Activity {
     private final BlackboardManager manager = ManagerFactory.getManager(BlackboardManager.class);
     private List<String> allCategoryNamesCached;
     private List<String> allCategoryNamesDB;
-    private List<Offer> ownOffers;
+    // private List<Offer> ownOffers;
 
     private List<Offer> offerListOfCategory;
     private List<Offer> offerListOfCategoryCached;
@@ -93,9 +93,6 @@ public class BlackBoardActivity extends Activity {
             Toast.makeText(getApplicationContext(), this.notificationOnError, Toast.LENGTH_SHORT).show();
             this.allCategoryNamesDB = this.allCategoryNamesCached;
 
-        }
-        if (this.ownOffers == null) {
-            getAllOwnOffers();
         }
         this.categorySpinner = (Spinner)findViewById(R.id.sb_categorie_spinner);
         this.offerListView = (ListView)findViewById(R.id.sb_offerList);
@@ -257,34 +254,31 @@ public class BlackBoardActivity extends Activity {
         this.offerListView.setAdapter(new OfferAdapter(BlackBoardActivity.this, this.offerListOfCategory));
     }
 
-    private void getAllOwnOffers() {
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected Void doInBackground(final Void... arg0) {
-                BlackBoardActivity.this.ownOffers = BlackBoardActivity.this.manager
-                                .getAllOwnOffers(BlackBoardActivity.this);
-                return null;
-            }
-
-        }.execute();
-    }
-
     /***************************************************************
      * OnButtonClick
      ***************************************************************/
 
     private void setOfferToIgnoreList(final Offer offer) {
-        this.manager.ignoreOffer(this, offer);
+        if (this.manager.ignoreOffer(this, offer)) {
+            this.offerListOfCategory.remove(offer);
+            setOfferListView();
+        }
     }
 
     private void deleteOffer(final Offer offer) {
-        new AsyncTask<Void, Void, Void>() {
+        new AsyncTask<Void, Void, Boolean>() {
 
             @Override
-            protected Void doInBackground(final Void... arg0) {
-                BlackBoardActivity.this.manager.removeOwnOffer(BlackBoardActivity.this, offer);
-                return null;
+            protected void onPostExecute(Boolean result) {
+                if (result) {
+                    BlackBoardActivity.this.offerListOfCategory.remove(offer);
+                    setOfferListView();
+                }
+            };
+
+            @Override
+            protected Boolean doInBackground(final Void... arg0) {
+                return BlackBoardActivity.this.manager.removeOwnOffer(BlackBoardActivity.this, offer);
             }
 
         }.execute();
@@ -333,7 +327,6 @@ public class BlackBoardActivity extends Activity {
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.sb_offerlist_frag, null);
             }
-            final View convertViewFinal = convertView;
 
             // TITEL
             final TextView title = (TextView)convertView.findViewById(R.id.sb_offerlist_titel);
@@ -369,7 +362,6 @@ public class BlackBoardActivity extends Activity {
                 @Override
                 public void onClick(final View v) {
                     setOfferToIgnoreList(offer);
-                    convertViewFinal.setVisibility(View.GONE);
                 }
 
             });
@@ -387,7 +379,6 @@ public class BlackBoardActivity extends Activity {
                     // TODO: Nachricht löschen
                     // TODO: prüfen ob eigene nachricht
                     deleteOffer(offer);
-                    convertViewFinal.setVisibility(View.GONE);
                 }
 
             });
