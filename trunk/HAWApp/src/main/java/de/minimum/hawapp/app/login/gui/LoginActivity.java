@@ -108,11 +108,13 @@ public class LoginActivity extends Activity {
         else {
             Toast.makeText(getApplicationContext(), noInternet, Toast.LENGTH_SHORT).show();
         }
+        checkboxClicked();
     }
 
     @Click(R.id.buttonLogout)
     void logoutClicked() {
         loggedOut();
+        checkboxClicked();
         MainActivity.loggedOut();
         Login.logout();
     }
