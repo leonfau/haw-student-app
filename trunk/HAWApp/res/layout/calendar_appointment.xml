@@ -1,133 +1,146 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".CalendarAppointmentActivity" 
-    android:background="@color/ColorBackground"
-    >
+    android:orientation="vertical" 
+     android:background="@color/ColorBackground"
+     >
 
-    <Button
-        android:id="@+id/cal_btn_app_modify"
-        android:layout_width="wrap_content"
+    <TableLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:textColor="@color/ColorText"
-        android:text="@string/btnTitle_aenderungSpeichern" />
+        android:stretchColumns="2" >
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/textView2"
-        android:layout_below="@+id/cal_app_end"
-        android:layout_marginTop="14dp"
-        android:text="@string/btnTitle_Ort"
-        android:textColor="@color/Color3"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        <TableRow android:padding="5dip" >
+
+            <TextView
+                android:id="@+id/TextView01"
+                android:layout_width="wrap_content"
+                android:gravity="right"
+                android:padding="10dip"
+                android:text="@string/txtTitle_Name"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/ColorText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:padding="10dip"
+                 />
+
+            <EditText
+                android:id="@+id/cal_app_name"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="left"
+                android:inputType="text"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </TableRow>
+
+        <TableRow android:padding="5dip" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:gravity="right"
+                android:padding="10dip"
+                android:text="@string/txtTitle_Beginn"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/ColorText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:padding="10dip" />
+
+            <EditText
+                android:id="@+id/cal_app_begin"
+                android:layout_width="fill_parent"
+                android:gravity="left"
+                android:ems="10"
+                android:freezesText="true"
+                android:inputType="none" />
+        </TableRow>
+
+        <TableRow android:padding="5dip" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:gravity="right"
+                android:padding="10dip"
+                android:text="@string/txtTitle_Ende"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/ColorText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:padding="10dip" />
+
+            <EditText
+                android:id="@+id/cal_app_end"
+                android:layout_width="fill_parent"
+                android:gravity="left"
+                android:ems="10"
+                android:inputType="datetime" />
+
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:padding="5dip" >
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:gravity="right"
+                android:padding="10dip"
+                android:text="@string/btnTitle_Ort"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/ColorText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:padding="10dip" />
+
+            <EditText
+                android:id="@+id/cal_app_location"
+                android:layout_width="fill_parent"
+                android:gravity="left"
+                android:ems="10"
+                android:freezesText="false"
+                android:inputType="text" />
+
+           
+        </TableRow>
+
+    </TableLayout>
 
     <EditText
-        android:id="@+id/cal_app_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/cal_app_end"
-        android:layout_alignTop="@+id/textView3"
+        android:id="@+id/cal_app_details"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
         android:ems="10"
-        android:freezesText="false"
         android:inputType="text" >
 
         <requestFocus />
     </EditText>
 
-    <EditText
-        android:id="@+id/cal_app_begin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/textView1"
-        android:ems="10"
-        android:freezesText="true"
-        android:inputType="none" />
-
-    <EditText
-        android:id="@+id/cal_app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/cal_app_begin"
-        android:layout_alignParentTop="true"
-        android:layout_alignRight="@+id/cal_app_begin"
-        android:layout_marginTop="14dp"
-        android:inputType="text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/textView1"
-        android:layout_below="@+id/cal_app_begin"
-        android:text="@string/txtTitle_Ende"
-        android:textColor="@color/Color3"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <EditText
-        android:id="@+id/cal_app_end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView2"
-        android:layout_alignBottom="@+id/textView2"
-        android:layout_alignLeft="@+id/cal_app_begin"
-        android:ems="10"
-        android:inputType="datetime" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/cal_app_name"
-        android:text="@string/txtTitle_Details"
-        android:textColor="@color/Color2"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <EditText
-        android:id="@+id/cal_app_details"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/cal_btn_app_modify"
-        android:layout_alignLeft="@+id/cal_btn_app_modify"
-        android:layout_below="@+id/textView4"
-        android:ems="10"
-        android:inputType="text" />
-
     <Button
         android:id="@+id/cal_btn_app_delete"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/cal_app_details"
-        android:textColor="@color/ColorText"
-        android:text="@string/btnTitle_DeleteTermin" />
+        android:text="@string/btnTitle_DeleteTermin"
+        android:textColor="@color/ColorText" />
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/cal_btn_app_modify"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/cal_app_name"
-        android:layout_toLeftOf="@+id/cal_app_begin"
-        android:text="@string/txtTitle_Beginn"
-        android:textColor="@color/Color3"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:text="@string/btnTitle_aenderungSpeichern"
+        android:textColor="@color/ColorText" />
 
-    <TextView
-        android:id="@+id/TextView01"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/cal_app_name"
-        android:layout_alignBottom="@+id/cal_app_name"
-        android:layout_alignLeft="@+id/textView1"
-        android:text="@string/txtTitle_Name"
-        android:textColor="@color/Color3"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-</RelativeLayout>
+</LinearLayout>
