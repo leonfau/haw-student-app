@@ -48,6 +48,8 @@ public interface BlackboardManager {
 
     public List<Offer> getAllOffers(Context context);
 
+    public List<Offer> searchOffers(Context context, String searchString);
+
     public Category getCategory(Context context, String categoryName);
 
     public Offer getOfferById(Context context, Long id);

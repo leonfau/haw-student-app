@@ -218,4 +218,10 @@ public class DefaultBlackboardManager implements BlackboardManager {
         }
         return ownOffersToReturn;
     }
+
+    @Override
+    public List<Offer> searchOffers(Context context, String searchString) {
+        // TODO Suchen
+        return getAllOffers(context);
+    }
 }
