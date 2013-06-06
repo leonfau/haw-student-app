@@ -3,9 +3,9 @@ package de.minimum.hawapp.app.rest;
 import java.io.File;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,6 +19,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.google.common.collect.Lists;
+
 import de.minimum.hawapp.app.blackboard.api.Category;
 import de.minimum.hawapp.app.blackboard.api.Image;
 import de.minimum.hawapp.app.blackboard.api.Offer;
@@ -27,6 +29,7 @@ import de.minimum.hawapp.app.blackboard.beans.CategoryBean;
 import de.minimum.hawapp.app.blackboard.beans.ImageBean;
 import de.minimum.hawapp.app.blackboard.beans.OfferBean;
 import de.minimum.hawapp.app.blackboard.beans.OfferCreationStatusBean;
+import de.minimum.hawapp.app.rest.exceptions.RestServiceException;
 
 public class BlackboardService {
     private static final String SERVICE_URL = RestConst.HOST + "/server/rest/blackboardservice/";
@@ -41,62 +44,62 @@ public class BlackboardService {
         BlackboardService.restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
     }
 
-    public List<Offer> retrieveAllOffers() {
+    public List<Offer> retrieveAllOffers() throws RestServiceException {
         final String url = BlackboardService.SERVICE_URL + "alloffers";
         try {
-            return Arrays.asList((Offer[])BlackboardService.restTemplate.getForObject(url, OfferBean[].class));
+            return Lists.newArrayList((Offer[])BlackboardService.restTemplate.getForObject(url, OfferBean[].class));
         }
         catch(RestClientException ex) {
             ex.printStackTrace();
-            return null;
+            throw new RestServiceException("Unable to retrieve all Offers.", ex);
         }
     }
 
-    public Category retrieveCategory(String categoryName) {
+    public Category retrieveCategory(String categoryName) throws RestServiceException {
         final String url = BlackboardService.SERVICE_URL + "category/" + URLEncoder.encode(categoryName);
         try {
             return BlackboardService.restTemplate.getForObject(url, CategoryBean.class);
         }
         catch(RestClientException ex) {
             ex.printStackTrace();
-            return null;
+            throw new RestServiceException("Unable to retrieve categorie", ex);
         }
     }
 
-    public Offer retrieveOfferById(Long id) {
+    public Offer retrieveOfferById(Long id) throws RestServiceException {
         final String url = BlackboardService.SERVICE_URL + "offer/" + id;
         try {
             return BlackboardService.restTemplate.getForObject(url, OfferBean.class);
         }
         catch(RestClientException ex) {
             ex.printStackTrace();
-            return null;
+            throw new RestServiceException("Unable to retrieve Offer", ex);
         }
     }
 
-    public List<String> retrieveAllCategoryNames() {
+    public List<String> retrieveAllCategoryNames() throws RestServiceException {
         final String url = BlackboardService.SERVICE_URL + "allcategorynames";
         try {
-            return Arrays.asList(BlackboardService.restTemplate.getForObject(url, String[].class));
+            return Lists.newArrayList(BlackboardService.restTemplate.getForObject(url, String[].class));
         }
         catch(RestClientException ex) {
             ex.printStackTrace();
-            return null;
+            throw new RestServiceException("Unable to retrieve all Category Names.", ex);
         }
     }
 
-    public Image retrieveImageById(Long id) {
+    public Image retrieveImageById(Long id) throws RestServiceException {
         final String url = BlackboardService.SERVICE_URL + "image/" + id;
         try {
             return BlackboardService.restTemplate.getForObject(url, ImageBean.class);
         }
         catch(RestClientException ex) {
             ex.printStackTrace();
-            return null;
+            throw new RestServiceException("Unable to retrieve Image.", ex);
         }
     }
 
-    public OfferCreationStatus postNewOffer(Offer offer, File image) {
+    public OfferCreationStatus postNewOffer(Offer offer, File image) throws RestServiceException {
         final String url = BlackboardService.SERVICE_URL + "newoffer";
         MultiValueMap<String, Object> form = new LinkedMultiValueMap<String, Object>();
         form.add("category", offer.getCategoryName());
@@ -106,7 +109,7 @@ public class BlackboardService {
         if (offer.getContact() != null)
             form.add("contact", offer.getContact());
         if (image != null)
-            form.add("image", image);
+            form.add("image", new FileSystemResource(image));
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.MULTIPART_FORM_DATA);
         HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<MultiValueMap<String, Object>>(form, header);
@@ -119,11 +122,11 @@ public class BlackboardService {
         }
         catch(RestClientException ex) {
             ex.printStackTrace();
-            return null;
+            throw new RestServiceException("Unable to create offer.", ex);
         }
     }
 
-    public boolean removeOffer(Offer offer, String deletionKey) {
+    public boolean removeOffer(Offer offer, String deletionKey) throws RestServiceException {
         final String url = BlackboardService.SERVICE_URL + "remove/offerid/" + offer.getId() + "/deletionkey/"
                         + URLEncoder.encode(deletionKey);
         try {
@@ -131,8 +134,11 @@ public class BlackboardService {
             return true;
         }
         catch(RestClientException ex) {
+            if (ex.getMessage().startsWith("403"))// TODO Ddas geht bestimmt
+                                                  // auch schöner
+                return false;
             ex.printStackTrace();
-            return false;
+            throw new RestServiceException("Unable to remove Offer.", ex);
         }
     }
 

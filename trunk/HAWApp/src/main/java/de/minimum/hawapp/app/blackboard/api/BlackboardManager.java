@@ -13,7 +13,7 @@ public interface BlackboardManager {
      * 
      * @return
      */
-    public List<Offer> getAllOwnOffers();
+    public List<Offer> getAllOwnOffers(Context context);
 
     /**
      * Entfernt das übergebene Angebot
@@ -23,7 +23,7 @@ public interface BlackboardManager {
      *         anderem auch wenn das Angebot nicht von einem selber erstellt
      *         wurde
      */
-    public boolean removeOwnOffer(Offer offer);
+    public boolean removeOwnOffer(Context context, Offer offer);
 
     /**
      * Setzt das Angebot auf eine IgnoreList. Das Angebot wird in der Folge
@@ -32,7 +32,7 @@ public interface BlackboardManager {
      * @param offer
      * @return
      */
-    public boolean ignoreOffer(Offer offer);
+    public boolean ignoreOffer(Context context, Offer offer);
 
     /**
      * Entfernt das Angebot von der IgnoreList. Es wird in der Folge wieder vom
@@ -42,21 +42,19 @@ public interface BlackboardManager {
      * @return true wenn entfernen erfolgreich sonst false. Auch false wenn
      *         Offer nicht auf der IgnoreList
      */
-    public boolean unignoreOffer(Offer offer);
+    public boolean unignoreOffer(Context context, Offer offer);
 
-    public List<Offer> getIgnoredOffers();
+    public List<Offer> getIgnoredOffers(Context context);
 
-    public List<Offer> getAllOffers();
+    public List<Offer> getAllOffers(Context context);
 
-    public Category getCategory(String categoryName);
+    public Category getCategory(Context context, String categoryName);
 
-    public Offer getOfferById(Long id);
+    public Offer getOfferById(Context context, Long id);
 
-    public List<String> getAllCategoryNames();
+    public List<String> getAllCategoryNames(Context context);
 
-    public Image getImageById(Long id);
-
-    public void setContext(Context context);
+    public Image getImageById(Context context, Long id);
 
     /**
      * 
@@ -69,6 +67,6 @@ public interface BlackboardManager {
      * @throws OfferCreationFailedException
      *             Wenn das Offer nicht angelegt werden konnte
      */
-    public Long createOffer(String category, String header, String description, String contact, File image)
-                    throws OfferCreationFailedException;
+    public Long createOffer(Context context, String category, String header, String description, String contact,
+                    File image) throws OfferCreationFailedException;
 }
