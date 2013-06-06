@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
@@ -197,7 +198,7 @@ public class HibernateConnector implements PersistenceConnector {
             Transaction trans = session.getTransaction();
             trans.begin();
             @SuppressWarnings("unchecked")
-            List<T> obj = session.createCriteria(clazz).list();
+            List<T> obj = session.createCriteria(clazz).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
             trans.commit();
             return obj;
         }
