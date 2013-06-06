@@ -14,6 +14,7 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -51,6 +52,17 @@ public class CalendarAppointmentActivity extends Activity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.x = -100;
+        params.height = 70;
+        params.width = 1000;
+        params.y = -50;
+        this.getWindow().setAttributes(params);
+        
+        
+        
         setContentView(R.layout.calendar_appointment);
         name = (EditText)findViewById(R.id.cal_app_name);
         begin = (EditText)findViewById(R.id.cal_app_begin);
