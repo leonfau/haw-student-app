@@ -221,15 +221,9 @@ public class BlackBoardActivity extends Activity {
 
                     else {
                         Log.v("SB OfferList", "sonstige Nachrichten ");
-                        // TODO: wirft fehler
-                        try {
-                            final Category category = BlackBoardActivity.this.manager.getCategory(
-                                            BlackBoardActivity.this, categoryName);
-                            BlackBoardActivity.this.offerListOfCategory = category.getAllOffers();// getOfferBy(category);
-                        }
-                        catch(final Exception e) {
-                            Log.v("Blackboard", e.getMessage(), e);
-                        }
+                        final Category category = BlackBoardActivity.this.manager.getCategory(BlackBoardActivity.this,
+                                        categoryName);
+                        BlackBoardActivity.this.offerListOfCategory = category.getAllOffers();
                     }
                     if (BlackBoardActivity.this.offerListOfCategoryCached == null) {
                         BlackBoardActivity.this.offerListOfCategoryCached = BlackBoardActivity.this.offerListOfCategory;
