@@ -28,7 +28,8 @@ public interface CalendarProvider {
 	 */
 	public void deleteEvent(Event event);
 	public void deleteEvents(List<Event> events);
-	
+	public void deleteEventById(long id);
+	public void deleteEventsById(List<Long> ids);
 	/**
 	 * 
 	 * @param event must have event id;
