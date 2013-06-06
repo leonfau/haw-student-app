@@ -1,6 +1,9 @@
 package de.minimum.hawapp.app.blackboard.beans;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.google.common.collect.Lists;
 
 import de.minimum.hawapp.app.blackboard.api.Category;
 import de.minimum.hawapp.app.blackboard.api.Offer;
@@ -24,17 +27,19 @@ public class CategoryBean implements Category {
         this.name = name;
     }
 
-    public void setAllOffers(List<Offer> allOffers) {
-        this.allOffers = allOffers;
-        this.visible = allOffers;
+    public void setAllOffers(OfferBean[] allOffers) {
+        this.allOffers = Lists.newArrayList((Offer[])allOffers);
+        this.visible = new ArrayList<Offer>(this.allOffers);
     }
 
     @Override
     public void ignoreOffers(List<Long> toIgnore) {
+        List<Offer> toRemove = new ArrayList<Offer>();
         for(Offer o : this.visible) {
             if (toIgnore.contains(o.getId()))
-                this.visible.remove(o);
+                toRemove.add(o);
         }
+        this.visible.removeAll(toRemove);
     }
 
     @Override
