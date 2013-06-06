@@ -61,11 +61,32 @@
 	<!-- LoginActivity strings -->
 	<string name="cal_back">Zurück</string>
 	<!-- CalendarActivity strings End --> 
- 	<string name="title_activity_calendarlecture">Lecture</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+ 	<string name="title_activity_calendarlecture">Vorlesung</string>
+ 	<string name="title_activity_calendarlectures">Vorlesungen</string>
+ 	<string name="title_activity_changeLog">ChangeLog</string>
+ 	<string name="title_calendar">Kalendar</string>
     <string name="title_activity_calendar_subcripted_lectures">Abonnierte Vorlesungen</string>
     <string name="title_activity_calendar_appointment">Termin</string> 
+    <string name="title_activity_calendar_appointments">Termine</string> 
+    
+    <string name="hello_world">Hello world!</string>
+
+    
+    <string name="btnTitle_aboVorlesungen">Abonnierte Vorlesungen</string>
+    <string name="btnTitle_aenderungSpeichern">Änderungen speichern</string>
+    <string name="btnTitle_Ort">Ort</string>
+    <string name="txtTitle_Ende">Ende</string>
+    <string name="txtTitle_Details">Ende</string>
+    <string name="btnTitle_DeleteTermin">Termin löschen</string>
+    <string name="btnTitle_abonnieren">abonnieren</string>
+    <string name="btnTitle_neuerTermin">neuer Termin</string>
+    <string name="txtTitle_Beginn">Beginn</string>
+    <string name="txtTitle_Name">Name</string>
+    <string name="txtTitle_Dozent">Dozent</string>
+    
+    
+    
 
   
 </resources>

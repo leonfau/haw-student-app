@@ -77,6 +77,8 @@
             android:screenOrientation="portrait"
             android:label="@string/sb_nachricht" >
         </activity>
+        
+        <!-- Calender START -->
         <activity
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarLectureActivity"
             android:label="@string/title_activity_calendarlecture" 
@@ -89,7 +91,7 @@
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarLecturesActivity"
-            android:label="Vorlesungen" 
+            android:label="@string/title_activity_calendar_subcripted_lectures" 
             android:screenOrientation="portrait"
             
             android:windowSoftInputMode="stateAlwaysVisible|adjustPan"  
@@ -116,7 +118,7 @@
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarChangeMessagesActivity"
-            android:label="ChangeLog" 
+            android:label="@string/title_activity_changeLog" 
             android:screenOrientation="portrait"
             
             android:windowSoftInputMode="stateAlwaysVisible|adjustPan"  
@@ -125,13 +127,14 @@
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarCalendarActivity"
-            android:label="Calendars" 
+            android:label="@string/title_calendar" 
             android:screenOrientation="portrait"
             
 			android:windowSoftInputMode="stateAlwaysVisible|adjustPan"  
   			android:theme="@android:style/Theme.Dialog"
             >
         </activity>
+        <!-- Calender END -->
     </application>
 
 </manifest>

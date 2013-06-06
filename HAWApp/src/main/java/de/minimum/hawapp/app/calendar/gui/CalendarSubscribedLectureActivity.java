@@ -99,7 +99,7 @@ public class CalendarSubscribedLectureActivity extends ListActivity {
         switch(id) {
             case DIALOG_DOWNLOAD_JSON_PROGRESS:
                 mProgressDialog = new ProgressDialog(this);
-                mProgressDialog.setMessage("Updating.....");
+                mProgressDialog.setMessage("Lade Veranstaltungspläne...");
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 mProgressDialog.setCancelable(true);
                 mProgressDialog.show();

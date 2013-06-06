@@ -22,13 +22,13 @@
         android:layout_height="wrap_content"                
         android:textColor="@color/ColorText"
         android:layout_marginTop="5dp"
-        android:text="Calendar" />
+        android:text="@string/title_calendar" />
 
     <Button
         android:id="@+id/cal_btn_subLectures"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"                
         android:textColor="@color/ColorText"
-        android:text="Abonnierte Vorlesungen" />
+        android:text="@string/btnTitle_aboVorlesungen" />
 
 </LinearLayout>
