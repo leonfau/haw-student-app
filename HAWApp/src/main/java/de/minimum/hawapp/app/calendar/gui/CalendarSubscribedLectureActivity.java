@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import de.minimum.hawapp.app.R;
@@ -28,6 +29,16 @@ public class CalendarSubscribedLectureActivity extends ListActivity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.x = -100;
+        params.height = 70;
+        params.width = 1000;
+        params.y = -50;
+        this.getWindow().setAttributes(params);
+        
+        
         aboService = calManager.getCalendarAboService(this);
         lectureSubscribtionAdapter = new ArrayAdapter<LectureSubscribtion>(this,R.layout.activity_stisys_list_item_1,
                         new ArrayList<LectureSubscribtion>());

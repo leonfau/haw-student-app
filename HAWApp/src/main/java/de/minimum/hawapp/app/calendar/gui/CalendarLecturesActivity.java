@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -32,7 +33,16 @@ public class CalendarLecturesActivity extends ListActivity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.x = -100;
+        params.height = 70;
+        params.width = 1000;
+        params.y = -50;
+        this.getWindow().setAttributes(params);
 
+        
+        
         lectureAdapter = new ArrayAdapter<Lecture>(this, R.layout.activity_stisys_list_item_1, new ArrayList<Lecture>());
         setContentView(R.layout.calendar_main);
         setListAdapter(lectureAdapter);

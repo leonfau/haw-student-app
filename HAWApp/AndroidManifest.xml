@@ -79,33 +79,58 @@
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarLectureActivity"
+            android:label="@string/title_activity_calendarlecture" 
+
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_calendarlecture" >
+            
+            android:windowSoftInputMode="stateAlwaysVisible|adjustPan"  
+  			android:theme="@android:style/Theme.Dialog"
+            >
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarLecturesActivity"
+            android:label="Vorlesungen" 
             android:screenOrientation="portrait"
-            android:label="Vorlesungen" >
+            
+            android:windowSoftInputMode="stateAlwaysVisible|adjustPan"  
+  			android:theme="@android:style/Theme.Dialog"
+            >
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarSubscribedLectureActivity"
+            android:label="@string/title_activity_calendar_subcripted_lectures" 
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_calendar_subcripted_lectures" >
+            
+            android:windowSoftInputMode="stateAlwaysVisible|adjustPan"  
+  			android:theme="@android:style/Theme.Dialog"
+            >
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarAppointmentActivity"
+            android:label="@string/title_activity_calendar_appointment" 
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_calendar_appointment" >
+            
+            android:windowSoftInputMode="stateAlwaysVisible|adjustPan"  
+  			android:theme="@android:style/Theme.Dialog"
+            >
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarChangeMessagesActivity"
+            android:label="ChangeLog" 
             android:screenOrientation="portrait"
-            android:label="ChangeLog" >
+            
+            android:windowSoftInputMode="stateAlwaysVisible|adjustPan"  
+  			android:theme="@android:style/Theme.Dialog"
+            >
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarCalendarActivity"
+            android:label="Calendars" 
             android:screenOrientation="portrait"
-            android:label="Calendars" >
+            
+			android:windowSoftInputMode="stateAlwaysVisible|adjustPan"  
+  			android:theme="@android:style/Theme.Dialog"
+            >
         </activity>
     </application>
 
