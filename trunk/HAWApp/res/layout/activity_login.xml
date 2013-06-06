@@ -77,9 +77,18 @@
                 android:id="@+id/buttonLogin"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/loginButton"
+                android:text="@string/login"
                 android:textColor="@color/ColorText"
                 android:textStyle="bold" />
+            
+            <Button
+                android:id="@+id/buttonLogout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/logout"
+                android:textColor="@color/ColorText"
+                android:textStyle="bold"
+                android:visibility="gone" />
             <!-- Link to Registration Screen -->
 
         </LinearLayout>
@@ -94,6 +103,7 @@
             android:layout_height="180dp"
             android:layout_alignParentBottom="true"
             android:background="@layout/activity_login_footer_repeat" >
+
         </LinearLayout>
         <!-- Footer Ends -->
 

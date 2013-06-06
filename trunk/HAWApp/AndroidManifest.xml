@@ -26,6 +26,7 @@
         <uses-library android:name="android.test.runner" />
         <activity
             android:name="de.minimum.hawapp.app.MainActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar" >
             <intent-filter>
@@ -34,52 +35,76 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="de.minimum.hawapp.app.stisys.gui.LoginActivity_" >
+        <activity 
+            android:name="de.minimum.hawapp.app.login.gui.LoginActivity_"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="de.minimum.hawapp.app.blackboard.gui.BlackBoardActivity" >
+        <activity 
+            android:name="de.minimum.hawapp.app.blackboard.gui.BlackBoardActivity"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="de.minimum.hawapp.app.blackboard.gui.FileChooser" >
+        <activity 
+            android:name="de.minimum.hawapp.app.blackboard.gui.FileChooser"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="de.minimum.hawapp.app.stisys.gui.StisysActivity" >
+        <activity 
+            android:name="de.minimum.hawapp.app.stisys.gui.StisysActivity"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="de.minimum.hawapp.app.calendar.gui.CalendarCategoriesActivity" >
+        <activity 
+            android:name="de.minimum.hawapp.app.calendar.gui.CalendarCategoriesActivity"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="de.minimum.hawapp.app.KalenderCategoryActivity" >
+        <activity 
+            android:name="de.minimum.hawapp.app.KalenderCategoryActivity"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="de.minimum.hawapp.app.mensa.gui.MensaActivity" >
+        <activity 
+            android:name="de.minimum.hawapp.app.mensa.gui.MensaActivity"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity android:name="de.minimum.hawapp.app.pub.gui.PubActivity" >
+        <activity 
+            android:name="de.minimum.hawapp.app.pub.gui.PubActivity"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.blackboard.gui.NewOfferActivity"
+            android:screenOrientation="portrait"
             android:label="@string/sb_neue_nachricht" >
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.blackboard.gui.OfferActivity"
+            android:screenOrientation="portrait"
             android:label="@string/sb_nachricht" >
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarLectureActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_calendarlecture" >
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarLecturesActivity"
+            android:screenOrientation="portrait"
             android:label="Vorlesungen" >
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarSubscribedLectureActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_calendar_subcripted_lectures" >
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarAppointmentActivity"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_calendar_appointment" >
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarChangeMessagesActivity"
+            android:screenOrientation="portrait"
             android:label="ChangeLog" >
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.calendar.gui.CalendarCalendarActivity"
+            android:screenOrientation="portrait"
             android:label="Calendars" >
         </activity>
     </application>

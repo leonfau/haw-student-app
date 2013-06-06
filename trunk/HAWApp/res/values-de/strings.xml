@@ -39,7 +39,7 @@
      
     <string name="loading">Lade</string>
     
-		<!-- Login: start -->
+	<!-- Login: start -->
 	<string name="noInternet">Keine Internetverbindung</string>
     <string name="show_dialog">Dialog</string>
     <string name="loginName">Name</string>
@@ -50,7 +50,6 @@
     <string name="checkLogin">Überprüfe Login...</string>
     <string name="failedLogin">Login gescheitert</string>
     <string name="succesfulLogin">Login erfolgreich</string>
-    <string name="loggedOut">ausgeloggt</string>
     <string name="hawLogoDescritpion">HAW-Logo</string>
 	<!-- Login : end -->  
 	
