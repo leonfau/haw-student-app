@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-     android:background="@color/ColorHintText"
+     android:background="@color/ColorBackground"
      >
     
     <ListView
@@ -12,7 +12,7 @@
         android:layout_height="0dp"
 		android:textColor="@color/Color2"
         android:layout_weight="1.24" 
-        android:background="@color/ColorBackground"
+        android:background="@color/ColorWhite"
         >
     </ListView>
 

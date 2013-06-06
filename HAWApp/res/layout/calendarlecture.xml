@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ColorHintText"
+    android:background="@color/ColorBackground"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".CalendarlectureActivity" >
 
@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:text="@string/title_activity_calendarlecture"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/Color3" />
+        android:textColor="@color/ColorText" />
 
     <TextView
         android:id="@+id/lecturer"
@@ -24,7 +24,7 @@
         android:layout_below="@+id/lecture"
         android:text="@string/txtTitle_Dozent"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/Color3" />
+        android:textColor="@color/ColorText" />
 
     <TextView
         android:id="@+id/lectureName"
@@ -35,7 +35,7 @@
         android:layout_marginLeft="16dp"
         android:layout_toRightOf="@+id/lecture"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/Color2" />
+        android:textColor="@color/ColorText" />
 
     <TextView
         android:id="@+id/lecturerName"
@@ -46,7 +46,7 @@
         android:layout_alignBottom="@+id/lecturer"
         android:layout_alignLeft="@+id/lectureName"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/Color2" />
+        android:textColor="@color/ColorText" />
 
     <TextView
         android:id="@+id/Termine"
@@ -57,7 +57,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/title_activity_calendar_appointments"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/ColorBackground" />
+        android:textColor="@color/ColorText" />
 
     <ListView
         android:id="@android:id/list"
@@ -66,14 +66,14 @@
         android:layout_above="@+id/subscripeLecture"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/Termine"
-        android:background="@color/ColorBackground" >
+        android:background="@color/ColorWhite" >
     </ListView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/ColorHintText" >
+        android:background="@color/ColorBackground" >
 
         <Button
             android:id="@+id/subscripeLecture"
