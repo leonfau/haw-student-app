@@ -90,4 +90,61 @@ public class OfferBean implements Offer {
         this.categoryName = categoryName;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.categoryName == null) ? 0 : this.categoryName.hashCode());
+        result = prime * result + ((this.contact == null) ? 0 : this.contact.hashCode());
+        result = prime * result + ((this.description == null) ? 0 : this.description.hashCode());
+        result = prime * result + ((this.header == null) ? 0 : this.header.hashCode());
+        result = prime * result + (int)(this.id ^ (this.id >>> 32));
+        result = prime * result + ((this.imageId == null) ? 0 : this.imageId.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        OfferBean other = (OfferBean)obj;
+        if (this.categoryName == null) {
+            if (other.categoryName != null)
+                return false;
+        }
+        else if (!this.categoryName.equals(other.categoryName))
+            return false;
+        if (this.contact == null) {
+            if (other.contact != null)
+                return false;
+        }
+        else if (!this.contact.equals(other.contact))
+            return false;
+        if (this.description == null) {
+            if (other.description != null)
+                return false;
+        }
+        else if (!this.description.equals(other.description))
+            return false;
+        if (this.header == null) {
+            if (other.header != null)
+                return false;
+        }
+        else if (!this.header.equals(other.header))
+            return false;
+        if (this.id != other.id)
+            return false;
+        if (this.imageId == null) {
+            if (other.imageId != null)
+                return false;
+        }
+        else if (!this.imageId.equals(other.imageId))
+            return false;
+        return true;
+    }
+
 }
