@@ -46,4 +46,36 @@ public class OfferCreationStatusBean implements OfferCreationStatus {
         this.dateOfCreation = dateOfCreation;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.deletionKey == null) ? 0 : this.deletionKey.hashCode());
+        result = prime * result + (int)(this.offerId ^ (this.offerId >>> 32));
+        result = prime * result + (this.successfull ? 1231 : 1237);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        OfferCreationStatusBean other = (OfferCreationStatusBean)obj;
+        if (this.deletionKey == null) {
+            if (other.deletionKey != null)
+                return false;
+        }
+        else if (!this.deletionKey.equals(other.deletionKey))
+            return false;
+        if (this.offerId != other.offerId)
+            return false;
+        if (this.successfull != other.successfull)
+            return false;
+        return true;
+    }
+
 }
