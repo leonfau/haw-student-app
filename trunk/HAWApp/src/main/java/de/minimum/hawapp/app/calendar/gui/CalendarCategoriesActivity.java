@@ -111,15 +111,23 @@ public class CalendarCategoriesActivity extends ListActivity {
     }
 
     private void showCategories() {
-        showDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+        if (categoryAdapter.isEmpty()) {
+            showDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+        }
         new AsyncTask<Void, Void, Void>() {
             private List<Category> categories;
             private boolean successful = false;
 
             @Override
             protected void onPostExecute(final Void arg0) {
-                dismissDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
-                removeDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+                try {
+                    dismissDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+                    removeDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+                }
+                catch(final IllegalArgumentException e) {
+
+                }
+
                 categoryAdapter.clear();
                 if (successful) {
                     categoryAdapter.addAll(categories);

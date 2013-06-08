@@ -54,15 +54,23 @@ public class CalendarLecturesActivity extends ListActivity {
     }
 
     private void showLectures() {
-        showDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+        if (lectureAdapter.isEmpty()) {
+            showDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+        }
         new AsyncTask<Void, Void, Void>() {
             List<Lecture> lectures;
             private boolean successful = false;
 
             @Override
             protected void onPostExecute(final Void arg0) {
-                dismissDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
-                removeDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+                try {
+                    dismissDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+                    removeDialog(DIALOG_DOWNLOAD_JSON_PROGRESS);
+                }
+                catch(final IllegalArgumentException e) {
+
+                }
+
                 lectureAdapter.clear();
                 if (successful) {
                     lectureAdapter.addAll(lectures);
