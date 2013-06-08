@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import de.minimum.hawapp.app.R;
 import de.minimum.hawapp.app.calendar.beans.Category;
+import de.minimum.hawapp.app.calendar.intern.CalendarAboService;
 import de.minimum.hawapp.app.calendar.intern.CalendarManager;
 import de.minimum.hawapp.app.context.ManagerFactory;
 
@@ -27,11 +28,13 @@ public class CalendarCategoriesActivity extends ListActivity {
     public final static String APPOINTMENT_UUID = "calendar_appointment_uuid";
     private static final int DIALOG_DOWNLOAD_JSON_PROGRESS = 0;
     private final CalendarManager calManager = ManagerFactory.getManager(CalendarManager.class);
+    private CalendarAboService aboService;
     private ArrayAdapter<Category> categoryAdapter;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        aboService = calManager.getCalendarAboService(this);
         categoryAdapter = new ArrayAdapter<Category>(this, R.layout.activity_stisys_list_item_1,
                         new ArrayList<Category>());
         setContentView(R.layout.calendar_main);
@@ -45,21 +48,55 @@ public class CalendarCategoriesActivity extends ListActivity {
                 viewSubscribedLectures();
             }
         });
-        final Button b2 = (Button)findViewById(R.id.cal_btn_Calendars);
+        final Button b2 = (Button)findViewById(R.id.cal_btn_Synchronise);
         b2.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(final View v) {
-                viewCalendars();
+                synchroniseWithCalendar();
             }
         });
 
     }
 
-    protected void viewCalendars() {
-        final Intent intent = new Intent(this, CalendarCalendarActivity.class);
-        startActivity(intent);
+    protected void synchroniseWithCalendar() {
 
+        new AsyncTask<Void, Void, Void>() {
+            private boolean successful = false;
+
+            @Override
+            protected void onPostExecute(final Void arg0) {
+                if (successful) {
+                    showToastSynchronisationSuccess();
+                }
+                else {
+                    showToastSynchronisationFailed();
+                }
+
+                super.onPostExecute(arg0);
+            }
+
+            @Override
+            protected Void doInBackground(final Void... arg0) {
+                try {
+                    aboService.synchroniseSubscriptedLectures();
+                    successful = true;
+                }
+                catch(final Throwable e) {
+                    successful = false;
+                }
+
+                return null;
+            }
+        }.execute();
+    }
+
+    private void showToastSynchronisationFailed() {
+        Toast.makeText(this, "Synchronisation fehlgeschlagen", Toast.LENGTH_LONG).show();
+    }
+
+    private void showToastSynchronisationSuccess() {
+        Toast.makeText(this, "Synchronisation erfolgreich", Toast.LENGTH_LONG).show();
     }
 
     @Override

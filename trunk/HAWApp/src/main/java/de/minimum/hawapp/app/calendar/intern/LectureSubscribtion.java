@@ -1,10 +1,9 @@
 package de.minimum.hawapp.app.calendar.intern;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import de.minimum.hawapp.app.calendar.beans.Appointment;
 import de.minimum.hawapp.app.calendar.beans.Lecture;
 
 public final class LectureSubscribtion implements Serializable {
@@ -19,18 +18,18 @@ public final class LectureSubscribtion implements Serializable {
     private static final long serialVersionUID = 876831189832189334L;
 
     private final String lectureUUID;
+    private final Date lastModified;
     private final String lectureName;
     private final String lecturerName;
-    private final List<String> appointmentUUIDs;
+    private final long calendarID;
+    private List<AppointmentSubscribtion> appointments;
 
-    public LectureSubscribtion(final Lecture lecture) {
+    public LectureSubscribtion(final Lecture lecture, final long calendarID) {
         lectureUUID = lecture.getUuid();
         lectureName = lecture.getName();
         lecturerName = lecture.getLecturerName();
-        appointmentUUIDs = new ArrayList<String>();
-        for(final Appointment appointment : lecture.getAppointments()) {
-            appointmentUUIDs.add(appointment.getUuid());
-        }
+        lastModified = lecture.getLastModified();
+        this.calendarID = calendarID;
     }
 
     public String getLectureUUID() {
@@ -45,7 +44,20 @@ public final class LectureSubscribtion implements Serializable {
         return lecturerName;
     }
 
-    public List<String> getAppointmentUUIDs() {
-        return appointmentUUIDs;
+    public List<AppointmentSubscribtion> getAppointments() {
+        return appointments;
     }
+
+    public void setAppointments(final List<AppointmentSubscribtion> appointments) {
+        this.appointments = appointments;
+    }
+
+    public Date getLastModified() {
+        return lastModified;
+    }
+
+    public long getCalendarID() {
+        return calendarID;
+    }
+
 }

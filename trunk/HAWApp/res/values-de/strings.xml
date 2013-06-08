@@ -58,13 +58,13 @@
 	<!-- Stisys : end -->
 	
 	<!-- LoginActivity strings -->
-	<string name="cal_back">Zurück</string>
 	<!-- CalendarActivity strings End --> 
- 	<string name="title_activity_calendarlecture">Lecture</string>
+ 	<string name="title_activity_calendarlecture">Vorlesung</string>
+ 	<string name="title_activity_calendarLectures">Vorlesungen</string>
     <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_calendar_subcripted_lectures">Abonnierte Vorlesungen</string>
-    <string name="title_activity_calendar_appointment">Termin</string> 
+    <string name="title_activity_calendar_appointment">Termin</string>
+    <string name="cal_synchronise">Synchronisieren</string> 
 
   
 </resources>

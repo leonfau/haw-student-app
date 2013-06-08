@@ -63,7 +63,6 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/subscripeLecture"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/Termine"
         android:background="@color/ColorWhite" >

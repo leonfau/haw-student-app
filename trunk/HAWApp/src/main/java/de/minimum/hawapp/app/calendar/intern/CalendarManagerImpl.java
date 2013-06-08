@@ -32,6 +32,11 @@ public class CalendarManagerImpl implements CalendarManager {
     }
 
     @Override
+    public List<Appointment> getAppointments(final String lectureUUID) {
+        return CalendarCache.getAppointments(lectureUUID);
+    }
+
+    @Override
     public CalendarAboService getCalendarAboService(final Context context) {
         if (calendarAboService == null) {
             calendarAboService = CalendarAboService.getSavedCalendarAboService(context);

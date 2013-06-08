@@ -32,4 +32,6 @@ public interface CalendarManager {
 
     public boolean deleteAppointment(String appointmentUUID);
 
+    public List<Appointment> getAppointments(String lectureUUID);
+
 }

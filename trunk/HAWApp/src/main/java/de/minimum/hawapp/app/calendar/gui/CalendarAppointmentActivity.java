@@ -14,8 +14,8 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -26,6 +26,7 @@ import de.minimum.hawapp.app.calendar.beans.Appointment;
 import de.minimum.hawapp.app.calendar.beans.AppointmentImpl;
 import de.minimum.hawapp.app.calendar.intern.CalendarManager;
 import de.minimum.hawapp.app.context.ManagerFactory;
+import de.minimum.hawapp.app.login.Login;
 
 public class CalendarAppointmentActivity extends Activity {
     private static final int BEGIN_DATE_DIALOG_ID = 1;
@@ -52,17 +53,15 @@ public class CalendarAppointmentActivity extends Activity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        
-        WindowManager.LayoutParams params = getWindow().getAttributes();
+
+        final WindowManager.LayoutParams params = getWindow().getAttributes();
         params.x = -100;
         params.height = 70;
         params.width = 1000;
         params.y = -50;
-        this.getWindow().setAttributes(params);
-        
-        
-        
+        getWindow().setAttributes(params);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
         setContentView(R.layout.calendar_appointment);
         name = (EditText)findViewById(R.id.cal_app_name);
         begin = (EditText)findViewById(R.id.cal_app_begin);
@@ -71,23 +70,8 @@ public class CalendarAppointmentActivity extends Activity {
         details = (EditText)findViewById(R.id.cal_app_details);
 
         appointmentUUID = getIntent().getExtras().getString(CalendarCategoriesActivity.APPOINTMENT_UUID);
-
         save = (Button)findViewById(R.id.cal_btn_app_modify);
-        save.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(final View v) {
-                saveChanges();
-            }
-        });
         delete = (Button)findViewById(R.id.cal_btn_app_delete);
-        delete.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(final View v) {
-                delete();
-            }
-        });
         // begin.setTextIsSelectable(false);
         begin.setKeyListener(null);
         begin.setOnClickListener(new OnClickListener() {
@@ -111,6 +95,41 @@ public class CalendarAppointmentActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (Login.loggedIn()) {
+
+            save.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    saveChanges();
+                }
+            });
+
+            delete.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    delete();
+                }
+            });
+        }
+        else {
+            final Toast toast = Toast.makeText(this,
+                            "Das Ändern und Löschen des Termins ist nur für angemeldete Nutzer möglich",
+                            Toast.LENGTH_LONG);
+            save.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    toast.show();
+                }
+            });
+
+            delete.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    toast.show();
+                }
+            });
+
+        }
         updateTextFields();
     }
 
