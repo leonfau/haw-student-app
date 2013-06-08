@@ -1,6 +1,13 @@
 package de.minimum.hawapp.app.blackboard;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -22,6 +29,7 @@ import de.minimum.hawapp.app.rest.exceptions.RestServiceException;
 
 //TODO regelmäßig überprüfen ob auch schon sehr alte eigene noch im Speicher liegen die entfernt werden müssen
 public class DefaultBlackboardManager implements BlackboardManager {
+
     private enum PersistentCollections {
         IGNORED, OWN
     }
@@ -31,23 +39,21 @@ public class DefaultBlackboardManager implements BlackboardManager {
 
     private BlackboardService bbService = new BlackboardService();
 
-    private Map<Long, String> offerToDelKey = new HashMap<Long, String>();
-    private Set<Long> ignoredOffers = new HashSet<Long>();
-    private Context context = null;// Beim benutzen immer auf Null Checken!!!
-    private boolean loaded = false;// Signalisiert ob Dateien schon vom
-                                   // Filesystem geladen wurden
+    private Map<Long, String> offerToDelKey = null;
+    private Set<Long> ignoredOffers = null;
 
     public DefaultBlackboardManager() {
     }
 
     @Override
     public List<Offer> getAllOwnOffers(Context context) {
-        return getAllOffersFromList(this.offerToDelKey.keySet(), PersistentCollections.OWN);
+        return getAllOffersFromList(context, this.getOrLoadOfferToDelKey(context).keySet(), PersistentCollections.OWN);
     }
 
     @Override
     public boolean removeOwnOffer(Context context, Offer offer) {
-        String delKey = this.offerToDelKey.get(offer.getId());
+        Map<Long, String> ownOffersToDelKey = getOrLoadOfferToDelKey(context);
+        String delKey = ownOffersToDelKey.get(offer.getId());
         if (delKey == null)
             return false;
         boolean removed = false;
@@ -59,9 +65,8 @@ public class DefaultBlackboardManager implements BlackboardManager {
             e.printStackTrace();
         }
         if (removed) {
-            this.offerToDelKey.remove(offer.getId());// TODO auch aus dem
-                                                     // Speicher
-            // löschen
+            ownOffersToDelKey.remove(offer.getId());
+            persistOwnOffers(context);
             return true;
         }
         else {
@@ -71,22 +76,23 @@ public class DefaultBlackboardManager implements BlackboardManager {
 
     @Override
     public boolean ignoreOffer(Context context, Offer offer) {
-        this.ignoredOffers.add(offer.getId());
+        Set<Long> loadedIgnoredOffers = getOrLoadIgnoredOffers(context);
+        loadedIgnoredOffers.add(offer.getId());
+        persistIgnoredOffers(context);
         return true;
     }
 
     @Override
     public boolean unignoreOffer(Context context, Offer offer) {
-        return this.ignoredOffers.remove(offer.getId());
+        Set<Long> loadedIgnoredOffers = getOrLoadIgnoredOffers(context);
+        boolean successfull = loadedIgnoredOffers.remove(offer.getId());
+        persistIgnoredOffers(context);
+        return successfull;
     }
 
     @Override
     public List<Offer> getIgnoredOffers(Context context) {
-        List<Long> ignoredOffersList = new ArrayList<Long>();
-        for(Long offerId : this.ignoredOffers) {
-            ignoredOffersList.add(offerId);
-        }
-        return getAllOffersFromList(ignoredOffersList, PersistentCollections.IGNORED);
+        return getAllOffersFromList(context, getOrLoadIgnoredOffers(context), PersistentCollections.IGNORED);
     }
 
     @Override
@@ -94,8 +100,13 @@ public class DefaultBlackboardManager implements BlackboardManager {
         try {
             List<Offer> allOffers = this.bbService.retrieveAllOffers();
             List<Offer> toRemove = new ArrayList<Offer>();
+            Set<Long> loadedIgnoredOffers = getOrLoadIgnoredOffers(context);
             for(Offer o : allOffers) {
-                if (this.ignoredOffers.contains(o.getId()))
+                if (loadedIgnoredOffers.contains(o.getId()))// TODO kann ich
+                                                            // hier
+                                                            // meine ignorierten
+                                                            // evtl. auch
+                                                            // überprüfen?
                     toRemove.add(o);
             }
             allOffers.removeAll(toRemove);
@@ -112,10 +123,14 @@ public class DefaultBlackboardManager implements BlackboardManager {
     public Category getCategory(Context context, String categoryName) {
         try {
             Category cat = this.bbService.retrieveCategory(categoryName);
-            List<Long> toIgnore = new ArrayList<Long>();
-            for(Long offerId : this.ignoredOffers) {
-                toIgnore.add(offerId);
-            }
+            List<Long> toIgnore = new ArrayList<Long>(getOrLoadIgnoredOffers(context));// TODO
+                                                                                       // können
+                                                                                       // hier
+                                                                                       // die
+                                                                                       // Inorierten
+                                                                                       // evtl.
+                                                                                       // überprüft
+                                                                                       // werden
             cat.ignoreOffers(toIgnore);
             return cat;
         }
@@ -166,12 +181,12 @@ public class DefaultBlackboardManager implements BlackboardManager {
     public Long createOffer(Context context, String category, String header, String description, String contact,
                     File image) throws OfferCreationFailedException {
         try {
+            Map<Long, String> ownOfferToDelKey = getOrLoadOfferToDelKey(context);
             OfferBean offer = new OfferBean(header, description, contact, category);
             OfferCreationStatus status = this.bbService.postNewOffer(offer, image);
             if (status.isSuccessfull()) {
-                this.offerToDelKey.put(status.getOfferId(), status.getDeletionKey());// TODO
-                                                                                     // Persistent
-                // ablegen
+                ownOfferToDelKey.put(status.getOfferId(), status.getDeletionKey());// TODO
+                persistOwnOffers(context);
                 return status.getOfferId();
             }
             else {
@@ -189,7 +204,8 @@ public class DefaultBlackboardManager implements BlackboardManager {
      * @param offers
      * @return
      */
-    private List<Offer> getAllOffersFromList(Collection<Long> offers, PersistentCollections toRemoveFrom) {
+    private List<Offer> getAllOffersFromList(Context context, Collection<Long> offers,
+                    PersistentCollections toRemoveFrom) {
         List<Offer> ownOffersToReturn = new ArrayList<Offer>();
         List<Long> toRemove = new ArrayList<Long>();
         for(Long offerId : offers) {
@@ -208,13 +224,27 @@ public class DefaultBlackboardManager implements BlackboardManager {
              // mehrere Ids.... / evtl. in
              // Liste ablegen...
         }
+        Map<Long, String> ownOffersToDelKey = null;
+        Set<Long> loadedInoredOffers = null;
+        if (toRemoveFrom == PersistentCollections.OWN) {
+            ownOffersToDelKey = getOrLoadOfferToDelKey(context);
+        }
+        else if (toRemoveFrom == PersistentCollections.IGNORED) {
+            loadedInoredOffers = getOrLoadIgnoredOffers(context);
+        }
         for(Long offerId : toRemove) {
-            if (toRemoveFrom == PersistentCollections.OWN) {
-                this.offerToDelKey.remove(offerId);
+            if (ownOffersToDelKey != null) {
+                ownOffersToDelKey.remove(offerId);
             }
-            else if (toRemoveFrom == PersistentCollections.IGNORED) {
-                this.ignoredOffers.remove(offerId);
+            else if (loadedInoredOffers != null) {
+                loadedInoredOffers.remove(offerId);
             }
+        }
+        if (ownOffersToDelKey != null) {
+            persistOwnOffers(context);
+        }
+        else if (loadedInoredOffers != null) {
+            persistIgnoredOffers(context);
         }
         return ownOffersToReturn;
     }
@@ -224,4 +254,128 @@ public class DefaultBlackboardManager implements BlackboardManager {
         // TODO Suchen
         return getAllOffers(context);
     }
+
+    private Map<Long, String> getOrLoadOfferToDelKey(Context context) {
+        if (this.offerToDelKey == null) {
+            loadOwnOffersToDelKey(context);
+        }
+        return this.offerToDelKey;
+    }
+
+    private Set<Long> getOrLoadIgnoredOffers(Context context) {
+        if (this.ignoredOffers == null) {
+            loadIgnoredOffers(context);
+        }
+        return this.ignoredOffers;
+    }
+
+    private void persistOwnOffers(Context context) {
+        try {
+            persist(context, this.getOrLoadOfferToDelKey(context), DefaultBlackboardManager.OWN_OFFERS_FILE);
+        }
+        catch(IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    private void loadOwnOffersToDelKey(Context context) {
+        try {
+            this.offerToDelKey = load(context, DefaultBlackboardManager.OWN_OFFERS_FILE);
+        }
+        catch(FileNotFoundException e) {
+            this.offerToDelKey = new HashMap<Long, String>();
+        }
+        catch(StreamCorruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch(IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch(ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    private void persistIgnoredOffers(Context context) {
+        try {
+            persist(context, getOrLoadIgnoredOffers(context), DefaultBlackboardManager.IGNORED_OFFERS_FILE);
+        }
+        catch(IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    private void loadIgnoredOffers(Context context) {
+        try {
+            this.ignoredOffers = load(context, DefaultBlackboardManager.IGNORED_OFFERS_FILE);
+        }
+        catch(FileNotFoundException e) {
+            this.ignoredOffers = new HashSet<Long>();
+        }
+        catch(StreamCorruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch(IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        catch(ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    private void persist(Context context, Object toPersist, String filename) throws IOException {
+        ObjectOutputStream objOut = null;
+        FileOutputStream fOut = null;
+        try {
+            // Write to disk with FileOutputStream
+            fOut = context.openFileOutput(filename, Context.MODE_PRIVATE);
+            // Write object with ObjectOutputStream
+            objOut = new ObjectOutputStream(fOut);
+
+            // Write object out to disk
+            objOut.writeObject(toPersist);
+            objOut.flush();
+        }
+        finally {
+            if (objOut != null)
+                objOut.close();
+            if (fOut != null)
+                fOut.close();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T load(Context context, String filename) throws StreamCorruptedException, IOException,
+                    ClassNotFoundException {
+        FileInputStream fIn = null;
+        ObjectInputStream objIn = null;
+        Object res = null;
+        try {
+            // Read from disk using FileInputStream
+            fIn = context.openFileInput(filename);
+
+            objIn = new ObjectInputStream(fIn);
+
+            // Read an object
+
+            res = objIn.readObject();
+
+        }
+        finally {
+            if (objIn != null)
+                objIn.close();
+            if (fIn != null)
+                fIn.close();
+        }
+        return (T)res;
+    }
+
 }
