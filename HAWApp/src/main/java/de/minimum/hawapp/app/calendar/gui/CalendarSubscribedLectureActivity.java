@@ -29,20 +29,18 @@ public class CalendarSubscribedLectureActivity extends ListActivity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        
-        WindowManager.LayoutParams params = getWindow().getAttributes();
+
+        final WindowManager.LayoutParams params = getWindow().getAttributes();
         params.x = -100;
         params.height = 70;
         params.width = 1000;
         params.y = -50;
-        this.getWindow().setAttributes(params);
-        
-        
+        getWindow().setAttributes(params);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         aboService = calManager.getCalendarAboService(this);
-        lectureSubscribtionAdapter = new ArrayAdapter<LectureSubscribtion>(this,R.layout.activity_stisys_list_item_1,
+        lectureSubscribtionAdapter = new ArrayAdapter<LectureSubscribtion>(this, R.layout.activity_stisys_list_item_1,
                         new ArrayList<LectureSubscribtion>());
-        setContentView(R.layout.calendar_subcripted_lectures);
+        setContentView(R.layout.calendar_simple_list_activity);
         setListAdapter(lectureSubscribtionAdapter);
 
     }

@@ -106,6 +106,11 @@ public final class CalendarCache {
         return appointments;
     }
 
+    public static synchronized List<Appointment> getAppointments(final String lectureUUID) {
+        final Lecture lecture = getLecture(lectureUUID);
+        return getAppointments(lecture);
+    }
+
     public static synchronized List<ChangeMessage> getChangeMessages(final Lecture lecture) {
         List<ChangeMessage> changeMessages = lecture.getChangeMessages();
         if (changeMessages == null || changeMessages.isEmpty()) {

@@ -11,10 +11,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 import de.minimum.hawapp.app.R;
@@ -33,29 +31,19 @@ public class CalendarLecturesActivity extends ListActivity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        WindowManager.LayoutParams params = getWindow().getAttributes();
+
+        final WindowManager.LayoutParams params = getWindow().getAttributes();
         params.x = -100;
         params.height = 70;
         params.width = 1000;
         params.y = -50;
-        this.getWindow().setAttributes(params);
+        getWindow().setAttributes(params);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        
-        
         lectureAdapter = new ArrayAdapter<Lecture>(this, R.layout.activity_stisys_list_item_1, new ArrayList<Lecture>());
-        setContentView(R.layout.calendar_main);
+        setContentView(R.layout.calendar_simple_list_activity);
         setListAdapter(lectureAdapter);
         categoryUUID = getIntent().getExtras().getString(CalendarCategoriesActivity.CATEGORY_UUID);
-
-        final Button b1 = (Button)findViewById(R.id.cal_btn_subLectures);
-        b1.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(final View v) {
-                viewSubscribedLectures();
-            }
-        });
 
     }
 
@@ -63,11 +51,6 @@ public class CalendarLecturesActivity extends ListActivity {
     protected void onResume() {
         super.onResume();
         showLectures();
-    }
-
-    protected void viewSubscribedLectures() {
-        final Intent intent = new Intent(this, CalendarSubscribedLectureActivity.class);
-        startActivity(intent);
     }
 
     private void showLectures() {
