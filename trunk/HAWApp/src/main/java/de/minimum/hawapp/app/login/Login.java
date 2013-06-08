@@ -17,6 +17,8 @@ public class Login {
     private static boolean loggedIn = false;
     private static String login;
     private static String password;
+    private static String userFirstName;
+    private static String userLastName;
 
     public static boolean login(final String login, final String password) {
         loggedIn = checkLogin(login, password);
@@ -82,8 +84,17 @@ public class Login {
         }
 
         final Document doc = Jsoup.parse(html);
-
+        userFirstName = doc.select("font").text().replaceAll(" .*", "");
+        userLastName = doc.select("font").text().replaceAll("^[a-zA-Z]*", "").replaceAll(".-.*", "");
         return doc.select("title").text().contains("Benutzerdaten");
+    }
+    
+    public static String getUserFirstName(){
+    	return userFirstName;
+    }
+    
+    public static String getUserLastName(){
+    	return userLastName;
     }
 
     public static boolean loggedIn() {
