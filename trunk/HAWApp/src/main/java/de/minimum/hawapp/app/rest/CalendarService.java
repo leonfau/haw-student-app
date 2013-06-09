@@ -15,6 +15,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import de.minimum.hawapp.app.calendar.beans.Appointment;
+import de.minimum.hawapp.app.calendar.beans.AppointmentModifyDto;
 import de.minimum.hawapp.app.calendar.beans.Category;
 import de.minimum.hawapp.app.calendar.beans.ChangeMessage;
 import de.minimum.hawapp.app.calendar.beans.Lecture;
@@ -170,10 +171,14 @@ public class CalendarService {
         }
     }
 
-    public static boolean createNewAppoinment(final Appointment appointment, final String lectureUUID) {
+    public static boolean createNewAppoinment(final AppointmentModifyDto appModifyDto, final String lectureUUID) {
         final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "lecture/" + lectureUUID + "/new";
+
         try {
-            restTemplate.postForEntity(url, appointment, null);
+            if (appModifyDto.getAppointment().getBegin().after(appModifyDto.getAppointment().getEnd())) {
+                return false;
+            }
+            restTemplate.postForEntity(url, appModifyDto, null);
         }
         catch(final Throwable e) {
             e.printStackTrace();
@@ -183,10 +188,14 @@ public class CalendarService {
         return true;
     }
 
-    public static boolean modifyAppointment(final Appointment appointment) {
+    public static boolean modifyAppointment(final AppointmentModifyDto appointmentModifyDto) {
         final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "appointment/modify";
+
         try {
-            restTemplate.postForEntity(url, appointment, null);
+            if (appointmentModifyDto.getAppointment().getBegin().after(appointmentModifyDto.getAppointment().getEnd())) {
+                return false;
+            }
+            restTemplate.postForEntity(url, appointmentModifyDto, null);
         }
         catch(final Throwable e) {
             e.printStackTrace();
@@ -196,10 +205,11 @@ public class CalendarService {
         return true;
     }
 
-    public static boolean deleteAppointment(final String appointmentuuid) {
-        final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "appointment/" + appointmentuuid + "/delete";
+    public static boolean deleteAppointment(final AppointmentModifyDto appointmentModifyDto) {
+        final String url = RestConst.HOST + CALENDARSERVICE_BASE_URL + "appointment/delete";
+
         try {
-            restTemplate.delete(url);
+            restTemplate.postForEntity(url, appointmentModifyDto, null);
         }
         catch(final Throwable e) {
             e.printStackTrace();

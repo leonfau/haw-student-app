@@ -26,12 +26,12 @@ public interface CalendarManager {
 
     public Appointment getAppointment(String appointmentUUID);
 
-    boolean createNewAppointment(Appointment appointment, String lectureUUID);
+    boolean createNewAppointment(Appointment appointment, String lectureUUID, String name, String reason);
 
-    public boolean modifyExistingAppointment(Appointment appointment);
-
-    public boolean deleteAppointment(String appointmentUUID);
+    public boolean modifyExistingAppointment(Appointment appointment, String name, String reason);
 
     public List<Appointment> getAppointments(String lectureUUID);
+
+    public boolean deleteAppointment(Appointment appointment, String name, String reason);
 
 }

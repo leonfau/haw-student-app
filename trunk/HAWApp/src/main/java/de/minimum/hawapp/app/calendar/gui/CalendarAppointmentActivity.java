@@ -5,12 +5,14 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -96,18 +98,81 @@ public class CalendarAppointmentActivity extends Activity {
     protected void onResume() {
         super.onResume();
         if (Login.loggedIn()) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            final AlertDialog.Builder builders = new AlertDialog.Builder(this);
 
             save.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    saveChanges();
+                    if (somethingHasChanged()) {
+                        final CharSequence[] reasons = { "Es gibt einen neuen Termin",
+                                        "Der Termin hat sich verschoben", "Der Ort hat sich geändert", "Sonstiges" };
+                        builder.setTitle("Grund für die Änderungen")
+                                        .setItems(reasons, new DialogInterface.OnClickListener() {
+
+                                            @Override
+                                            public void onClick(final DialogInterface dialog, final int which) {
+                                                final CharSequence reason = reasons[which];
+                                                builders.setMessage(
+                                                                String.format("%s %s sollen deine Änderungen wirklich an alle Nutzer geschickt werden?",
+                                                                                Login.getUserFirstName(),
+                                                                                Login.getUserLastName()))
+                                                                .setPositiveButton("Änderungen hochladen",
+                                                                                new DialogInterface.OnClickListener() {
+
+                                                                                    @Override
+                                                                                    public void onClick(
+                                                                                                    final DialogInterface dialog,
+                                                                                                    final int which) {
+                                                                                        saveChanges(reason);
+
+                                                                                    }
+
+                                                                                })
+                                                                .setNegativeButton("Änderungen verwerfen", null).show();
+
+                                            }
+
+                                        }).show();
+
+                    }
                 }
+
             });
 
             delete.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    delete();
+                    final CharSequence[] reasons = { "Der Termin wurde wegen Krankheit abgesagt",
+                                    "Der Termin wurde gestrichen", "Sonstiges" };
+                    builder.setTitle("Grund für die Änderungen")
+                                    .setItems(reasons, new DialogInterface.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(final DialogInterface dialog, final int which) {
+                                            final CharSequence reason = reasons[which];
+                                            builders.setMessage(
+                                                            String.format("%s %s sollen deine Änderungen wirklich an alle Nutzer geschickt werden?",
+                                                                            Login.getUserFirstName(),
+                                                                            Login.getUserLastName()))
+                                                            .setPositiveButton("Änderungen hochladen",
+                                                                            new DialogInterface.OnClickListener() {
+
+                                                                                @Override
+                                                                                public void onClick(
+                                                                                                final DialogInterface dialog,
+                                                                                                final int which) {
+                                                                                    delete(reason);
+
+                                                                                }
+
+                                                                            })
+                                                            .setNegativeButton("Änderungen verwerfen", null).show();
+
+                                        }
+
+                                    }).show();
+
                 }
             });
         }
@@ -191,7 +256,7 @@ public class CalendarAppointmentActivity extends Activity {
         Toast.makeText(this, "Es ist ein Problem aufgetreten", Toast.LENGTH_LONG).show();
     }
 
-    private void saveChanges() {
+    private void saveChanges(final CharSequence reason) {
         new AsyncTask<Void, Void, Void>() {
             boolean isSuccessful = false;
 
@@ -209,13 +274,13 @@ public class CalendarAppointmentActivity extends Activity {
             @Override
             protected Void doInBackground(final Void... params) {
                 if (appointment == null) {
-                    isSuccessful = createNewAppointment();
+                    isSuccessful = createNewAppointment(reason);
                     if (!isSuccessful) {
                         appointment = null;
                     }
                 }
                 else {
-                    isSuccessful = modifyAppointment();
+                    isSuccessful = modifyAppointment(reason);
                 }
                 return null;
             }
@@ -233,7 +298,7 @@ public class CalendarAppointmentActivity extends Activity {
         Toast.makeText(this, "Änderungen konnten nicht gespeichert werden", Toast.LENGTH_LONG).show();
     }
 
-    private void delete() {
+    private void delete(final CharSequence reason) {
         new AsyncTask<Void, Void, Void>() {
             boolean isSuccessful = false;
 
@@ -253,7 +318,8 @@ public class CalendarAppointmentActivity extends Activity {
             @Override
             protected Void doInBackground(final Void... params) {
                 if (appointment != null) {
-                    isSuccessful = calManager.deleteAppointment(appointment.getUuid());
+                    final String name = String.format("%s %s", Login.getUserFirstName(), Login.getUserLastName());
+                    isSuccessful = calManager.deleteAppointment(appointment, name, reason.toString());
                 }
 
                 return null;
@@ -271,17 +337,48 @@ public class CalendarAppointmentActivity extends Activity {
         Toast.makeText(this, "Der Termin konnte nicht gelöscht werden", Toast.LENGTH_LONG).show();
     }
 
-    private boolean createNewAppointment() {
+    private boolean createNewAppointment(final CharSequence reason) {
         appointment = new AppointmentImpl();
-        putChangesInAppointment();
-        final String lectureUUID = getIntent().getExtras().getString(CalendarCategoriesActivity.LECTURE_UUID);
-        return calManager.createNewAppointment(appointment, lectureUUID);
+        if (putChangesInAppointment()) {
+            final String lectureUUID = getIntent().getExtras().getString(CalendarCategoriesActivity.LECTURE_UUID);
+            final String name = String.format("%s %s", Login.getUserFirstName(), Login.getUserLastName());
+            return calManager.createNewAppointment(appointment, lectureUUID, name, reason.toString());
+        }
+        return false;
 
     }
 
-    private boolean modifyAppointment() {
-        putChangesInAppointment();
-        return calManager.modifyExistingAppointment(appointment);
+    private boolean modifyAppointment(final CharSequence reason) {
+        if (putChangesInAppointment()) {
+            final String name = String.format("%s %s", Login.getUserFirstName(), Login.getUserLastName());
+            return calManager.modifyExistingAppointment(appointment, name, reason.toString());
+        }
+        return false;
+    }
+
+    private boolean somethingHasChanged() {
+        if (appointment == null) {
+            return !(name.getText().toString().equals("") | begin.getText().toString().equals("") | end.getText()
+                            .toString().equals(""));
+        }
+        boolean somethingHasChanged = false;
+        if (!name.getText().toString().equals(appointment.getName())) {
+            somethingHasChanged = true;
+        }
+        if (appointment.getBegin() == null
+                        || !begin.getText().toString().equals(dateFormat.format(appointment.getBegin()))) {
+            somethingHasChanged = true;
+        }
+        if (appointment.getEnd() == null || !end.getText().toString().equals(dateFormat.format(appointment.getEnd()))) {
+            somethingHasChanged = true;
+        }
+        if (!location.getText().toString().equals(appointment.getLocation())) {
+            somethingHasChanged = true;
+        }
+        if (!details.getText().toString().equals(appointment.getDetails())) {
+            somethingHasChanged = true;
+        }
+        return somethingHasChanged;
     }
 
     private boolean putChangesInAppointment() {
@@ -304,7 +401,7 @@ public class CalendarAppointmentActivity extends Activity {
             somethingHasChanged = true;
         }
         if (!details.getText().toString().equals(appointment.getDetails())) {
-            appointment.setDetails(name.getText().toString());
+            appointment.setDetails(details.getText().toString());
             somethingHasChanged = true;
         }
         return somethingHasChanged;
