@@ -1,16 +1,21 @@
 package de.minimum.hawapp.app.calendar.gui;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 import de.minimum.hawapp.app.R;
 import de.minimum.hawapp.app.calendar.beans.ChangeMessage;
@@ -20,6 +25,7 @@ import de.minimum.hawapp.app.context.ManagerFactory;
 
 public class CalendarChangeMessagesActivity extends ListActivity {
     private static final int DIALOG_DOWNLOAD_JSON_PROGRESS = 0;
+    private static final int DIALOG_DETAILS = 1;
     private final CalendarManager calManager = ManagerFactory.getManager(CalendarManager.class);
     private ArrayAdapter<ChangeMessage> changeMessageAdapter;
     private String lectureUUID;
@@ -113,7 +119,27 @@ public class CalendarChangeMessagesActivity extends ListActivity {
                 mProgressDialog.setCancelable(true);
                 mProgressDialog.show();
                 return mProgressDialog;
+            case DIALOG_DETAILS:
+
         }
         return null;
+    }
+
+    private String message;
+
+    @Override
+    protected void onListItemClick(final ListView l, final View v, final int position, final long id) {
+        final ChangeMessage changeMessage = changeMessageAdapter.getItem(position);
+        final DateFormat dateformat = DateFormat
+                        .getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.GERMANY);
+        message = String.format("Geändert am: %s\nVon: %s\nGrund: %s\nWas: %s",
+                        dateformat.format(changeMessage.getChangeat()), changeMessage.getPerson(),
+                        changeMessage.getReason(), changeMessage.getWhat());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Details").setMessage(message);
+
+        builder.create().show();
+        super.onListItemClick(l, v, position, id);
     }
 }

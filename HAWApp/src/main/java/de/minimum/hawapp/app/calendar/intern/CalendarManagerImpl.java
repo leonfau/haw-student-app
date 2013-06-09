@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.content.Context;
 import de.minimum.hawapp.app.calendar.beans.Appointment;
+import de.minimum.hawapp.app.calendar.beans.AppointmentModifyDto;
 import de.minimum.hawapp.app.calendar.beans.Category;
 import de.minimum.hawapp.app.calendar.beans.ChangeMessage;
 import de.minimum.hawapp.app.calendar.beans.Lecture;
@@ -69,20 +70,32 @@ public class CalendarManagerImpl implements CalendarManager {
     }
 
     @Override
-    public boolean createNewAppointment(final Appointment appointment, final String lectureUUID) {
-        return CalendarService.createNewAppoinment(appointment, lectureUUID);
+    public boolean createNewAppointment(final Appointment appointment, final String lectureUUID, final String name,
+                    final String reason) {
+        final AppointmentModifyDto appModifyDto = new AppointmentModifyDto();
+        appModifyDto.setAppointment(appointment);
+        appModifyDto.setFromPerson(name);
+        appModifyDto.setReason(reason);
+        return CalendarService.createNewAppoinment(appModifyDto, lectureUUID);
 
     }
 
     @Override
-    public boolean modifyExistingAppointment(final Appointment appointment) {
-        return CalendarService.modifyAppointment(appointment);
+    public boolean modifyExistingAppointment(final Appointment appointment, final String name, final String reason) {
+        final AppointmentModifyDto appModifyDto = new AppointmentModifyDto();
+        appModifyDto.setAppointment(appointment);
+        appModifyDto.setFromPerson(name);
+        appModifyDto.setReason(reason);
+        return CalendarService.modifyAppointment(appModifyDto);
     }
 
     @Override
-    public boolean deleteAppointment(final String appointmentUUID) {
-
-        return CalendarService.deleteAppointment(appointmentUUID);
+    public boolean deleteAppointment(final Appointment appointment, final String name, final String reason) {
+        final AppointmentModifyDto appModifyDto = new AppointmentModifyDto();
+        appModifyDto.setAppointment(appointment);
+        appModifyDto.setFromPerson(name);
+        appModifyDto.setReason(reason);
+        return CalendarService.deleteAppointment(appModifyDto);
     }
 
 }

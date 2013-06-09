@@ -16,9 +16,9 @@ public class ChangeMessageImpl implements ChangeMessage, java.io.Serializable {
 
     @Override
     public String toString() {
-        final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT,
-                        Locale.GERMANY);
-        return "Am " + dateFormat.format(changeat) + " wurde folgendes geändert\n" + what;
+        final DateFormat dateFormat = DateFormat
+                        .getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, Locale.GERMANY);
+        return dateFormat.format(changeat) + "\nÄnderungsgrund: " + reason;
     }
 
     /**
