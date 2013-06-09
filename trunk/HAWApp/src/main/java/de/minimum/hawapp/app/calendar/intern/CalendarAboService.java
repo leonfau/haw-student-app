@@ -80,6 +80,12 @@ public class CalendarAboService implements Serializable {
         for(final LectureSubscribtion lectureSub : subscribtions) {
             synchroniseSubscriptedLecture(lectureSub);
         }
+        try {
+            persist();
+        }
+        catch(final IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void synchroniseSubscriptedLecture(final LectureSubscribtion lectureSub) {
