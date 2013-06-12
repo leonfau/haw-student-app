@@ -42,6 +42,8 @@ public interface PersistenceConnector {
 
     Category loadCategory(String name) throws PersistenceException;
 
+    List<Offer> loadOffersBySearchString(String searchStr) throws PersistenceException;
+
     List<Category> loadAllCategories() throws PersistenceException;
 
     List<Offer> loadAllOffers() throws PersistenceException;

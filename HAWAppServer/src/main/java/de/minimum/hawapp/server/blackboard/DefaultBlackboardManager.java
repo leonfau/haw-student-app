@@ -170,8 +170,14 @@ public class DefaultBlackboardManager implements BlackboardManager {
 
     @Override
     public List<Offer> getOffersBySearchStr(String searchStr) {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            return this.persConnector.loadOffersBySearchString(searchStr);
+        }
+        catch(PersistenceException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
