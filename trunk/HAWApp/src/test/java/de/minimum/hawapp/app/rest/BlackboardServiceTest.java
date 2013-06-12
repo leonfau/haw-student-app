@@ -42,4 +42,8 @@ public class BlackboardServiceTest extends TestCase {
     public void testNullResults() throws RestServiceException {
         Assert.assertNull("Null result without Exception.", this.bbService.retrieveCategory("cjsddbcdgbdcxgNILN"));
     }
+
+    public void testReportOffer() throws RestServiceException {
+        this.bbService.reportOffer(this.bbService.retrieveAllOffers().get(0), "Test");
+    }
 }
