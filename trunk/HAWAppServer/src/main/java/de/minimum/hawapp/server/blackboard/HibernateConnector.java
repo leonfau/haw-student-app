@@ -2,7 +2,6 @@ package de.minimum.hawapp.server.blackboard;
 
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -179,15 +178,34 @@ public class HibernateConnector implements PersistenceConnector {
             Session session = this.hibernateSessionMgr.getCurrentSession();
             Transaction trans = session.getTransaction();
             trans.begin();
-            Calendar cal = new GregorianCalendar();
+            Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DAY_OF_MONTH, -ageInDays);
-            session.createQuery("delete from OfferEntity where dateOfCreation < :date").setDate("date", cal.getTime())
-                            .executeUpdate();
+            session.createQuery("delete from OfferEntity o where o.dateOfCreation < :date")
+                            .setCalendarDate("date", cal).executeUpdate();
             trans.commit();
             return true;
         }
         catch(HibernateException ex) {
             this.logger.error("Deletion of offers older than " + ageInDays + " was not possible: ", ex);
+            throw new PersistenceException(ex);
+        }
+    }
+
+    @Override
+    public List<Offer> loadOffersBySearchString(String searchStr) throws PersistenceException {
+        try {
+            Session session = this.hibernateSessionMgr.getCurrentSession();
+            Transaction trans = session.getTransaction();
+            trans.begin();
+            @SuppressWarnings("unchecked")
+            List<Offer> res = session
+                            .createQuery("select o from OfferEntity o where ( lower(o.header) like :expression or lower(o.description) like :expression or lower(o.contact) like :expression or lower(o.categoryName) like :expression)")
+                            .setParameter("expression", "%" + searchStr.toLowerCase() + "%").list();
+            trans.commit();
+            return res;
+        }
+        catch(HibernateException ex) {
+            this.logger.error("Search for " + searchStr + " at Offers was not possible: ", ex);
             throw new PersistenceException(ex);
         }
     }

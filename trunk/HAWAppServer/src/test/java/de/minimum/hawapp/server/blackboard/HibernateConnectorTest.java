@@ -20,7 +20,7 @@ public class HibernateConnectorTest {
     private HibernateConnector hibCon = new HibernateConnector();
 
     @Test
-    public void test() throws PersistenceException {
+    public void removeOldOffersTest() throws PersistenceException {
         int days = 7;
         Category cat = this.hibCon.loadAllCategories().get(0);
         String header = "Header";
@@ -55,5 +55,44 @@ public class HibernateConnectorTest {
         offer.setDateOfCreation(date);
         offer.setDeletionKey("123");
         return offer;
+    }
+
+    @Test
+    public void searchTest() throws PersistenceException {
+        Offer o = this.hibCon.loadAllOffers().get(0);
+        String header = o.getHeader();
+        String description = o.getDescription();
+        String category = o.getCategoryName();
+        String contact = o.getContact();
+
+        Assert.assertTrue("Überschrift gefunden", this.hibCon.loadOffersBySearchString(header).contains(o));
+        Assert.assertTrue("Beschreibung gefunden", this.hibCon.loadOffersBySearchString(description).contains(o));
+        Assert.assertTrue("Kontakt gefunden", this.hibCon.loadOffersBySearchString(contact).contains(o));
+        Assert.assertTrue("Kategorie gefunden", this.hibCon.loadOffersBySearchString(category).contains(o));
+
+        if (header.length() >= 4)
+            Assert.assertTrue("Teil von Überschrift gefunden",
+                            this.hibCon.loadOffersBySearchString(header.substring(1, header.length() - 1)).contains(o));
+        if (description.length() >= 4)
+            Assert.assertTrue("Teil von Beschreibung gefunden",
+                            this.hibCon.loadOffersBySearchString(description.substring(1, description.length() - 1))
+                                            .contains(o));
+        if (contact.length() >= 4)
+            Assert.assertTrue("Teil von Kontakt gefunden",
+                            this.hibCon.loadOffersBySearchString(contact.substring(1, contact.length() - 1))
+                                            .contains(o));
+        if (category.length() >= 4)
+            Assert.assertTrue("Teil von Kategorie gefunden",
+                            this.hibCon.loadOffersBySearchString(category.substring(1, category.length() - 1))
+                                            .contains(o));
+
+        Assert.assertFalse("Überschrift + \"ABC\" nicht gefunden", this.hibCon.loadOffersBySearchString(header + "ABC")
+                        .contains(o));
+        Assert.assertFalse("Beschreibung + \"ABC\" nicht gefunden",
+                        this.hibCon.loadOffersBySearchString(description + "ABC").contains(o));
+        Assert.assertFalse("Kontakt + \"ABC\" nicht gefunden", this.hibCon.loadOffersBySearchString(contact + "ABC")
+                        .contains(o));
+        Assert.assertFalse("Kategorie + \"ABC\" nicht gefunden", this.hibCon.loadOffersBySearchString(category + "ABC")
+                        .contains(o));
     }
 }

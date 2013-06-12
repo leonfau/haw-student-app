@@ -199,7 +199,15 @@ ALTER TABLE haw_app.Blackboard_Offer ADD INDEX fk_image (imageId),
 ALTER TABLE haw_app.Blackboard_Offer ADD INDEX fk_category (categoryName), 
 	ADD CONSTRAINT fk_category FOREIGN KEY (categoryName) REFERENCES haw_app.Blackboard_Category (name);
 ALTER TABLE haw_app.Blackboard_Report ADD INDEX fk_offer (offerId), 
-	ADD CONSTRAINT fk_offer FOREIGN KEY (offerId) REFERENCES haw_app.Blackboard_Offer (id);
+	ADD CONSTRAINT fk_offer FOREIGN KEY (offerId) REFERENCES haw_app.Blackboard_Offer (id) ON DELETE CASCADE;
+	
+ALTER TABLE `haw_app`.`blackboard_report` DROP FOREIGN KEY `fk_offer` ;
+ALTER TABLE `haw_app`.`blackboard_report` 
+  ADD CONSTRAINT `fk_offer`
+  FOREIGN KEY (`offerId` )
+  REFERENCES `haw_app`.`blackboard_offer` (`id` )
+  ON DELETE CASCADE
+  ON UPDATE RESTRICT;
 
 USE `haw_app` ;
 
