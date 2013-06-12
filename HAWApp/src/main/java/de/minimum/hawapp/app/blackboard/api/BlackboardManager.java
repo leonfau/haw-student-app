@@ -58,6 +58,8 @@ public interface BlackboardManager {
 
     public Image getImageById(Context context, Long id);
 
+    public void reportOffer(Context context, Offer offer, String reason);
+
     /**
      * 
      * @param category

@@ -142,4 +142,31 @@ public class BlackboardService {
         }
     }
 
+    public void reportOffer(Offer o, String reason) throws RestServiceException {
+        final String url = BlackboardService.SERVICE_URL + "report";
+        MultiValueMap<String, Object> form = new LinkedMultiValueMap<String, Object>();
+        form.add("offerId", o.getId() + "");
+        form.add("reason", reason);
+        HttpHeaders header = new HttpHeaders();
+        HttpEntity<MultiValueMap<String, Object>> request = new HttpEntity<MultiValueMap<String, Object>>(form, header);
+        try {
+            BlackboardService.restTemplate.postForObject(url, request, String.class);
+        }
+        catch(RestClientException ex) {
+            ex.printStackTrace();
+            throw new RestServiceException("Unable to report offer.", ex);
+        }
+    }
+
+    public List<Offer> searchForOffer(String searchStr) throws RestServiceException {
+        final String url = BlackboardService.SERVICE_URL + "search/" + URLEncoder.encode(searchStr);
+        try {
+            return Lists.newArrayList((Offer[])BlackboardService.restTemplate.getForObject(url, OfferBean[].class));
+        }
+        catch(RestClientException ex) {
+            ex.printStackTrace();
+            throw new RestServiceException("Unable to retrieve result for search: " + searchStr, ex);
+        }
+    }
+
 }

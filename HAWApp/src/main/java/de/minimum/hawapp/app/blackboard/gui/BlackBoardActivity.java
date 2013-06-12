@@ -1,6 +1,8 @@
 package de.minimum.hawapp.app.blackboard.gui;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.app.Activity;
@@ -245,6 +247,7 @@ public class BlackBoardActivity extends Activity {
             Toast.makeText(getApplicationContext(), this.notificationOnError, Toast.LENGTH_SHORT).show();
             this.offerListOfCategory = this.offerListOfCategoryCached;
         }
+        Collections.sort(this.offerListOfCategory, OfferDateComperator.getInstance());
         this.offerListView.setAdapter(new OfferAdapter(BlackBoardActivity.this, this.offerListOfCategory));
     }
 
@@ -414,5 +417,26 @@ public class BlackBoardActivity extends Activity {
         public boolean isEnabled(final int arg0) {
             return false;
         }
+    }
+
+    private static class OfferDateComperator implements Comparator<Offer> {
+
+        private static final OfferDateComperator instance = new OfferDateComperator();
+
+        private OfferDateComperator() {
+        }
+
+        @Override
+        public int compare(Offer lhs, Offer rhs) {
+            int res = lhs.getDateOfCreation().compareTo(rhs.getDateOfCreation());
+            if (res == 0)
+                res = lhs.getHeader().compareTo(rhs.getHeader());
+            return res;
+        }
+
+        public static OfferDateComperator getInstance() {
+            return OfferDateComperator.instance;
+        }
+
     }
 }

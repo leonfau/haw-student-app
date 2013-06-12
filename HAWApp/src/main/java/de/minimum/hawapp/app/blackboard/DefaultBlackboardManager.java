@@ -251,8 +251,25 @@ public class DefaultBlackboardManager implements BlackboardManager {
 
     @Override
     public List<Offer> searchOffers(Context context, String searchString) {
-        // TODO Suchen
-        return getAllOffers(context);
+        try {
+            return this.bbService.searchForOffer(searchString);
+        }
+        catch(RestServiceException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public void reportOffer(Context context, Offer offer, String reason) {
+        try {
+            this.bbService.reportOffer(offer, reason);
+        }
+        catch(RestServiceException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     private Map<Long, String> getOrLoadOfferToDelKey(Context context) {
