@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="10dp"
+    android:weightSum="1"
+    android:duplicateParentState="true" >
+    
+    <ImageView
+        android:id="@+id/imageViewPub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:maxHeight="@dimen/maxFileIconHeight"
+        android:duplicateParentState="true"
+        android:focusable="false"
+		android:focusableInTouchMode="false" />
+ 
+    <TextView 
+        android:id="@+id/textViewPub"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"        
+        android:textColor="@color/ColorText"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+         android:layout_weight="0.9"
+         android:layout_gravity="center"
+         android:duplicateParentState="true" />
+    
+    <ImageView
+        android:id="@+id/favImgPub"
+        style="@style/favoritePub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:maxHeight="@dimen/maxFileIconHeight"
+        android:duplicateParentState="true"
+        android:focusable="false"
+		android:focusableInTouchMode="false" />
+    
+</LinearLayout>

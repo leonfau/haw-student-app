@@ -125,13 +125,19 @@ public class PubManagerImpl implements PubManager {
 	@Override
 	public void makeFavorite(FTPFile favoriteDir)
 			throws IllegalArgumentException {
-		// TODO Nice to Have
+		//TODO
+	}
+	
+	@Override
+	public void removeFavorite(FTPFile favoriteDir)
+			throws IllegalArgumentException {
+		//TODO
 	}
 
 	@Override
 	public List<FTPFile> loadFavorites() {
 		// TODO Nice to Have
-		return null;
+		return new ArrayList<FTPFile>();
 	}
 
 

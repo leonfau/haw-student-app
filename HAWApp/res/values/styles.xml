@@ -22,4 +22,10 @@
 		    </style>
 			<color name="ColorWhite">#ffffff</color>
 			
+		<style name="favoritePub" parent="@android:style/Widget.RatingBar">
+          <item name="android:progressDrawable">@drawable/ratingstars</item>
+          <item name="android:minHeight">22dip</item>
+          <item name="android:maxHeight">22dip</item>
+     	</style>
+			
 </resources>
