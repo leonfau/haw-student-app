@@ -7,13 +7,19 @@ import java.util.List;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.jcraft.jsch.SftpException;
 
@@ -28,7 +34,8 @@ public class PubActivity extends Activity {
     PubManager manager;
 
     private final List<FTPFile> listItems = new ArrayList<FTPFile>();
-    private ArrayAdapter<FTPFile> adapter;
+    private List<FTPFile> favorites = new ArrayList<FTPFile>();
+    private PubAdapter adapter;
     private ListView lv;
     private String loading;
 
@@ -55,21 +62,42 @@ public class PubActivity extends Activity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pub);
-
-        manager = ManagerFactory.getManager(PubManager.class);
-
-        adapter = new ArrayAdapter<FTPFile>(this, R.layout.activity_pub_list_item_1, listItems);
-        lv = (ListView)findViewById(R.id.publist);
         loading = getString(R.string.loading);
 
-        lv.setOnItemClickListener(new OnItemClickListener() {
+        manager = ManagerFactory.getManager(PubManager.class);
+        favorites = manager.loadFavorites();
+        adapter = new PubAdapter(this, R.layout.activity_pub_item_row, listItems);
+        lv = (ListView)findViewById(R.id.publist);
 
+        lv.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> av, final View view, final int pos, final long id) {
                 showDialog(DIALOG_DOWNLOAD_INFORMATION_PROGRESS);
                 handleFile(adapter.getItem(pos));
             }
         });
+
+        
+        lv.setOnItemLongClickListener(new OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view,
+                    int pos, long id) {
+            	FTPFile clicked = adapter.getItem(pos);
+            	if (clicked.isDirectory()) {
+            		if (favorites.contains(clicked)) {
+                		manager.removeFavorite(clicked);
+                		favorites.remove(clicked);
+            		} else {
+                		manager.makeFavorite(clicked);
+                		favorites.add(clicked);
+            		}
+            		adapter.notifyDataSetChanged();
+            	}
+            	return true;
+            }
+        });
+        
+        
         lv.setAdapter(adapter);
         currentDirectory = manager.getRootDirectory();
         showDialog(DIALOG_DOWNLOAD_INFORMATION_PROGRESS);
@@ -168,4 +196,63 @@ public class PubActivity extends Activity {
             downloadAndRunFile(clickedFile);
         }
     }
+
+    public class PubAdapter extends ArrayAdapter<FTPFile> {
+        private final int layoutResourceId;
+        private final Context context;
+        private final List<FTPFile> data;
+
+        public PubAdapter(final Context context, final int layoutResourceId, final List<FTPFile> data) {
+            super(context, layoutResourceId, data);
+            this.layoutResourceId = layoutResourceId;
+            this.context = context;
+            this.data = data;
+        }
+
+        @Override
+        public View getView(final int position, final View convertView, final ViewGroup parent) {
+            View row = convertView;
+            FileHolder holder = null;
+
+            if (row == null) {
+                final LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+                row = inflater.inflate(layoutResourceId, parent, false);
+
+                holder = new FileHolder();
+                holder.imgIcon = (ImageView)row.findViewById(R.id.imageViewPub);
+                holder.txtTitle = (TextView)row.findViewById(R.id.textViewPub);
+                holder.favImg = (ImageView)row.findViewById(R.id.favImgPub);
+                row.setTag(holder);
+            }
+            else {
+                holder = (FileHolder)row.getTag();
+            }
+
+            final FTPFile file = data.get(position);
+            holder.txtTitle.setText(file.getFileName());
+
+            if (file.isDirectory()) {
+                holder.imgIcon.setImageResource(R.drawable.directory_icon);
+                if (favorites.contains(file)) {
+                	holder.favImg.setImageResource(R.drawable.star);
+                } else {
+                	holder.favImg.setImageResource(R.drawable.star_empty);
+                }
+                
+            }
+            else {
+                holder.imgIcon.setImageResource(R.drawable.file_icon);
+                holder.favImg.setImageResource(-1);
+            }
+
+            return row;
+        }
+    }
+
+    static class FileHolder {
+        ImageView imgIcon;
+        TextView txtTitle;
+        ImageView favImg;
+    }
+
 }

@@ -24,4 +24,5 @@ public interface FTPFile extends Comparable<FTPFile> {
 	 * @return
 	 */
 	public String getAbsolutePath();
+	
 }

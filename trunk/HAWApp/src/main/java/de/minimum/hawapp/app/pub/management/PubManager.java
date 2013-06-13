@@ -64,6 +64,13 @@ public interface PubManager {
 	public void makeFavorite(FTPFile favoriteDir) throws IllegalArgumentException;
 	
 	/**
+	 * Entfernt die persistente Speicherung als Favorit des übergebenen Ordners
+	 * @param favoriteDir
+	 * @throws IllegalArgumentException wenn Datei statt Ordner übergeben wird
+	 */
+	public void removeFavorite(FTPFile favoriteDir) throws IllegalArgumentException;
+	
+	/**
 	 * Lädt die gespeicherten Favorisierten Ordner und gibt sie in einer Liste zurück
 	 * @return
 	 */
