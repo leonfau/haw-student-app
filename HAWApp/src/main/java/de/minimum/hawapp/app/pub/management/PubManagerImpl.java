@@ -126,6 +126,7 @@ public class PubManagerImpl implements PubManager {
 			mimetype = mime.getMimeTypeFromExtension(ext);
 		}
 		newApp.setDataAndType(Uri.parse(file), mimetype);
+		fromActivity.startActivity(newApp);
 	}
 
 
