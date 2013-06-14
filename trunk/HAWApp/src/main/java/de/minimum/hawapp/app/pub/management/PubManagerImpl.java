@@ -66,17 +66,17 @@ public class PubManagerImpl implements PubManager {
 	public FTPFile downloadFile(FTPFile remoteFile)
 			throws IllegalArgumentException, SftpException {
 		if (sftpChannel == null || sftpChannel.isClosed()
-				|| !sftpChannel.isConnected())
+				|| !sftpChannel.isConnected()) {
 			connect();
+		}
+			
 		if (remoteFile.isDirectory())
 			throw new IllegalArgumentException(ERROR_ARGUMENT_MUST_BE_FILE);
-
 		String localAbsolutePath = Environment.getExternalStorageDirectory()
-				+ SEPERATOR + Environment.DIRECTORY_DOWNLOADS;
+				+ SEPERATOR + Environment.DIRECTORY_DOWNLOADS + SEPERATOR;
 		sftpChannel.get(
 				remoteFile.getAbsolutePath() + remoteFile.getFileName(),
 				localAbsolutePath + remoteFile.getFileName());
-
 		sftpChannel.exit();
 		session.disconnect();
 		return new FTPFileBeansImpl(remoteFile.getFileName(),

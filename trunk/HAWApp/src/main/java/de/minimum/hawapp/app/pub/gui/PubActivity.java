@@ -188,7 +188,9 @@ public class PubActivity extends Activity {
 						busyDownloadung = true;
 						downloaded = manager.downloadFile(file);
 					} catch (final IllegalArgumentException e) {
+						e.printStackTrace();
 					} catch (final SftpException e) {
+						e.printStackTrace();
 					}
 
 				} else {
@@ -263,7 +265,7 @@ public class PubActivity extends Activity {
 
 			final FTPFile file = data.get(position);
 			holder.txtTitle.setText(file.toString());
-			holder.favImg.setImageResource(-1);
+			holder.favImg.setImageResource(0);
 
 			if (file.isDirectory()) {
 				holder.imgIcon.setImageResource(R.drawable.directory_icon);
