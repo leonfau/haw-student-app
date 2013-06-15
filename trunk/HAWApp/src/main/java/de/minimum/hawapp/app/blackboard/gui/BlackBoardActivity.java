@@ -6,9 +6,11 @@ import java.util.Comparator;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.os.AsyncTask;
@@ -22,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -40,6 +43,7 @@ public class BlackBoardActivity extends Activity {
 	protected static final String CATEGORY_ALL = "Alles";
 	protected static final String CATEGORY_IGNORE = "Papierkorb";
 	protected static final String CATEGORY_OWN = "Meins";
+	protected static final String CATEGORY_SEARCH_RESULTS = "Suchergebnisse";
 	private final String NO_INTERNET_CONNECTION_MSG = "Keine Internetverbindung vorhanden";
 	private final String NO_DATA_FROM_SERVICE = "keine Nachrichten vorhanden oder Service nicht verfügbar";
 
@@ -58,6 +62,7 @@ public class BlackBoardActivity extends Activity {
 	// Views
 	private Spinner categorySpinner;
 	private ListView offerListView;
+	private List<Offer> searchResult;
 
 	@Override
 	protected void onCreate(final Bundle savedInstanceState) {
@@ -105,6 +110,7 @@ public class BlackBoardActivity extends Activity {
 		categoryNames.add(BlackBoardActivity.CATEGORY_ALL);
 		categoryNames.add(BlackBoardActivity.CATEGORY_IGNORE);
 		categoryNames.add(BlackBoardActivity.CATEGORY_OWN);
+		categoryNames.add(BlackBoardActivity.CATEGORY_SEARCH_RESULTS);
 		categoryNames.addAll(allCategoryNamesDB);
 		setCategoryAdapter(categoryNames);
 
@@ -123,6 +129,42 @@ public class BlackBoardActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+
+		searchResult = new ArrayList<Offer>();
+		final EditText searchET = (EditText) findViewById(R.id.sb_search_edittext);
+		final ImageButton searchBtn = (ImageButton) findViewById(R.id.sb_search_btn);
+		searchBtn.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(final View v) {
+				searchOffer(searchET.getText().toString());
+				searchET.setText("");
+			}
+
+		});
+	}
+
+	private void searchOffer(final String searchString) {
+		new AsyncTask<Void, Void, List<Offer>>() {
+
+			@Override
+			protected void onPostExecute(final List<Offer> result) {
+				if (result != null) {
+					searchResult.clear();
+					searchResult.addAll(result);
+					categorySpinner.setSelection(3);
+					setOfferListView();
+				}
+			}
+
+			@Override
+			protected List<Offer> doInBackground(final Void... arg0) {
+
+				return manager.searchOffers(BlackBoardActivity.this,
+						searchString);
+			}
+
+		}.execute();
 	}
 
 	/***************************************************************
@@ -226,6 +268,12 @@ public class BlackBoardActivity extends Activity {
 						// Meine Nachrichten
 						offerListOfCategory = manager
 								.getAllOwnOffers(BlackBoardActivity.this);
+					} else if (categoryName
+							.equals(BlackBoardActivity.CATEGORY_SEARCH_RESULTS)) {
+						// TODO
+						offerListOfCategory.clear();
+						offerListOfCategory.addAll(searchResult);
+
 					} else {
 						Log.v("SB OfferList", "sonstige Nachrichten ");
 						final Category category = manager.getCategory(
@@ -405,14 +453,32 @@ public class BlackBoardActivity extends Activity {
 					BlackBoardActivity.CATEGORY_OWN)) {
 				deleteBtn.setVisibility(View.INVISIBLE);
 			}
+			final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(final DialogInterface dialog,
+						final int which) {
+					switch (which) {
+					case DialogInterface.BUTTON_POSITIVE:
+						deleteOffer(offer);
+						break;
+
+					case DialogInterface.BUTTON_NEGATIVE:
+						break;
+					}
+				}
+			};
+
 			deleteBtn.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(final View v) {
-
-					// TODO: Nachricht löschen
-					// TODO: prüfen ob eigene nachricht
-					deleteOffer(offer);
+					final AlertDialog.Builder builder = new AlertDialog.Builder(
+							BlackBoardActivity.this);
+					builder.setMessage(
+							"Bist du sicher das du diese Nachricht löschen willst?")
+							.setPositiveButton("Ja", dialogClickListener)
+							.setNegativeButton("Nein", dialogClickListener)
+							.show();
 				}
 
 			});

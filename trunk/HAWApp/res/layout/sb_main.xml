@@ -9,13 +9,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:id="@+id/sb_search_edittext"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ems="10" >
+
+            <requestFocus />
+        </EditText>
+
+        <ImageButton
+            android:id="@+id/sb_search_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/search"
+            android:scaleType="center"
+            android:src="@android:drawable/ic_menu_search" />
+    </LinearLayout>
+
     <ListView
         android:id="@+id/sb_offerList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@color/ColorBackground"
-        android:scrollbars="vertical">
+        android:scrollbars="vertical" >
     </ListView>
 
     <Button
