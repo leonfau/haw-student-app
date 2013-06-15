@@ -1,9 +1,12 @@
 package de.minimum.hawapp.app.blackboard.gui;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -104,6 +107,7 @@ public class BlackBoardActivity extends Activity {
 
 		}
 		categorySpinner = (Spinner) findViewById(R.id.sb_categorie_spinner);
+
 		offerListView = (ListView) findViewById(R.id.sb_offerList);
 
 		final List<String> categoryNames = new ArrayList<String>();
@@ -209,7 +213,7 @@ public class BlackBoardActivity extends Activity {
 
 	private void setCategoryAdapter(final List<String> categoryNames) {
 		final ArrayAdapter<String> categorieAdapter = new ArrayAdapter<String>(
-				this, android.R.layout.simple_spinner_item, categoryNames);
+				this, R.layout.sb_simple_spinner_item, categoryNames);
 		categorySpinner.setAdapter(categorieAdapter);
 		categorySpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 
@@ -270,7 +274,6 @@ public class BlackBoardActivity extends Activity {
 								.getAllOwnOffers(BlackBoardActivity.this);
 					} else if (categoryName
 							.equals(BlackBoardActivity.CATEGORY_SEARCH_RESULTS)) {
-						// TODO
 						offerListOfCategory.clear();
 						offerListOfCategory.addAll(searchResult);
 
@@ -413,8 +416,12 @@ public class BlackBoardActivity extends Activity {
 					final Intent intent = new Intent(BlackBoardActivity.this,
 							OfferActivity.class);
 					final Bundle b = new Bundle();
+					final Date date = offer.getDateOfCreation();
+
 					b.putString("TITLE", offer.getHeader());
-					b.putString("DATE", offer.getDateOfCreation() + "");
+					b.putString("DATE", (DateFormat.getDateInstance(
+							DateFormat.FULL, Locale.GERMAN)).format(date
+							.getDate()));
 					b.putString("TEXT", offer.getDescription());
 					b.putString("CONTAKT", offer.getContact());
 					b.putLong(
