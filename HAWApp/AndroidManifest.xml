@@ -70,12 +70,18 @@
         <activity
             android:name="de.minimum.hawapp.app.blackboard.gui.NewOfferActivity"
             android:screenOrientation="portrait"
-            android:label="@string/sb_neue_nachricht" >
+            android:label="@string/sb_neue_nachricht" 
+            
+            android:windowSoftInputMode="stateAlwaysVisible|adjustPan"  
+  			android:theme="@android:style/Theme.Dialog">
         </activity>
         <activity
             android:name="de.minimum.hawapp.app.blackboard.gui.OfferActivity"
             android:screenOrientation="portrait"
-            android:label="@string/sb_nachricht" >
+            android:label="@string/sb_nachricht" 
+            
+            android:windowSoftInputMode="stateAlwaysVisible|adjustPan"  
+  			android:theme="@android:style/Theme.Dialog">
         </activity>
         
         <!-- Calender START -->

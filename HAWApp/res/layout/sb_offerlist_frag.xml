@@ -38,6 +38,14 @@
             android:contentDescription="@string/rubbish"
             android:scaleType="center"
             android:src="@android:drawable/ic_menu_delete" />
+        
+        <ImageButton
+            android:id="@+id/sb_offerlist_revert_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/revert"
+            android:scaleType="center"
+            android:src="@android:drawable/ic_menu_revert" />
         </RelativeLayout>
 
     </TableRow>
