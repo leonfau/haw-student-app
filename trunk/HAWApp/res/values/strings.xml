@@ -83,7 +83,8 @@
     <string name="btnTitle_neuerTermin">neuer Termin</string>
     <string name="txtTitle_Beginn">Beginn</string>
     <string name="txtTitle_Name">Name</string>
-    <string name="txtTitle_Dozent">Dozent</string>
+    <string name="txtTitle_Dozent">Dozent</string> 
+    <string name="revert">Rückgängig</string>
     
     
     
