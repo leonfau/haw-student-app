@@ -1,5 +1,12 @@
 package de.minimum.hawapp.app.pub.management;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -18,6 +25,7 @@ import de.minimum.hawapp.app.pub.beans.FTPFileBeansImpl;
 import de.minimum.hawapp.app.pub.beans.UpperDirFTPFile;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
@@ -32,13 +40,17 @@ public class PubManagerImpl implements PubManager {
 	private final String FTP_TYPE = "sftp";
 	private final String SEPERATOR = "/";
 	private final String URI_PREFIX = "file:/";
-
+	private final String FAV_FILENAME = "fav";
+	private final char PERSIST_SEPERATOR = '#';
+	
 	private final String ERROR_ARGUMENT_MUST_BE_FILE = "Argument must be File not Directory";
 	private final String ERROR_ARGUMENT_MUST_BE_DIR = "Argument must be Directory not File";
 
 	private ChannelSftp sftpChannel;
 	private Session session;
 
+	private List<FTPFile> favorites = new ArrayList<FTPFile>();
+	
 	private void connect() {
 		user = Login.decrypt(Login.getEncryptedLogin());
 		pw = Login.decrypt(Login.getEncryptedPassword());
@@ -147,21 +159,88 @@ public class PubManagerImpl implements PubManager {
 	}
 
 	@Override
-	public void makeFavorite(FTPFile favoriteDir)
+	public void makeFavorite(FTPFile favoriteDir, Context context)
 			throws IllegalArgumentException {
-		// TODO
+		
+		favorites.add(favoriteDir);
+		try {
+			persist(context);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public void removeFavorite(FTPFile favoriteDir)
+	public void removeFavorite(FTPFile favoriteDir, Context context)
 			throws IllegalArgumentException {
-		// TODO
+		favorites.remove(favoriteDir);
+		try {
+			persist(context);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
-	public List<FTPFile> loadFavorites() {
-		// TODO Nice to Have
-		return new ArrayList<FTPFile>();
+	public List<FTPFile> loadFavorites(Context context) {
+		try {
+			favorites = load(context);
+		} catch (StreamCorruptedException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return favorites;
 	}
+	
+	private void persist(Context context) throws IOException {
+        FileOutputStream fOut = null;
+        PrintStream ps = null;
+        try {
+            fOut = context.openFileOutput(FAV_FILENAME, Context.MODE_PRIVATE);
+            ps = new PrintStream(fOut);
+            for (FTPFile fav : favorites) {
+            	String toWrite = fav.getAbsolutePath() + "#" + fav.getFileName();
+            	ps.println(toWrite);
+            }
+            ps.flush();
+            ps.close();
+        }
+        finally {
+            if (fOut != null)
+                fOut.close();
+        }
+    }
 
+    private List<FTPFile> load(Context context) throws StreamCorruptedException, IOException,
+                    ClassNotFoundException {
+    	FileInputStream fIn = null;
+    	InputStreamReader isr = null;
+        BufferedReader br = null;
+        
+        List<FTPFile> result = new ArrayList<FTPFile>();
+        try {
+            fIn = context.openFileInput(FAV_FILENAME);
+            isr = new InputStreamReader(fIn);
+            br = new BufferedReader(isr);
+            
+            result = new ArrayList<FTPFile>();
+            
+            String line = br.readLine();
+            while (line != null) {
+            	result.add(new FTPFileBeansImpl(line.substring(line.lastIndexOf(PERSIST_SEPERATOR)+1),
+            			line.substring(0,line.lastIndexOf(PERSIST_SEPERATOR)), true));
+            	line = br.readLine();
+            }
+            br.close();
+        }
+        finally {
+            if (fIn != null)
+                fIn.close();
+        }
+        return result;
+    }
 }
+    

@@ -8,6 +8,7 @@ import com.jcraft.jsch.SftpException;
 import de.minimum.hawapp.app.pub.beans.FTPFile;
 
 import android.app.Activity;
+import android.content.Context;
 
 /**
  * Management Klasse welche dei Logik für das Pubmodul beinhaltet
@@ -61,19 +62,19 @@ public interface PubManager {
 	 * @param favoriteDir
 	 * @throws IllegalArgumentException wenn Datei statt Ordner übergeben wird
 	 */
-	public void makeFavorite(FTPFile favoriteDir) throws IllegalArgumentException;
+	public void makeFavorite(FTPFile favoriteDir, Context context) throws IllegalArgumentException;
 	
 	/**
 	 * Entfernt die persistente Speicherung als Favorit des übergebenen Ordners
 	 * @param favoriteDir
 	 * @throws IllegalArgumentException wenn Datei statt Ordner übergeben wird
 	 */
-	public void removeFavorite(FTPFile favoriteDir) throws IllegalArgumentException;
+	public void removeFavorite(FTPFile favoriteDir, Context context) throws IllegalArgumentException;
 	
 	/**
 	 * Lädt die gespeicherten Favorisierten Ordner und gibt sie in einer Liste zurück
 	 * @return
 	 */
-	public List<FTPFile> loadFavorites();
+	public List<FTPFile> loadFavorites(Context context);
 	
 }
