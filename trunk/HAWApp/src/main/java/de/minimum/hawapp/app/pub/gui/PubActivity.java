@@ -72,7 +72,7 @@ public class PubActivity extends Activity {
 		loading = getString(R.string.loading);
 
 		manager = ManagerFactory.getManager(PubManager.class);
-		favorites = manager.loadFavorites();
+		favorites = manager.loadFavorites(getApplicationContext());
 		adapter = new PubAdapter(this, R.layout.activity_pub_item_row,
 				listItems);
 		lv = (ListView) findViewById(R.id.publist);
@@ -93,11 +93,11 @@ public class PubActivity extends Activity {
 				FTPFile clicked = adapter.getItem(pos);
 				if (clicked.isDirectory()) {
 					if (favorites.contains(clicked)) {
-						manager.removeFavorite(clicked);
-						favorites.remove(clicked);
+						manager.removeFavorite(clicked, getApplicationContext());
+						if (listItems.contains(clicked)) listItems.remove(clicked);
 					} else {
-						manager.makeFavorite(clicked);
-						favorites.add(clicked);
+						manager.makeFavorite(clicked, getApplicationContext());
+						listItems.add(clicked);
 					}
 					adapter.notifyDataSetChanged();
 				}
@@ -162,6 +162,13 @@ public class PubActivity extends Activity {
 		if (!currentDirectory.equals(manager.getRootDirectory())) {
 			listItems.add(0, manager.getUpperDirectory(currentDirectory));
 		}
+		
+		Collections.sort(favorites);
+		Collections.reverse(favorites);
+		for (FTPFile fav : favorites) {
+			listItems.add(0, fav);
+		}
+	
 		adapter.notifyDataSetChanged();
 		lv.setSelectionAfterHeaderView();
 	}
