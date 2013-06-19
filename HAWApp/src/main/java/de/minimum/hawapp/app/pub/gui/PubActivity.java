@@ -26,6 +26,7 @@ import com.jcraft.jsch.SftpException;
 
 import de.minimum.hawapp.app.R;
 import de.minimum.hawapp.app.context.ManagerFactory;
+import de.minimum.hawapp.app.login.Login;
 import de.minimum.hawapp.app.pub.beans.FTPFile;
 import de.minimum.hawapp.app.pub.beans.UpperDirFTPFile;
 import de.minimum.hawapp.app.pub.management.PubManager;
@@ -64,6 +65,14 @@ public class PubActivity extends Activity {
 			return null;
 		}
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (!Login.loggedIn()) {
+			Login.login(Login.getEncryptedLogin(), Login.getEncryptedPassword());
+		}
+	}
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -97,7 +106,7 @@ public class PubActivity extends Activity {
 						if (listItems.contains(clicked)) listItems.remove(clicked);
 					} else {
 						manager.makeFavorite(clicked, getApplicationContext());
-						listItems.add(clicked);
+						listItems.add(0, clicked);
 					}
 					adapter.notifyDataSetChanged();
 				}

@@ -110,7 +110,7 @@ public class PubManagerImpl implements PubManager {
 		List<FTPFile> resultFiles = new ArrayList<FTPFile>();
 
 		for (LsEntry ls : list) {
-			if (!ls.getFilename().equals("Gesperrt")) {
+			if(ls.getAttrs().getPermissionsString().lastIndexOf('r') == 7) {
 				resultFiles.add(new FTPFileBeansImpl(ls.getFilename(), dir
 						.getAbsolutePath() + dir.getFileName() + SEPERATOR, ls
 						.getAttrs().isDir() || ls.getAttrs().isLink()));
