@@ -116,7 +116,7 @@ public class MensaPlanImpl implements MensaPlan {
 			for (Meal oldMeal : oldDayPlan) {
 				if (!updatedDayPlan.contains(oldMeal)) {
 					LOGGER.debug(dayPlanEntry.getKey() + " Meal " + oldMeal + " removed");
-					// oldDayPlan.remove(oldMeal);
+					oldDayPlan.remove(oldMeal);
 					mealList.remove(oldMeal.getID());
 				}
 			}
